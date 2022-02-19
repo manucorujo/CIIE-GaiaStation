@@ -38,6 +38,13 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((800,600))
     screen.fill(GRAY)
 
+    
+    # Permitimos que la tecla este pulsada
+    pygame.key.set_repeat(1, 25)
+
+    # Eliminamos el raton
+    pygame.mouse.set_visible(False)
+
     # Bucle de eventos
     while True:
         clock.tick(60)
@@ -45,19 +52,19 @@ if __name__ == "__main__":
         for evento in pygame.event.get():
                 # RIGHT
                 if evento.type == KEYDOWN and evento.key == K_d:
-                    pos_x += 10
+                    pos_x += 3
 
                 # LEFT
                 if evento.type == KEYDOWN and evento.key == K_a:
-                    pos_x -= 10
+                    pos_x -= 3
 
                 # UP
                 if evento.type == KEYDOWN and evento.key == K_w:
-                    pos_y -= 10
+                    pos_y -= 3
 
                 # DOWN  
                 if evento.type == KEYDOWN and evento.key == K_s:
-                    pos_y += 10
+                    pos_y += 3
                 
                 # ESCAPE
                 elif evento.type == KEYDOWN and evento.key == K_ESCAPE:
