@@ -44,8 +44,20 @@ if __name__ == "__main__":
 
         for evento in pygame.event.get():
                 # RIGHT
-                if evento.type == KEYDOWN and evento.key == K_RIGHT:
+                if evento.type == KEYDOWN and evento.key == K_d:
                     pos_x += 10
+
+                # LEFT
+                if evento.type == KEYDOWN and evento.key == K_a:
+                    pos_x -= 10
+
+                # UP
+                if evento.type == KEYDOWN and evento.key == K_w:
+                    pos_y -= 10
+
+                # DOWN  
+                if evento.type == KEYDOWN and evento.key == K_s:
+                    pos_y += 10
                 
                 # ESCAPE
                 elif evento.type == KEYDOWN and evento.key == K_ESCAPE:
