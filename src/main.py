@@ -36,6 +36,7 @@ class Game:
 
         # Configuracion inicial da pantalla
         self.screen = pygame.display.set_mode((800,600))
+        pygame.display.set_caption("GAIA Station") # nome do xogo
         self.screen.fill(BLACK)
 
         # Permitimos que la tecla este pulsada

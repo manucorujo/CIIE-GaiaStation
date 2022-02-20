@@ -33,4 +33,5 @@ class Level:
                     Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites])
 
     def run(self):
+        # mostrar os sprites dentro do grupo "visible_sprites"
         self.visible_sprites.draw(self.display_surface)
