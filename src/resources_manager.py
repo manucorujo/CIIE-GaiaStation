@@ -1,7 +1,9 @@
 import os, pygame
 from pygame.locals import *
 
+#==============================================================================
 # Clase baleira con métodos de clase
+
 class ResourcesManager(object):
     resources = {}
             

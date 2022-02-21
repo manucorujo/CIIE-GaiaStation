@@ -2,6 +2,8 @@ import pygame
 from world_objects import *
 from player import Player
 
+#==============================================================================
+# Clase para cargar un nivel
 
 class Level:
     def __init__(self, filename):
