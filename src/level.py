@@ -1,6 +1,7 @@
 import pygame 
 from world_objects import *
 from player import Player
+from debug import debug
 
 #==============================================================================
 # Clase para cargar un nivel
@@ -30,10 +31,12 @@ class Level:
                 pos_x, pos_y = x*16, y*16
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
-                    Player((pos_x,pos_y),[self.visible_sprites])
+                    self.player = Player((pos_x,pos_y),[self.visible_sprites])
                 elif simb == 'w00':
                     Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites])
 
     def run(self):
         # mostrar os sprites dentro do grupo "visible_sprites"
         self.visible_sprites.draw(self.display_surface)
+        self.visible_sprites.update()
+        debug(self.player.direction)
