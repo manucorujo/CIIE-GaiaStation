@@ -31,7 +31,7 @@ class Level:
                 pos_x, pos_y = x*16, y*16
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
-                    self.player = Player((pos_x,pos_y),[self.visible_sprites])
+                    self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites)
                 elif simb == 'w00':
                     Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites])
 
