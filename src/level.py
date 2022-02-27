@@ -1,7 +1,6 @@
 import pygame 
 from world_objects import *
 from player import Player
-from debug import debug
 
 #==============================================================================
 # Clase para cargar un nivel
@@ -16,7 +15,7 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         # Grupos de sprites
-        self.visible_sprites = YSortCameraGroup()
+        self.visible_sprites = CameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
         self.create_map()
@@ -39,12 +38,8 @@ class Level:
         # mostrar os sprites dentro do grupo "visible_sprites"
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
-        # debug(self.player.direction)
 
-'''
-YSort es porque vamos a ordenar los sprites por la coordenada y, de esa forma le daremos algo de overlap
-'''
-class YSortCameraGroup(pygame.sprite.Group):
+class CameraGroup(pygame.sprite.Group):
     def __init__(self):
 
         # general setup

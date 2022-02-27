@@ -41,14 +41,10 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, speed):
         '''
-            self.direction tiene que estar normalizado
-
-            Es decir, si tenemos un vector de dirección [1,1], no puede ir más rápido
-            que con [1,0] o [0,1]. De la siguiente manera conseguimos que nunca sea 
-            mayor que 1 ¿?
+            self.direction tiene que estar normalizado, para no ir más rápido en diagonal
         '''
         if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
+            self.direction = self.direction.normalize() # returns a vector with the same direction but length 1.
         
         self.rect.x += self.direction.x * speed
         self.collision('horizontal')
