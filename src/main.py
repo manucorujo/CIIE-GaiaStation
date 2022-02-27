@@ -55,23 +55,7 @@ class Game:
         while True:
             self.clock.tick(60)
 
-            for evento in pygame.event.get():
-                # # RIGHT
-                # if evento.type == KEYDOWN and evento.key == K_d:
-                #     pos_x += 3
-
-                # # LEFT
-                # if evento.type == KEYDOWN and evento.key == K_a:
-                #     pos_x -= 3
-
-                # # UP
-                # if evento.type == KEYDOWN and evento.key == K_w:
-                #     pos_y -= 3
-
-                # # DOWN  
-                # if evento.type == KEYDOWN and evento.key == K_s:
-                #     pos_y += 3
-                
+            for evento in pygame.event.get():       
                 # ESCAPE
                 if evento.type == KEYDOWN and evento.key == K_ESCAPE:
                     pygame.quit()
