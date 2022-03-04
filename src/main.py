@@ -1,21 +1,27 @@
 from tiles import *
 from spritesheet import Spritesheet
+import configparser
+
 
 def main():
 
+    ############################ LECTURA DO FICHEIRO DE CONFIGURACIÓN ###############################
+    parser = configparser.ConfigParser()
+    parser.read("GaiaStation.config")
+
     ################################ CARGA DA VENTÁ BÁSICA E  RELOXO ###############################
     pygame.init()
-    DISPLAY_W, DISPLAY_H = 1280, 720 
+    DISPLAY_W, DISPLAY_H = int(parser.get("config", "DISPLAY_W")), int(parser.get("config", "DISPLAY_H")) 
     canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
     window = pygame.display.set_mode(((DISPLAY_W,DISPLAY_H)))
     running = True
     clock = pygame.time.Clock()
 
     ################################# CARGA DO XOGADOR E TILESET ###################################
-    spritesheet = Spritesheet('../res/sprites/Tileset/tileset.png')
+    spritesheet = Spritesheet(parser.get("config", "TILESET"))
 
     #################################### CARGA DO NIVEL #######################################
-    map = TileMap('../res/levels/level1.csv', spritesheet )
+    map = TileMap(parser.get("config", "LEVEL1"), spritesheet )
 
     ################################# LOOP DO XOGO ##########################
     while running:
