@@ -1,80 +1,45 @@
-#==============================================================================
-#
-# # TODO: Engadir sinatura en todos os ficheiros
-#
-#==============================================================================
+from tiles import *
+from spritesheet import Spritesheet
 
-import time
-import numpy as np
-import pygame
-import sys
+def main():
 
-from pygame.locals import *
-from level import Level
+    ################################ CARGA DA VENTÁ BÁSICA E  RELOXO ###############################
+    pygame.init()
+    DISPLAY_W, DISPLAY_H = 1280, 720 
+    canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
+    window = pygame.display.set_mode(((DISPLAY_W,DISPLAY_H)))
+    running = True
+    clock = pygame.time.Clock()
 
-#==============================================================================
-# Constantes
+    ################################# CARGA DO XOGADOR E TILESET ###################################
+    spritesheet = Spritesheet('../res/sprites/Tileset/tileset.png')
 
-# TODO: Isto deberia sacarse a un script de configuracion mais adiante
+    #################################### CARGA DO NIVEL #######################################
+    map = TileMap('../res/levels/level1.csv', spritesheet )
 
-WHITE = (255, 255, 255)
-GRAY = (75, 75, 75)
-BLACK = (0, 0, 0)
+    ################################# LOOP DO XOGO ##########################
+    while running:
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                pass
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-
-#==============================================================================
-# Clase PRincipal do xogo
-
-class Game:
-    
-    def __init__ (self):
-        # Inicializacion
-        pygame.init()
-        self.clock = pygame.time.Clock()
-
-        # Configuracion inicial da pantalla
-        self.screen = pygame.display.set_mode((800,600))
-        pygame.display.set_caption("GAIA Station") # nome do xogo
-        self.screen.fill(BLACK)
-
-        # Permitimos que la tecla este pulsada
-        # pygame.key.set_repeat(1, 25)
-
-        # Eliminamos el raton
-        pygame.mouse.set_visible(False)
-
-        # Carga do nivel
-        self.level = Level("level1.txt")
-
-        return
-
-    def run (self):
-        # Bucle de eventos
-        while True:
-            self.clock.tick(60)
-
-            for evento in pygame.event.get():       
-                # ESCAPE
-                if evento.type == KEYDOWN and evento.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-
-            self.screen.fill(BLACK)
-            self.level.run()
-            pygame.display.update()
-        return
-
-#==============================================================================
-# Bucle principal
+        ####################################### ACTUALIZACIÓN ######################################
+        canvas.fill((0, 0, 0))
+        map.draw_map(canvas)
+        window.blit(canvas, (0,0))
+        pygame.display.update()
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
-    
+    main()
 
-    
+
+
+
+
+
 
 
 
