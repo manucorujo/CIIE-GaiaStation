@@ -1,12 +1,15 @@
 import pygame
+import miSprite
 from pygame.locals import *
 from resources_manager import *
 
 #==============================================================================
 # Clase Wall
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
-        super().__init__(groups)
-        self.image = ResourcesManager.LoadImage("wall.png")
+class Wall(miSprite.MiSprite):
+    def __init__(self, pos, groups, image_file):
+        super().__init__(groups, image_file)
         self.rect = self.image.get_rect(topleft = pos)
+
+    def get_image(self):
+        return self.image

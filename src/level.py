@@ -30,9 +30,9 @@ class Level:
                 pos_x, pos_y = x*16, y*16
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
-                    self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites)
+                    self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites, "Player/Assault-Class.png", "Player/Assault-Class.txt")
                 elif simb == 'w00':
-                    Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites])
+                    Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites], "Tileset/wall.png")
 
     def run(self):
         # mostrar os sprites dentro do grupo "visible_sprites"
@@ -61,5 +61,4 @@ class CameraGroup(pygame.sprite.Group):
 
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft - self.offset
-            self.display_surface.blit(sprite.image, offset_pos)
-        
+            self.display_surface.blit(sprite.get_image(), offset_pos)
