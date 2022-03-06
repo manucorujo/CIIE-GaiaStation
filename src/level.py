@@ -1,6 +1,9 @@
+from cv2 import sort
 import pygame 
 from world_objects import *
 from player import Player
+
+TILE_SIZE = 16
 
 #==============================================================================
 # Clase para cargar un nivel
@@ -27,7 +30,7 @@ class Level:
 
         for y,line in enumerate(map.split("\n")):
             for x,simb in enumerate(line.split()):
-                pos_x, pos_y = x*16, y*16
+                pos_x, pos_y = x*TILE_SIZE, y*TILE_SIZE
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
                     self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites, "Player/Assault-Class.png", "Player/Assault-Class.txt")
@@ -51,14 +54,17 @@ class CameraGroup(pygame.sprite.Group):
     
     def custom_draw(self,player):
 
-        '''
-        Un poco de geometria y se entiende, jurado
-        '''
-
+        # Un poco de geometria y se entiende, jurado, el tema de movimiento de la camara.
+        
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
 
-        for sprite in self.sprites():
+        # Tenemos que ordenar a los sprites por la posición en Y, por eso la Key es el rect.centery
+        # Al ordenar por la posición en Y, se dibujará antes a un sprite que está por encima de otro,
+        # por tanto, siguiendo el algoritmo del pintor que usar pygame por defecto el personaje se 
+        # solapará correctamente estando por encima o por debajo de sprite. Si debajo tenemos una pared,
+        # esta se dibujará después que nuestro personaje, y por tanto se superpondrá a él. (en base a su hitbox y el método collision)
+        for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.get_image(), offset_pos)
