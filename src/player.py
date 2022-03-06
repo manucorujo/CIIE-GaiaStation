@@ -11,7 +11,9 @@ ANDANDO = 1
 AGACHADO = 2 # sin usar
 ATACANDO = 3
 
-RETARDO_ANIMACION_JUGADOR = [50, 25, 0, 100] # updates que durará cada imagen del personaje
+TIEMPO_ATAQUE = 1000
+
+RETARDO_ANIMACION_JUGADOR = [50, 25, 0, int(TIEMPO_ATAQUE/2)] # updates que durará cada imagen del personaje
 # hay un valor para cada postura: el primero apra idle, el segundo para andar, etc.
 
 #==============================================================================
@@ -47,11 +49,27 @@ class Player(miSprite.MiSprite):
         # Lado hacia el que esta mirando
         self.mirando = DERECHA
 
+        # movimiento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
 
+        self.atacando = False
+        self.cooldownAtaque = TIEMPO_ATAQUE
+        self.tiempoAtaque = 0
+
     def input(self):
+        
+        '''
+        Este metodo move recibe un parametro speed y no usar self.speed ya que posteriormente lo eliminará de esta clase.
+
+        La idea entonces sería tener una super clase con este metodo, y que tanto los enemigos como el jugador
+        hereden de esta clase.
+        '''
+
+        if self.atacando:
+            return
+
         keys = pygame.key.get_pressed()
 
         # movimiento
@@ -74,17 +92,12 @@ class Player(miSprite.MiSprite):
         self.numPostura = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
 
         # ataque
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and not self.atacando:
+            self.atacando = True
+            self.tiempoAtaque = pygame.time.get_ticks()
+
+            self.numImagenPostura = 0 # para que empiece a atacar desde la primera imagen
             self.numPostura = ATACANDO # postura atacando
-            print("Ataque")
-            # falta controlar el COOLDOWN del ataque
-
-    '''
-    Este metodo move recibe un parametro speed y no usar self.speed ya que posteriormente lo eliminará de esta clase.
-
-    La idea entonces sería tener una super clase con este metodo, y que tanto los enemigos como el jugador
-    hereden de esta clase.
-    '''
 
     def move(self, speed):
         if self.direction.magnitude() != 0:
@@ -112,6 +125,16 @@ class Player(miSprite.MiSprite):
                     elif self.direction.y < 0: 
                         self.rect.top = sprite.rect.bottom
 
+    def cooldown(self):
+        current_time = pygame.time.get_ticks()
+
+        # cooldown para cuando se realiza un ataque
+        if self.atacando:
+            if current_time - self.tiempoAtaque > self.cooldownAtaque:
+                self.atacando = False
+
+        # se añadiran más, como por ejemplo uno pequeño de invencibilidad para cuando se recibe un golpe
+
     def get_image(self):
         self.actualizarPostura()
         if self.mirando == DERECHA:
@@ -133,4 +156,5 @@ class Player(miSprite.MiSprite):
 
     def update(self):
         self.input()
+        self.cooldown()
         self.move(self.speed)

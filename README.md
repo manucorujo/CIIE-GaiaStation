@@ -1,5 +1,10 @@
 # CIIE-GaiaStation
 
+## Bugs
+
+ * Atacar sin poder moverse: para darle cierto desafio, he intentado que al atacar el personaje no se pueda mover al mismo tiempo. Pero al mantener pulsado
+el botón de atacar (SPACE) y de moverse mucho rato el personaje se mete alguna carrera atacando.
+
 ## Resource Manager
 
 Tenemos tres funciones para cargar datos:
