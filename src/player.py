@@ -12,10 +12,11 @@ ATACANDO = 3
 
 # esto de al animación y retardos del ataque está completamente abierto a cambios
 TIEMPO_ATAQUE = 300
-RETARDO_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
+TIEMPO_RECARGA = 600
+RETARDO_ANIMACION_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
 
 # la caurta posicion, ataque, hay que ajustarla y coordinarla
-RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ATAQUE] # updates que durará cada imagen del personaje
+RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que durará cada imagen del personaje
 # hay un valor para cada postura: el primero apra idle, el segundo para andar, etc.
 
 #==============================================================================
@@ -28,7 +29,7 @@ class Player(elementos_moviles.ElementoMovil):
         # Leemos las coordenadas de un archivo de texto
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
         datos = datos.split()
-        self.numPostura = IDLE # postura idle
+        self.postura = IDLE # postura idle
         self.numImagenPostura = 0
         cont = 0
         numImagenes = [2, 2, 2, 2, 3, 5, 3]
@@ -41,7 +42,7 @@ class Player(elementos_moviles.ElementoMovil):
                 cont += 4
 
         # Hitbox: se corresponde al rect del personaje, pero recortando por arriba y por abajo para así tener un comportamiento más realista con las paredes superiores e inferiores
-        self.rect = pygame.Rect(pos[0],pos[1],self.coordenadasHoja[self.numPostura][self.numImagenPostura][2],self.coordenadasHoja[self.numPostura][self.numImagenPostura][3])
+        self.rect = pygame.Rect(pos[0],pos[1],self.coordenadasHoja[self.postura][self.numImagenPostura][2],self.coordenadasHoja[self.postura][self.numImagenPostura][3])
         self.hitbox = self.rect.inflate(0, -12)
 
         # El retardo a la hora de cambiar la imagen del Sprite (para que no se mueva demasiado rápido)
@@ -57,6 +58,10 @@ class Player(elementos_moviles.ElementoMovil):
         self.cooldownAtaque = TIEMPO_ATAQUE
         self.tiempoAtaque = 0
 
+        self.recargando = False
+        self.cooldownRecarga = TIEMPO_RECARGA
+        self.tiempoRecarga = 0
+
         # armas
         self.crear_ataque = crear_ataque
         self.borrar_ataque = borrar_ataque
@@ -65,13 +70,6 @@ class Player(elementos_moviles.ElementoMovil):
         self.speed = 5
 
     def input(self):
-        
-        '''
-        Este metodo move recibe un parametro speed y no usar self.speed ya que posteriormente lo eliminará de esta clase.
-
-        La idea entonces sería tener una super clase con este metodo, y que tanto los enemigos como el jugador
-        hereden de esta clase.
-        '''
 
         if self.atacando:
             return
@@ -95,25 +93,19 @@ class Player(elementos_moviles.ElementoMovil):
         else:
             self.direction.x = 0
 
-        self.numPostura = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
+        self.postura = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
 
         # ataque
-        if keys[pygame.K_SPACE] and not self.atacando:
+        if keys[pygame.K_SPACE] and not self.recargando:
             self.direction.x = 0
             self.direction.y = 0
             self.atacando = True
             self.tiempoAtaque = pygame.time.get_ticks()
 
             self.numImagenPostura = 0 # para que empiece a atacar desde la primera imagen
-            self.numPostura = ATACANDO # postura atacando
+            self.postura = ATACANDO # postura atacando
 
             self.crear_ataque()
-
-            ''' Empiezo a pensar que lo mejor es que puedas disparar y mover,
-            y por tanto que el cooldown solo sea para repetir ataque
-            
-            Esto le quitará ese punto de táctica y dificutlad que pensé 
-            por algo de "acción frenetica" '''
 
     def move(self, speed):
         if self.direction.magnitude() != 0:
@@ -149,6 +141,11 @@ class Player(elementos_moviles.ElementoMovil):
         if self.atacando:
             if current_time - self.tiempoAtaque > self.cooldownAtaque:
                 self.atacando = False
+                self.recargando = True
+                self.tiempoRecarga = current_time
+        elif self.recargando:
+            if current_time - self.tiempoRecarga > self.cooldownRecarga:
+                self.recargando = False
                 self.borrar_ataque()
 
         # se añadiran más, como por ejemplo uno pequeño de invencibilidad para cuando se recibe un golpe
@@ -156,9 +153,9 @@ class Player(elementos_moviles.ElementoMovil):
     def get_image(self):
         self.actualizarPostura()
         if self.orientacion == DERECHA:
-            return self.image.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
+            return self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura])
         elif self.orientacion == IZQUIERDA:
-            return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura]), 1, 0)
+            return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura]), 1, 0)
 
     def get_orientacion(self):
         return self.orientacion
@@ -167,13 +164,13 @@ class Player(elementos_moviles.ElementoMovil):
         self.retardoMovimiento -= 1
         # Miramos si ha pasado el retardo
         if (self.retardoMovimiento < 0):
-            self.retardoMovimiento = RETARDO_ANIMACION_JUGADOR[self.numPostura]
+            self.retardoMovimiento = RETARDO_ANIMACION_JUGADOR[self.postura]
             # Si ha pasado, actualizamos la postura
             self.numImagenPostura += 1
-            if self.numImagenPostura >= len(self.coordenadasHoja[self.numPostura]):
+            if self.numImagenPostura >= len(self.coordenadasHoja[self.postura]):
                 self.numImagenPostura = 0
             if self.numImagenPostura < 0:
-                self.numImagenPostura = len(self.coordenadasHoja[self.numPostura])-1
+                self.numImagenPostura = len(self.coordenadasHoja[self.postura])-1
 
     def update(self):
         self.input()
