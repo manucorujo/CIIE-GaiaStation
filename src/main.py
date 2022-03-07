@@ -21,8 +21,8 @@ WHITE = (255, 255, 255)
 GRAY = (75, 75, 75)
 BLACK = (0, 0, 0)
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 20
+SCREEN_HEIGHT = 20
 
 #==============================================================================
 # Clase PRincipal do xogo
