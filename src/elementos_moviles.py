@@ -48,12 +48,12 @@ class Proyectil(ElementoMovil):
         # placement
         if self.orientacion == 2: # derecha
             self.rect = self.image.get_rect(midleft = player.rect.midright)
-        else:
+        else: # izquierda
             # se mide desde el 0,0, y el jugador ha sido girado... no se
-            self.rect = self.image.get_rect(midright = player.rect.midright)
+            self.rect = self.image.get_rect(midright = (player.rect.midleft[0] + player.rect.width, player.rect.midleft[1])) 
 
     def move(self, speed):
-        #pass
+        # pass
         self.rect.x += speed if self.orientacion == 2 else -speed
         self.collision('horizontal')
 
@@ -68,8 +68,8 @@ class Proyectil(ElementoMovil):
         if self.orientacion == 2:
             return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
         elif self.orientacion == 1:
-            return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
-            #return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura]), 0, 0)
+            #return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
+            return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura]), 0, 0)
 
     def actualizarPostura(self):
         if self.numImagenPostura >= len(self.coordenadasHoja[0])-1:

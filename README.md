@@ -2,9 +2,7 @@
 
 ## Bugs
 
- * Atacar sin poder moverse: para darle cierto desafio, he intentado que al atacar el personaje no se pueda mover al mismo tiempo. Pero al mantener pulsado
-el botón de atacar (SPACE) y de moverse mucho rato el personaje se mete alguna carrera atacando.
-
+ * Bala: al chocar con una pared del lado izquiero el comportamiento de la colisión no es el deseado, problemas con el rect.
 ## Resource Manager
 
 Tenemos tres funciones para cargar datos:
