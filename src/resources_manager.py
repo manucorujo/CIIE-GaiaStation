@@ -26,6 +26,10 @@ class ResourcesManager(object):
                 if colorkey is -1:
                     colorkey = image.get_at((0,0))
                 image.set_colorkey(colorkey, RLEACCEL)
+
+            # reescalado para ver como queda
+            image = pygame.transform.scale(image, (image.get_width()*2, image.get_height()*2))
+
             # Almacénase
             cls.resources[name] = image
             # Devólvese

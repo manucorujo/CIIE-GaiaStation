@@ -1,8 +1,7 @@
 import pygame
 from resources_manager import *
-import miSprite
+import elementos_moviles
 
-QUIETO = 0
 IZQUIERDA = 1
 DERECHA = 2
 
@@ -11,17 +10,20 @@ ANDANDO = 1
 AGACHADO = 2 # sin usar
 ATACANDO = 3
 
-TIEMPO_ATAQUE = 1000
+# esto de al animación y retardos del ataque está completamente abierto a cambios
+TIEMPO_ATAQUE = 300
+RETARDO_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
 
-RETARDO_ANIMACION_JUGADOR = [50, 25, 0, int(TIEMPO_ATAQUE/2)] # updates que durará cada imagen del personaje
+# la caurta posicion, ataque, hay que ajustarla y coordinarla
+RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ATAQUE] # updates que durará cada imagen del personaje
 # hay un valor para cada postura: el primero apra idle, el segundo para andar, etc.
 
 #==============================================================================
 # Clase Player
 
-class Player(miSprite.MiSprite):
-    def __init__(self, pos, groups, obstacle_sprites, image_file, coordeanada_file):
-        super().__init__(groups, image_file)
+class Player(elementos_moviles.ElementoMovil):
+    def __init__(self, pos, groups, obstacle_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
+        super().__init__(groups, obstacle_sprites, image_file)
 
         # Leemos las coordenadas de un archivo de texto
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
@@ -40,25 +42,27 @@ class Player(miSprite.MiSprite):
 
         # Hitbox: se corresponde al rect del personaje, pero recortando por arriba y por abajo para así tener un comportamiento más realista con las paredes superiores e inferiores
         self.rect = pygame.Rect(pos[0],pos[1],self.coordenadasHoja[self.numPostura][self.numImagenPostura][2],self.coordenadasHoja[self.numPostura][self.numImagenPostura][3])
-        self.hitbox = self.rect.inflate(0, -6)
+        self.hitbox = self.rect.inflate(0, -12)
 
         # El retardo a la hora de cambiar la imagen del Sprite (para que no se mueva demasiado rápido)
         self.retardoMovimiento = 0
 
-        # El movimiento que esta realizando
-        self.movimiento = QUIETO
-
-        # Lado hacia el que esta mirando
-        self.mirando = DERECHA
+        # Orientacion del personaja (der o izq)
+        self.orientacion = DERECHA
 
         # movimiento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
-        self.speed = 5
-        self.obstacle_sprites = obstacle_sprites
 
         self.atacando = False
         self.cooldownAtaque = TIEMPO_ATAQUE
         self.tiempoAtaque = 0
+
+        # armas
+        self.crear_ataque = crear_ataque
+        self.borrar_ataque = borrar_ataque
+
+
+        self.speed = 5
 
     def input(self):
         
@@ -84,10 +88,10 @@ class Player(miSprite.MiSprite):
 
         if keys[pygame.K_d]:
             self.direction.x = 1
-            self.mirando = DERECHA
+            self.orientacion = DERECHA
         elif keys[pygame.K_a]:
             self.direction.x = -1
-            self.mirando = IZQUIERDA
+            self.orientacion = IZQUIERDA
         else:
             self.direction.x = 0
 
@@ -95,11 +99,21 @@ class Player(miSprite.MiSprite):
 
         # ataque
         if keys[pygame.K_SPACE] and not self.atacando:
+            self.direction.x = 0
+            self.direction.y = 0
             self.atacando = True
             self.tiempoAtaque = pygame.time.get_ticks()
 
             self.numImagenPostura = 0 # para que empiece a atacar desde la primera imagen
             self.numPostura = ATACANDO # postura atacando
+
+            self.crear_ataque()
+
+            ''' Empiezo a pensar que lo mejor es que puedas disparar y mover,
+            y por tanto que el cooldown solo sea para repetir ataque
+            
+            Esto le quitará ese punto de táctica y dificutlad que pensé 
+            por algo de "acción frenetica" '''
 
     def move(self, speed):
         if self.direction.magnitude() != 0:
@@ -135,15 +149,19 @@ class Player(miSprite.MiSprite):
         if self.atacando:
             if current_time - self.tiempoAtaque > self.cooldownAtaque:
                 self.atacando = False
+                self.borrar_ataque()
 
         # se añadiran más, como por ejemplo uno pequeño de invencibilidad para cuando se recibe un golpe
 
     def get_image(self):
         self.actualizarPostura()
-        if self.mirando == DERECHA:
+        if self.orientacion == DERECHA:
             return self.image.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-        elif self.mirando == IZQUIERDA:
+        elif self.orientacion == IZQUIERDA:
             return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura]), 1, 0)
+
+    def get_orientacion(self):
+        return self.orientacion
 
     def actualizarPostura(self):
         self.retardoMovimiento -= 1

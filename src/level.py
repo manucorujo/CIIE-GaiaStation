@@ -1,9 +1,10 @@
 from cv2 import sort
-import pygame 
+import pygame
 from world_objects import *
 from player import Player
+from elementos_moviles import Proyectil
 
-TILE_SIZE = 16
+TILE_SIZE = 32
 
 #==============================================================================
 # Clase para cargar un nivel
@@ -21,6 +22,9 @@ class Level:
         self.visible_sprites = CameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
+        # sprites para ataques
+        self.ataque_actual = None
+
         self.create_map()
 
     def create_map(self):
@@ -33,9 +37,17 @@ class Level:
                 pos_x, pos_y = x*TILE_SIZE, y*TILE_SIZE
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
-                    self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites, "Player/Assault-Class.png", "Player/Assault-Class.txt")
+                    self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
                 elif simb == 'w00':
                     Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites], "Tileset/wall.png")
+
+    def crear_ataque(self):
+        self.ataque_actual = Proyectil(self.player, [self.visible_sprites], self.obstacle_sprites, "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
+
+    def borrar_ataque(self):
+        if self.ataque_actual:
+            self.ataque_actual.kill()
+        self.ataque_actual = None
 
     def run(self):
         # mostrar os sprites dentro do grupo "visible_sprites"
