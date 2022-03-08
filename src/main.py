@@ -8,21 +8,11 @@ import time
 import numpy as np
 import pygame
 import sys
+import configparser
+import re
 
 from pygame.locals import *
 from level import Level
-
-#==============================================================================
-# Constantes
-
-# TODO: Isto deberia sacarse a un script de configuracion mais adiante
-
-WHITE = (255, 255, 255)
-GRAY = (75, 75, 75)
-BLACK = (0, 0, 0)
-
-SCREEN_WIDTH = 20
-SCREEN_HEIGHT = 20
 
 #==============================================================================
 # Clase PRincipal do xogo
@@ -34,9 +24,14 @@ class Game:
         pygame.init()
         self.clock = pygame.time.Clock()
 
+        # Lectura do ficheiro de configuración
+        self.parser = configparser.ConfigParser()
+        self.parser.read("GaiaStation.config")
+
         # Configuracion inicial da pantalla
         self.screen = pygame.display.set_mode((800,600))
         pygame.display.set_caption("GAIA Station") # nome do xogo
+        BLACK = self.getColour(self.parser.get("main", "BLACK"))
         self.screen.fill(BLACK)
 
         # Permitimos que la tecla este pulsada
@@ -61,10 +56,17 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+            BLACK = self.getColour(self.parser.get("main", "BLACK"))
             self.screen.fill(BLACK)
             self.level.run()
             pygame.display.update()
         return
+
+    def getColour(self, text):
+        pattern = r'\(([0-9]+), ([0-9]+), ([0-9]+)\)'
+        match = re.match(pattern, text)
+        colour = tuple((int(x) for x in match.groups()))     
+        return colour    
 
 #==============================================================================
 # Bucle principal

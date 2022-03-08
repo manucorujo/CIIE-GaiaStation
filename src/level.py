@@ -3,8 +3,7 @@ import pygame
 from world_objects import *
 from player import Player
 from elementos_moviles import Proyectil
-
-TILE_SIZE = 32
+import configparser
 
 #==============================================================================
 # Clase para cargar un nivel
@@ -25,12 +24,17 @@ class Level:
         # sprites para ataques
         self.ataque_actual = None
 
+       # Lectura do ficheiro de configuración
+        self.parser = configparser.ConfigParser()
+        self.parser.read("GaiaStation.config")
+
         self.create_map()
 
     def create_map(self):
 
         # Usa o xestor de recursos para conseguir o mapa
         map = ResourcesManager.LoadLevelDefinitionFile(self.filename)
+        TILE_SIZE = int(self.parser.get("level", "TILE_SIZE"))
 
         for y,line in enumerate(map.split("\n")):
             for x,simb in enumerate(line.split()):
