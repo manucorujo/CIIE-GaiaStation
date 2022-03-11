@@ -1,5 +1,6 @@
 from cv2 import sort
 import pygame
+from enemies import MeleeEnemy
 from world_objects import *
 from player import Player
 from elementos_moviles import Proyectil
@@ -20,6 +21,8 @@ class Level:
         # Grupos de sprites
         self.visible_sprites = CameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+        self.enemies_sprites = pygame.sprite.Group()
+        self.player_sprites = pygame.sprite.Group()
 
         # sprites para ataques
         self.ataque_actual = None
@@ -27,6 +30,8 @@ class Level:
        # Lectura do ficheiro de configuración
         self.parser = configparser.ConfigParser()
         self.parser.read("GaiaStation.config")
+
+        self.player = None
 
         self.create_map()
 
@@ -41,9 +46,13 @@ class Level:
                 pos_x, pos_y = x*TILE_SIZE, y*TILE_SIZE
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
-                    self.player = Player((pos_x,pos_y),[self.visible_sprites], self.obstacle_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
+                    self.player = Player((pos_x,pos_y), [self.visible_sprites, self.player_sprites], self.obstacle_sprites, self.enemies_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
                 elif simb == 'w00':
-                    Wall((pos_x,pos_y),[self.visible_sprites,self.obstacle_sprites], "Tileset/wall.png")
+                    Wall((pos_x,pos_y), [self.visible_sprites, self.obstacle_sprites], "Tileset/wall.png")
+
+                elif simb == 'e00':
+                    print("posicionando enemigo en: " + str(pos_x) + ',' + str(pos_y))
+                    MeleeEnemy((pos_x,pos_y), self.player, [self.visible_sprites, self.enemies_sprites], self.obstacle_sprites, "Robots/Scarab.png", "Robots/Scarab.txt")
 
     def crear_ataque(self):
         self.ataque_actual = Proyectil(self.player, [self.visible_sprites], self.obstacle_sprites, "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)

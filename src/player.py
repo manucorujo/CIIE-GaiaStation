@@ -10,6 +10,9 @@ ANDANDO = 1
 AGACHADO = 2 # sin usar
 ATACANDO = 3
 
+HORIZONTAL = 1
+VERTICAL = 2
+
 # esto de al animación y retardos del ataque está completamente abierto a cambios
 TIEMPO_ATAQUE = 300
 TIEMPO_RECARGA = 600
@@ -17,13 +20,15 @@ RETARDO_ANIMACION_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
 
 # la caurta posicion, ataque, hay que ajustarla y coordinarla
 RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que durará cada imagen del personaje
-# hay un valor para cada postura: el primero apra idle, el segundo para andar, etc.
+# hay un valor para cada postura: el primero para idle, el segundo para andar, etc.
+
+COOLDOWN_DAMAGE_TAKEN = 1500
 
 #==============================================================================
 # Clase Player
 
 class Player(elementos_moviles.ElementoMovil):
-    def __init__(self, pos, groups, obstacle_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
+    def __init__(self, pos, groups, obstacle_sprites, enemies_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
         super().__init__(groups, obstacle_sprites, image_file)
 
         # Leemos las coordenadas de un archivo de texto
@@ -66,8 +71,19 @@ class Player(elementos_moviles.ElementoMovil):
         self.crear_ataque = crear_ataque
         self.borrar_ataque = borrar_ataque
 
+        # Grupos
+        self.obstacle_sprites = obstacle_sprites
+        self.enemies_sprites = enemies_sprites
 
-        self.speed = 5
+        self.damage_taken = False
+        self.cooldown_damage_taken = COOLDOWN_DAMAGE_TAKEN
+        self.damage_taken_time = 0
+        self.value = 0
+        self.backup_image = self.image.copy()
+        self.newColor = [0,0,0,0]
+
+
+        self.speed = 2.5
 
     def input(self):
 
@@ -112,13 +128,13 @@ class Player(elementos_moviles.ElementoMovil):
             self.direction = self.direction.normalize() # devuelve un vector con la misma direccion pero con magnitud 1
         
         self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')
+        self.collision(HORIZONTAL)
         self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
+        self.collision(VERTICAL)
         self.rect.center = self.hitbox.center # importante mantener el centro del rect
 
     def collision(self, direction):
-        if direction == 'horizontal':
+        if direction == HORIZONTAL:
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.x > 0: # nos movemos a la derecha
@@ -126,13 +142,20 @@ class Player(elementos_moviles.ElementoMovil):
                     elif self.direction.x < 0:
                         self.hitbox.left = sprite.hitbox.right
 
-        if direction == 'vertical':
+        if direction == VERTICAL:
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.y > 0: # hacia abajo
                         self.hitbox.bottom = sprite.hitbox.top
                     elif self.direction.y < 0: 
                         self.hitbox.top = sprite.hitbox.bottom
+
+        if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
+            if not self.damage_taken:
+                print("Golpe recibido")
+                self.damage_taken = True
+                self.damage_taken_time = pygame.time.get_ticks()
+                self.hit_countdown = 6
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()
@@ -147,6 +170,9 @@ class Player(elementos_moviles.ElementoMovil):
             if current_time - self.tiempoRecarga > self.cooldownRecarga:
                 self.recargando = False
                 self.borrar_ataque()
+        elif self.damage_taken:
+            if current_time - self.damage_taken_time > self.cooldown_damage_taken:
+                self.damage_taken = False
 
         # se añadiran más, como por ejemplo uno pequeño de invencibilidad para cuando se recibe un golpe
 
