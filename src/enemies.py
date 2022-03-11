@@ -1,3 +1,4 @@
+import random
 from resources_manager import *
 from elementos_moviles import ElementoMovil
 import pygame
@@ -19,17 +20,20 @@ VERTICAL = 2
 ATTACK_DURATION = 300
 ATTACK_COOLDOWN = 100
 
+MOVE_DURATION = 500
+MOVE_COOLDOWN = 500
+
 NUM_FRAMES_PER_POSE = [2, 4, 2, 5, 1]
 COOLDOWN_ANIMATION = [25, 0, 0, 0, 0]
 
 # -------------------------------------------------
-# Clase Proyectil
+
 class MeleeEnemy(ElementoMovil):
     def __init__(self, pos, player, groups, obstacle_sprites, image_file, coordeanada_file):
         super().__init__(groups, obstacle_sprites, image_file)
 
         self.orientation = LEFT
-        self.speed = 2
+        self.speed = 1
         self.current_pose = 0
         self.current_pose_frame = 0
         self.coordinates_sheet = []
@@ -42,6 +46,7 @@ class MeleeEnemy(ElementoMovil):
         cont = 0
         for pose in range(len(NUM_FRAMES_PER_POSE)):
             self.coordinates_sheet.append([])
+
             for frame in range(NUM_FRAMES_PER_POSE[pose]):
                 self.coordinates_sheet[pose].append( 
                     pygame.Rect(
@@ -76,6 +81,8 @@ class MeleeEnemy(ElementoMovil):
         self.direction = pygame.math.Vector2()  # Por defecto: [x:0, y:0]
 
         # Ataques
+        self.is_hunting = False
+
         self.is_attacking = False
         self.attack_duration = ATTACK_DURATION
         self.attack_time = 0
@@ -84,14 +91,38 @@ class MeleeEnemy(ElementoMovil):
         self.cooldown_duration = ATTACK_COOLDOWN
         self.cooldown_time = 0
 
+        # A referencia do xogador
+        self.player = player
+        self.field_of_view = self.rect.inflate(160, 160)
 
-    def move(self):
+        self.is_moving = False
+
+        self.move_duration = MOVE_DURATION
+        self.move_time = 0
+        
+        self.stop_duration = MOVE_DURATION
+        self.stop_time = 0
+
+
+    def move_ai(self):
+
+        speed_buf = 1
+
+        if self.is_hunting:
+            speed_buf = 2
+            self.direction.update(self.player.rect.centerx - self.rect.centerx, self.player.rect.centery - self.rect.centery)
+
+        else:
+            if pygame.Rect.colliderect(self.player.rect, self.field_of_view):
+                self.is_hunting = True
+
+        # Movemento
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
-        
-        self.hitbox.x += self.direction.x * self.speed
+
+        self.hitbox.x += self.direction.x * self.speed * speed_buf
         self.collision(HORIZONTAL)
-        self.hitbox.y += self.direction.y * self.speed
+        self.hitbox.y += self.direction.y * self.speed * speed_buf
         self.collision(VERTICAL)
         self.rect.center = self.hitbox.center
 
@@ -128,6 +159,21 @@ class MeleeEnemy(ElementoMovil):
                 self.has_cooldown = False
                 self.borrar_ataque()
 
+        # Cooldown para o movemento
+        if self.is_moving and not self.is_hunting:
+            if current_time - self.move_time > self.move_duration:
+                self.is_moving = False
+                self.stop_time = pygame.time.get_ticks()
+                self.direction.x = 0
+                self.direction.y = 0
+
+        elif not self.is_moving and not self.is_hunting:
+            if current_time - self.stop_time > self.stop_duration:
+                self.is_moving = True
+                self.move_time = pygame.time.get_ticks()
+                self.direction.x = random.randint(-1,1)
+                self.direction.y = random.randint(-1,1)
+            
 
     def get_image(self):
         self.update_pose()
@@ -154,4 +200,4 @@ class MeleeEnemy(ElementoMovil):
 
     def update(self):
         self.cooldown()
-        self.move()
+        self.move_ai()

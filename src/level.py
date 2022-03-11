@@ -32,6 +32,8 @@ class Level:
         self.parser.read("GaiaStation.config")
 
         self.player = None
+        
+        self.tile_size = int(self.parser.get("level", "TILE_SIZE"))
 
         self.create_map()
 
@@ -39,20 +41,17 @@ class Level:
 
         # Usa o xestor de recursos para conseguir o mapa
         map = ResourcesManager.LoadLevelDefinitionFile(self.filename)
-        TILE_SIZE = int(self.parser.get("level", "TILE_SIZE"))
 
         for y,line in enumerate(map.split("\n")):
             for x,simb in enumerate(line.split()):
-                pos_x, pos_y = x*TILE_SIZE, y*TILE_SIZE
+                pos_x, pos_y = x*self.tile_size, y*self.tile_size
                 if simb == 'p00':
                     print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
                     self.player = Player((pos_x,pos_y), [self.visible_sprites, self.player_sprites], self.obstacle_sprites, self.enemies_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
                 elif simb == 'w00':
                     Wall((pos_x,pos_y), [self.visible_sprites, self.obstacle_sprites], "Tileset/wall.png")
 
-                elif simb == 'e00':
-                    print("posicionando enemigo en: " + str(pos_x) + ',' + str(pos_y))
-                    MeleeEnemy((pos_x,pos_y), self.player, [self.visible_sprites, self.enemies_sprites], self.obstacle_sprites, "Robots/Scarab.png", "Robots/Scarab.txt")
+        MeleeEnemy((384,1216), self.player, [self.visible_sprites, self.enemies_sprites], self.obstacle_sprites, "Robots/Scarab.png", "Robots/Scarab.txt")
 
     def crear_ataque(self):
         self.ataque_actual = Proyectil(self.player, [self.visible_sprites], self.obstacle_sprites, "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
