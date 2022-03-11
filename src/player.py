@@ -83,7 +83,7 @@ class Player(elementos_moviles.ElementoMovil):
         self.newColor = [0,0,0,0]
 
 
-        self.speed = 2.5
+        self.speed = 3
 
     def input(self):
 
@@ -127,9 +127,12 @@ class Player(elementos_moviles.ElementoMovil):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize() # devuelve un vector con la misma direccion pero con magnitud 1
         
-        self.hitbox.x += self.direction.x * speed
+        # Uso de round -> el rect (hitbox) funciona con numero enteros, si no usamos round, el rect automaticamente 
+        # redondeara a la baja, dando un comportamiento distinto entre valores negativos y positivos
+
+        self.hitbox.x += round(self.direction.x * speed)
         self.collision(HORIZONTAL)
-        self.hitbox.y += self.direction.y * speed
+        self.hitbox.y += round(self.direction.y * speed)
         self.collision(VERTICAL)
         self.rect.center = self.hitbox.center # importante mantener el centro del rect
 

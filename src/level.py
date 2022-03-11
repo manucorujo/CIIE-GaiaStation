@@ -1,9 +1,8 @@
-from cv2 import sort
-import pygame
+from elementos_moviles import Proyectil
 from enemies import MeleeEnemy
 from world_objects import *
 from player import Player
-from elementos_moviles import Proyectil
+import pygame
 import configparser
 
 #==============================================================================
