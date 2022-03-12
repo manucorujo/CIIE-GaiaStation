@@ -1,4 +1,5 @@
 import os, pygame
+from csv import reader
 from pygame.locals import *
 
 #==============================================================================
@@ -50,13 +51,17 @@ class ResourcesManager(object):
                 print('Cannot load image: ' + fullname)
                 raise SystemExit(message)
             image = image.convert()
+
+            # reescalado para ver como queda
+            image = pygame.transform.scale(image, (image.get_width()*2, image.get_height()*2))
+
             # Almacénase
             cls.resources[name] = image
             # Devólvese
             return image
 
     @classmethod
-    def LoadLevelDefinitionFile(cls, name):
+    def LoadLevelObstaclesFile(cls, name):
         # Se o nome do arquivo está nos recursos xa cargados
         if name in cls.resources:
             return cls.resources[name]
@@ -64,9 +69,11 @@ class ResourcesManager(object):
         else:
             # Cárgase o recurso indicanso o nome da súa carpeta
             fullname = os.path.join('../res/levels', name)
-            pfile=open(fullname,'r')
-            data=pfile.read()
-            pfile.close()
+            data = []
+            with open(fullname) as f:
+                content = reader(f, delimiter = ',')
+                for row in content:
+                    data.append(list(row))
             # Almacénase
             cls.resources[name] = data
             # Devólvese

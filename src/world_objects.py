@@ -1,16 +1,14 @@
 import pygame
-import mi_sprite
 from pygame.locals import *
 from resources_manager import *
 
 #==============================================================================
-# Clase Wall
+# Clase Obstacle
 
-class Wall(mi_sprite.MiSprite):
-    def __init__(self, pos, groups, image_file):
-        super().__init__(groups, image_file)
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self, pos, groups, sprite_type, surface = pygame.Surface((32, 32))):
+        super().__init__(groups)
+        self.sprite_type = sprite_type
+        self.image = surface
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0, -12) # reducimos la hitbox para que las colisiones sean más realistas 
-
-    def get_image(self):
-        return self.image
+        self.hitbox = self.rect.inflate(0, -12)
