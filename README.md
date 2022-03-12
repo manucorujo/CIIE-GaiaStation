@@ -19,6 +19,12 @@ además del dichero .drawio para poder editarlo en la correspondiente plataforma
 
 Sprites originales: https://mattwalkden.itch.io/free-robot-warfare-pack
 
+¿Por qué tienen una función get_image?
+
+Para así en la función custom_draw de level.py, cuando se vaya a dibujar cada elemento se use, en vez de llamar al atributo 
+image de cada objeto. Pero además de esta regla del software, conseguimos que para cada postura de un personaje se puede mostrar
+una imagen distinta, por tanto el get_image de cada personaje es más complejo que el de un obstaculo, que solo devolverá el atributo imagen
+
 ## Patrones de diseño
 
 En esta sección se apuntarán los patrones de diseño recomendados por el profesor y alguno adicional que utilicemos.

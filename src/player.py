@@ -4,6 +4,8 @@ import elementos_moviles
 
 IZQUIERDA = 1
 DERECHA = 2
+ARRIBA = 3
+ABAJO = 4
 
 IDLE = 0
 ANDANDO = 1
@@ -55,6 +57,7 @@ class Player(elementos_moviles.ElementoMovil):
 
         # Orientacion del personaja (der o izq)
         self.orientacion = DERECHA
+        self.orientacionAtaque = DERECHA
 
         # movimiento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
@@ -95,17 +98,21 @@ class Player(elementos_moviles.ElementoMovil):
         # movimiento
         if keys[pygame.K_w]:
             self.direction.y = -1
+            self.orientacionAtaque = ARRIBA
         elif keys[pygame.K_s]:
             self.direction.y = 1
+            self.orientacionAtaque = ABAJO
         else:
             self.direction.y = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
             self.orientacion = DERECHA
+            self.orientacionAtaque = DERECHA
         elif keys[pygame.K_a]:
             self.direction.x = -1
             self.orientacion = IZQUIERDA
+            self.orientacionAtaque = IZQUIERDA
         else:
             self.direction.x = 0
 
@@ -188,6 +195,9 @@ class Player(elementos_moviles.ElementoMovil):
 
     def get_orientacion(self):
         return self.orientacion
+
+    def get_orientacionAtaque(self):
+        return self.orientacionAtaque
 
     def actualizarPostura(self):
         self.retardoMovimiento -= 1
