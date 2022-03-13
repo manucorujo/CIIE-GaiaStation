@@ -1,19 +1,13 @@
 import pygame
 from resources_manager import *
-import elementos_moviles
+import dinamic_sprites
 
-IZQUIERDA = 1
-DERECHA = 2
-ARRIBA = 3
-ABAJO = 4
+# -------------------------------------------------
 
 IDLE = 0
 ANDANDO = 1
 AGACHADO = 2 # sin usar
 ATACANDO = 3
-
-HORIZONTAL = 1
-VERTICAL = 2
 
 # esto de al animación y retardos del ataque está completamente abierto a cambios
 TIEMPO_ATAQUE = 300
@@ -26,10 +20,9 @@ RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que 
 
 COOLDOWN_DAMAGE_TAKEN = 1500
 
-#==============================================================================
-# Clase Player
+# -------------------------------------------------
 
-class Player(elementos_moviles.ElementoMovil):
+class Player(dinamic_sprites.DinamicSprite):
     def __init__(self, pos, groups, obstacle_sprites, enemies_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
         super().__init__(groups, obstacle_sprites, image_file)
 
@@ -56,14 +49,14 @@ class Player(elementos_moviles.ElementoMovil):
         self.retardoMovimiento = 0
 
         # Orientacion del personaja (der o izq)
-        self.orientacion = DERECHA
-        self.orientacionAtaque = DERECHA
+        self.orientacion = dinamic_sprites.RIGHT
+        self.orientacionAtaque = dinamic_sprites.RIGHT
 
         # movimiento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
 
         # cooldowns
-        self.atacando = False
+        self.is_attacking = False
         self.cooldownAtaque = TIEMPO_ATAQUE
         self.tiempoAtaque = 0
 
@@ -88,15 +81,10 @@ class Player(elementos_moviles.ElementoMovil):
         self.vida = self.max_vida 
         self.speed = 3 # velocidad de movimiento
 
-        # Por ordenar
-        self.value = 0
-        self.backup_image = self.image.copy()
-        self.newColor = [0,0,0,0]
-
 
     def input(self):
 
-        if self.atacando:
+        if self.is_attacking:
             return
 
         keys = pygame.key.get_pressed()
@@ -110,21 +98,21 @@ class Player(elementos_moviles.ElementoMovil):
         # movimiento
         if keys[pygame.K_w]:
             self.direction.y = -1
-            self.orientacionAtaque = ARRIBA
+            self.orientacionAtaque = dinamic_sprites.UP
         elif keys[pygame.K_s]:
             self.direction.y = 1
-            self.orientacionAtaque = ABAJO
+            self.orientacionAtaque = dinamic_sprites.DOWN
         else:
             self.direction.y = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
-            self.orientacion = DERECHA
-            self.orientacionAtaque = DERECHA
+            self.orientacion = dinamic_sprites.RIGHT
+            self.orientacionAtaque = dinamic_sprites.RIGHT
         elif keys[pygame.K_a]:
             self.direction.x = -1
-            self.orientacion = IZQUIERDA
-            self.orientacionAtaque = IZQUIERDA
+            self.orientacion = dinamic_sprites.LEFT
+            self.orientacionAtaque = dinamic_sprites.LEFT
         else:
             self.direction.x = 0
 
@@ -134,7 +122,7 @@ class Player(elementos_moviles.ElementoMovil):
         if keys[pygame.K_SPACE] and not self.recargando:
             self.direction.x = 0
             self.direction.y = 0
-            self.atacando = True
+            self.is_attacking = True
             self.tiempoAtaque = pygame.time.get_ticks()
 
             self.numImagenPostura = 0 # para que empiece a atacar desde la primera imagen
@@ -142,35 +130,10 @@ class Player(elementos_moviles.ElementoMovil):
 
             self.crear_ataque()
 
-    def move(self, speed):
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize() # devuelve un vector con la misma direccion pero con magnitud 1
-        
-        # Uso de round -> el rect (hitbox) funciona con numero enteros, si no usamos round, el rect automaticamente 
-        # redondeara a la baja, dando un comportamiento distinto entre valores negativos y positivos
-
-        self.hitbox.x += round(self.direction.x * speed)
-        self.collision(HORIZONTAL)
-        self.hitbox.y += round(self.direction.y * speed)
-        self.collision(VERTICAL)
-        self.rect.center = self.hitbox.center # importante mantener el centro del rect
 
     def collision(self, direction):
-        if direction == HORIZONTAL:
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.x > 0: # nos movemos a la derecha
-                        self.hitbox.right = sprite.hitbox.left
-                    elif self.direction.x < 0:
-                        self.hitbox.left = sprite.hitbox.right
 
-        if direction == VERTICAL:
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.y > 0: # hacia abajo
-                        self.hitbox.bottom = sprite.hitbox.top
-                    elif self.direction.y < 0: 
-                        self.hitbox.top = sprite.hitbox.bottom
+        super().collision(direction)
 
         if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
             if not self.damage_taken:
@@ -179,13 +142,14 @@ class Player(elementos_moviles.ElementoMovil):
                 self.damage_taken_time = pygame.time.get_ticks()
                 self.hit_countdown = 6
 
+
     def cooldown(self):
         current_time = pygame.time.get_ticks()
 
         # cooldown para cuando se realiza un ataque
-        if self.atacando:
+        if self.is_attacking:
             if current_time - self.tiempoAtaque > self.cooldownAtaque:
-                self.atacando = False
+                self.is_attacking = False
                 self.recargando = True
                 self.tiempoRecarga = current_time
 
@@ -198,22 +162,24 @@ class Player(elementos_moviles.ElementoMovil):
             if current_time - self.damage_taken_time > self.cooldown_damage_taken:
                 self.damage_taken = False
 
-        # se añadiran más, como por ejemplo uno pequeño de invencibilidad para cuando se recibe un golpe
 
     def get_image(self):
-        self.actualizarPostura()
-        if self.orientacion == DERECHA:
+        self.update_pose()
+        if self.orientacion == dinamic_sprites.RIGHT:
             return self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura])
-        elif self.orientacion == IZQUIERDA:
+        elif self.orientacion == dinamic_sprites.LEFT:
             return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura]), 1, 0)
+
 
     def get_orientacion(self):
         return self.orientacion
 
+
     def get_orientacionAtaque(self):
         return self.orientacionAtaque
 
-    def actualizarPostura(self):
+
+    def update_pose(self):
         self.retardoMovimiento -= 1
         # Miramos si ha pasado el retardo
         if (self.retardoMovimiento < 0):
@@ -224,6 +190,7 @@ class Player(elementos_moviles.ElementoMovil):
                 self.numImagenPostura = 0
             if self.numImagenPostura < 0:
                 self.numImagenPostura = len(self.coordenadasHoja[self.postura])-1
+
 
     def update(self):
         self.input()

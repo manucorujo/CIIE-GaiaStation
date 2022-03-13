@@ -1,5 +1,5 @@
-from elementos_moviles import Proyectil
-from enemies import MeleeEnemy
+from bullets import Proyectil
+from melee_enemy import MeleeEnemy
 from world_objects import *
 from player import Player
 from ui import UIGroup, BarraVida
