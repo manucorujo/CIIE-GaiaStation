@@ -34,9 +34,6 @@ class Game:
         BLACK = self.getColour(self.parser.get("main", "BLACK"))
         self.screen.fill(BLACK)
 
-        # Permitimos que la tecla este pulsada
-        # pygame.key.set_repeat(1, 25)
-
         # Eliminamos el raton
         pygame.mouse.set_visible(False)
 

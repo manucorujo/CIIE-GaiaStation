@@ -2,6 +2,7 @@ from elementos_moviles import Proyectil
 from enemies import MeleeEnemy
 from world_objects import *
 from player import Player
+from ui import UIGroup, BarraVida
 import pygame
 import configparser
 
@@ -19,14 +20,15 @@ class Level:
 
         # Grupos de sprites
         self.visible_sprites = CameraGroup()
+        self.ui_sprites = UIGroup()
         self.obstacle_sprites = pygame.sprite.Group()
         self.enemies_sprites = pygame.sprite.Group()
         self.player_sprites = pygame.sprite.Group()
 
-        # sprites para ataques
+        # sprites para ataques (puede cambiar en un futuro)
         self.ataque_actual = None
 
-       # Lectura do ficheiro de configuración
+        # Lectura do ficheiro de configuración
         self.parser = configparser.ConfigParser()
         self.parser.read("GaiaStation.config")
 
@@ -35,6 +37,9 @@ class Level:
         self.tile_size = int(self.parser.get("level", "TILE_SIZE"))
 
         self.create_map()
+
+        # Elementos UI
+        self.barra_vida = BarraVida([self.ui_sprites], "UI/health-bars.png", "UI/health-bars.txt", self.player)
 
     def create_map(self):
 
@@ -64,6 +69,10 @@ class Level:
         # mostrar os sprites dentro do grupo "visible_sprites"
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+
+        # mostrar os sprites dentro do grupo "ui_sprites"
+        self.ui_sprites.custom_draw()
+        self.ui_sprites.update()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
