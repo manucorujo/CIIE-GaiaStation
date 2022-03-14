@@ -1,6 +1,7 @@
 import pygame
 from resources_manager import *
 import dinamic_sprites
+from subject import Subject
 
 # -------------------------------------------------
 
@@ -22,9 +23,10 @@ COOLDOWN_DAMAGE_TAKEN = 1500
 
 # -------------------------------------------------
 
-class Player(dinamic_sprites.DinamicSprite):
+class Player(dinamic_sprites.DinamicSprite, Subject):
     def __init__(self, pos, groups, obstacle_sprites, enemies_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
-        super().__init__(groups, obstacle_sprites, image_file)
+        dinamic_sprites.DinamicSprite.__init__(self, groups, obstacle_sprites, image_file)
+        Subject.__init__(self)
 
         # Leemos las coordenadas de un archivo de texto
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
@@ -94,6 +96,7 @@ class Player(dinamic_sprites.DinamicSprite):
             self.vida -= 1 # para probar a bajar vida
             self.damage_taken = True
             self.damage_taken_time = pygame.time.get_ticks()
+            self.notify_obervers()
 
         # movimiento
         if keys[pygame.K_w]:
