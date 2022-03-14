@@ -38,7 +38,8 @@ class Game:
         pygame.mouse.set_visible(False)
 
         # Carga do nivel
-        self.level = Level("level1.txt")
+        # self.level = Level("level1.png", "level1_obstacles.csv")
+        self.level = Level("level2.png", "level2_obstacles.csv")
 
         return
 

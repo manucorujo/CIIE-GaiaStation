@@ -10,17 +10,17 @@ import configparser
 # Clase para cargar un nivel
 
 class Level:
-    def __init__(self, filename):
+    def __init__(self, map_image, obstacles_file):
 
         # Garda o ficheiro que define o nivel
-        self.filename = filename
+        self.obstacles_file = obstacles_file
 
         # Obtén a superficie
         self.display_surface = pygame.display.get_surface()
 
         # Grupos de sprites
-        self.visible_sprites = CameraGroup()
         self.ui_sprites = UIGroup()
+        self.visible_sprites = CameraGroup(map_image)
         self.obstacle_sprites = pygame.sprite.Group()
         self.enemies_sprites = pygame.sprite.Group()
         self.player_sprites = pygame.sprite.Group()
@@ -44,18 +44,16 @@ class Level:
     def create_map(self):
 
         # Usa o xestor de recursos para conseguir o mapa
-        map = ResourcesManager.LoadLevelDefinitionFile(self.filename)
+        obstacles = ResourcesManager.LoadLevelObstaclesFile(self.obstacles_file)
 
-        for y,line in enumerate(map.split("\n")):
-            for x,simb in enumerate(line.split()):
-                pos_x, pos_y = x*self.tile_size, y*self.tile_size
-                if simb == 'p00':
-                    print("posicionando xogador en: " + str(pos_x) + ',' + str(pos_y))
-                    self.player = Player((pos_x,pos_y), [self.visible_sprites, self.player_sprites], self.obstacle_sprites, self.enemies_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
-                elif simb == 'w00':
-                    Wall((pos_x,pos_y), [self.visible_sprites, self.obstacle_sprites], "Tileset/wall.png")
+        for row_index, row in enumerate(obstacles):
+            for col_index, col in enumerate(row):
+                if col != '-1':
+                    x, y = col_index * self.tile_size, row_index * self.tile_size
+                    Obstacle((x,y), [self.obstacle_sprites], 'invisible')
 
-        MeleeEnemy((384,1216), self.player, [self.visible_sprites, self.enemies_sprites], self.obstacle_sprites, "Robots/Scarab.png", "Robots/Scarab.txt")
+        self.player = Player((700,700), [self.visible_sprites, self.player_sprites], self.obstacle_sprites, self.enemies_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
+        MeleeEnemy((900,900), self.player, [self.visible_sprites, self.enemies_sprites], self.obstacle_sprites, "Robots/Scarab.png", "Robots/Scarab.txt")
 
     def crear_ataque(self):
         self.ataque_actual = Proyectil(self.player, [self.visible_sprites], self.obstacle_sprites, "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
@@ -75,7 +73,7 @@ class Level:
         self.ui_sprites.update()
 
 class CameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self, map_image):
 
         # general setup
         super().__init__()
@@ -83,6 +81,10 @@ class CameraGroup(pygame.sprite.Group):
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2() # [x:0, y:0]
+
+        # Creando o chan
+        self.floor_surf = ResourcesManager.LoadImage('maps/' + map_image)
+        self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
     
     def custom_draw(self,player):
 
@@ -91,6 +93,10 @@ class CameraGroup(pygame.sprite.Group):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
+
+        # Debuxando o chan
+        floor_offset_pos = self.floor_rect.topleft - self.offset
+        self.display_surface.blit(self.floor_surf, floor_offset_pos)
 
         # Tenemos que ordenar a los sprites por la posición en Y, por eso la Key es el rect.centery
         # Al ordenar por la posición en Y, se dibujará antes a un sprite que está por encima de otro,
