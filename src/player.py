@@ -81,7 +81,7 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         # Estadisticas: vida, etc
         self.max_vida = 3 # golpes para morir
         self.vida = self.max_vida 
-        self.speed = 3 # velocidad de movimiento
+        self.speed = 3.5 # velocidad de movimiento
 
 
     def input(self):
@@ -90,13 +90,6 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
             return
 
         keys = pygame.key.get_pressed()
-
-        ''' TEST PARA PERDER VIDA '''
-        if keys[pygame.K_e] and not self.damage_taken:
-            self.vida -= 1 # para probar a bajar vida
-            self.damage_taken = True
-            self.damage_taken_time = pygame.time.get_ticks()
-            self.notify_obervers()
 
         # movimiento
         if keys[pygame.K_w]:
@@ -140,7 +133,8 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
 
         if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
             if not self.damage_taken:
-                print("Golpe recibido")
+                self.vida -= 1
+                self.notify_obervers()
                 self.damage_taken = True
                 self.damage_taken_time = pygame.time.get_ticks()
                 self.hit_countdown = 6
