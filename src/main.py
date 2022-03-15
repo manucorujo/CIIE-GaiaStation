@@ -31,8 +31,6 @@ class Game:
         # Configuracion inicial da pantalla
         self.screen = pygame.display.set_mode((800,600))
         pygame.display.set_caption("GAIA Station") # nome do xogo
-        BLACK = self.getColour(self.parser.get("main", "BLACK"))
-        self.screen.fill(BLACK)
 
         # Eliminamos el raton
         pygame.mouse.set_visible(False)
@@ -54,8 +52,6 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            BLACK = self.getColour(self.parser.get("main", "BLACK"))
-            self.screen.fill(BLACK)
             self.level.run()
             pygame.display.update()
         return
