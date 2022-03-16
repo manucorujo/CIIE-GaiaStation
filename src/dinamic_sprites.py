@@ -1,6 +1,7 @@
 from resources_manager import *
 import mi_sprite
 import pygame
+import math
 
 # -------------------------------------------------
 
@@ -16,10 +17,10 @@ DOWN = 4
 
 class DinamicSprite(mi_sprite.MiSprite):
     "Los Sprites que tendra este juego"
-    def __init__(self, groups, obstacle_sprites, image_file):
+    def __init__(self, groups, collision_groups, image_file):
         super().__init__(groups, image_file)
     
-        self.obstacle_sprites = obstacle_sprites
+        self.obstacle_sprites = collision_groups[0]
         self.hitbox = None
 
 
@@ -57,3 +58,8 @@ class DinamicSprite(mi_sprite.MiSprite):
 
     def update_pose(self):
         pass
+
+
+    def wave_value(self):
+        value = math.sin(pygame.time.get_ticks())
+        return 255 if value >= 0 else 0

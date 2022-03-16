@@ -23,8 +23,8 @@ COOLDOWN_DAMAGE_TAKEN = 1500
 # -------------------------------------------------
 
 class Player(dinamic_sprites.DinamicSprite):
-    def __init__(self, pos, groups, obstacle_sprites, enemies_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
-        super().__init__(groups, obstacle_sprites, image_file)
+    def __init__(self, pos, groups, collision_groups, crear_ataque, borrar_ataque, image_file, coordeanada_file):
+        super().__init__(groups, collision_groups, image_file)
 
         # Leemos las coordenadas de un archivo de texto
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
@@ -72,9 +72,9 @@ class Player(dinamic_sprites.DinamicSprite):
         self.crear_ataque = crear_ataque
         self.borrar_ataque = borrar_ataque
 
-        # Grupos
-        self.obstacle_sprites = obstacle_sprites
-        self.enemies_sprites = enemies_sprites
+        # Grupos para colisions
+        self.obstacle_sprites = collision_groups[0]
+        self.enemies_sprites = collision_groups[1]
 
         # Estadisticas: vida, etc
         self.max_vida = 3 # golpes para morir
@@ -135,12 +135,13 @@ class Player(dinamic_sprites.DinamicSprite):
 
         super().collision(direction)
 
-        if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
-            if not self.damage_taken:
-                print("Golpe recibido")
-                self.damage_taken = True
-                self.damage_taken_time = pygame.time.get_ticks()
-                self.hit_countdown = 6
+        # if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
+        enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
+        if enemy_hitted and not self.damage_taken and not enemy_hitted.is_death:
+            print("Lo has tocado - Perder vida")
+            self.damage_taken = True
+            self.damage_taken_time = pygame.time.get_ticks()
+            self.hit_countdown = 6
 
 
     def cooldown(self):
