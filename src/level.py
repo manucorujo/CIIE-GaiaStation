@@ -1,7 +1,7 @@
 from melee_enemy import MeleeEnemy
 from world_objects import *
 from player import Player
-from ui import UIGroup, BarraVida
+from ui import UIGroup, BarraVida, Puntuacion
 import pygame
 import configparser
 
@@ -36,8 +36,10 @@ class Level:
 
         # Elementos UI
         barra_vida = BarraVida([self.ui_sprites], "UI/health-bars.png", "UI/health-bars.txt", self.player.vida)
+        puntuacion = Puntuacion([self.ui_sprites], 0)
 
         self.player.add_observer(barra_vida)
+        self.player.add_observer(puntuacion)
 
     def create_map(self):
 

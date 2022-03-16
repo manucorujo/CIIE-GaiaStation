@@ -47,3 +47,18 @@ class BarraVida(MiSprite, Observer):
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10, 10))
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10 + self.separacion_barras, 10))
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10 + self.separacion_barras * 2, 10))  
+
+
+class Puntuacion(pygame.sprite.Sprite, Observer):
+    def __init__(self, groups, puntos):
+        super().__init__(groups)
+        self.display_surface = pygame.display.get_surface()
+        self.tipoLetra = pygame.font.SysFont('arial', 24)
+        self.puntos = puntos
+
+    def notify(self,player):
+        self.puntos = player.puntos
+
+    def dibujar_ui(self):
+        # TODO: Añadir el tamaño de la pantalla real
+        self.display_surface.blit(self.tipoLetra.render(str(self.puntos), True, (160, 160, 160)), (800-60, 10))

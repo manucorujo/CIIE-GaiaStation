@@ -192,7 +192,7 @@ class MeleeEnemy(enemies.Enemy):
         if self.is_death:
             if current_time - self.death_time > DEATH_DURATION:
                 self.kill()
-                print("Enemigo muerto - Aumentar puntuación")
+                self.player.sumar_puntos(10)
         return
 
 

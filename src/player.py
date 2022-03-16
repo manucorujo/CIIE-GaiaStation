@@ -85,6 +85,8 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.vida = self.max_vida 
         self.speed = 3.5 # velocidad de movimiento
 
+        self.puntos = 0
+
 
     def input(self):
 
@@ -224,3 +226,8 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         if self.ataque_actual:
             self.ataque_actual.kill()
         self.ataque_actual = None
+
+    def sumar_puntos(self, puntos):
+        self.puntos += puntos
+        self.notify_obervers()
+        print(self.puntos)
