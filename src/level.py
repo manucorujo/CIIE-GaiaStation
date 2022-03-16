@@ -39,7 +39,9 @@ class Level:
         self.create_map()
 
         # Elementos UI
-        self.barra_vida = BarraVida([self.ui_sprites], "UI/health-bars.png", "UI/health-bars.txt", self.player)
+        barra_vida = BarraVida([self.ui_sprites], "UI/health-bars.png", "UI/health-bars.txt", self.player.vida)
+
+        self.player.add_observer(barra_vida)
 
     def create_map(self):
 

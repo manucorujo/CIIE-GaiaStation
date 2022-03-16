@@ -1,8 +1,6 @@
 # CIIE-GaiaStation
 
-## Bugs
 
- * Bala: al chocar con una pared del lado izquiero el comportamiento de la colisión no es el deseado, problemas con el rect.
 ## Resource Manager
 
 Tenemos tres funciones para cargar datos:
@@ -38,6 +36,8 @@ Define una dependencia del tipo uno a muchos entre objetos, de manera que cuando
 
 Se asegura de que solo exista una única instancia del objeto y proporciona un acceso global a esta. Ejemplos: Gestor de recursos.
 
+GESTOR DE RECURSOS
+
 ### Decorator
 
 Este patrón de diseño de software nos proporciona una forma fácil de añadir responsabilidades adicionales a un objeto de forma dinámica y sin tener que modificar este objeto. Además proporciona una alternativa a la herencia para extender su funcionalidad.
@@ -49,6 +49,8 @@ De esta no estoy tan seguro. Se suministran objetos a una clase en lugar de ser 
 ### Flyweight
 
 ESTE CREO QUE TENÍA OTRO NOMBRE, ES QUE NO LOS TENGO APUNTADOS. El patrón Flyweight (u objeto ligero) sirve para eliminar o reducir la redundancia cuando tenemos gran cantidad de objetos que contienen información idéntica, además de lograr un equilibrio entre flexibilidad y rendimiento (uso de recursos)
+
+GESTOR DE RECURSOS
 
 - - - -
 

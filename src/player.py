@@ -1,6 +1,8 @@
 import pygame
 from resources_manager import *
 import dinamic_sprites
+from subject import Subject
+from math import *
 
 # -------------------------------------------------
 
@@ -22,9 +24,10 @@ COOLDOWN_DAMAGE_TAKEN = 1500
 
 # -------------------------------------------------
 
-class Player(dinamic_sprites.DinamicSprite):
-    def __init__(self, pos, groups, collision_groups, crear_ataque, borrar_ataque, image_file, coordeanada_file):
-        super().__init__(groups, collision_groups, image_file)
+class Player(dinamic_sprites.DinamicSprite, Subject):
+    def __init__(self, pos, groups, obstacle_sprites, enemies_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
+        dinamic_sprites.DinamicSprite.__init__(self, groups, obstacle_sprites, image_file)
+        Subject.__init__(self)
 
         # Leemos las coordenadas de un archivo de texto
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
@@ -79,7 +82,7 @@ class Player(dinamic_sprites.DinamicSprite):
         # Estadisticas: vida, etc
         self.max_vida = 3 # golpes para morir
         self.vida = self.max_vida 
-        self.speed = 3 # velocidad de movimiento
+        self.speed = 3.5 # velocidad de movimiento
 
 
     def input(self):
@@ -88,12 +91,6 @@ class Player(dinamic_sprites.DinamicSprite):
             return
 
         keys = pygame.key.get_pressed()
-
-        ''' TEST PARA PERDER VIDA '''
-        if keys[pygame.K_e] and not self.damage_taken:
-            self.vida -= 1 # para probar a bajar vida
-            self.damage_taken = True
-            self.damage_taken_time = pygame.time.get_ticks()
 
         # movimiento
         if keys[pygame.K_w]:
@@ -135,10 +132,15 @@ class Player(dinamic_sprites.DinamicSprite):
 
         super().collision(direction)
 
+        # mejorasPersonaje
+        # if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
+        #   if not self.damage_taken:
+
         # if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
         enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
         if enemy_hitted and not self.damage_taken and not enemy_hitted.is_death:
-            print("Lo has tocado - Perder vida")
+            self.vida -= 1
+            self.notify_obervers()
             self.damage_taken = True
             self.damage_taken_time = pygame.time.get_ticks()
             self.hit_countdown = 6
@@ -191,9 +193,20 @@ class Player(dinamic_sprites.DinamicSprite):
                 self.numImagenPostura = 0
             if self.numImagenPostura < 0:
                 self.numImagenPostura = len(self.coordenadasHoja[self.postura])-1
-
+        
+        # Parpadeo se recibimos dano
+        if self.damage_taken:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)
 
     def update(self):
         self.input()
         self.cooldown()
         self.move(self.speed)
+
+    # Obtenemos la frecuncia del parpadeo (subir a la clase padre de enemigos y player)
+    def wave_value(self):
+        value = sin(pygame.time.get_ticks())
+        return 255 if value >= 0 else 0
