@@ -2,6 +2,7 @@ import pygame
 from resources_manager import *
 import dinamic_sprites
 from subject import Subject
+from bullets import Projectile
 from math import *
 
 # -------------------------------------------------
@@ -25,7 +26,7 @@ COOLDOWN_DAMAGE_TAKEN = 1500
 # -------------------------------------------------
 
 class Player(dinamic_sprites.DinamicSprite, Subject):
-    def __init__(self, pos, groups, collision_groups, crear_ataque, borrar_ataque, image_file, coordeanada_file):
+    def __init__(self, pos, groups, collision_groups, image_file, coordeanada_file):
         dinamic_sprites.DinamicSprite.__init__(self, groups, collision_groups, image_file)
         Subject.__init__(self)
 
@@ -72,8 +73,8 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.damage_taken_time = 0
 
         # armas
-        self.crear_ataque = crear_ataque
-        self.borrar_ataque = borrar_ataque
+        self.ataque_actual = None
+        self.visible_sprites = [groups[0]]
 
         # Grupos para colisions
         self.obstacle_sprites = collision_groups[0]
@@ -215,3 +216,11 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
     def wave_value(self):
         value = sin(pygame.time.get_ticks())
         return 255 if value >= 0 else 0
+
+    def crear_ataque(self):
+        self.ataque_actual = Projectile(self, self.visible_sprites, [self.obstacle_sprites, self.enemies_sprites], "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
+
+    def borrar_ataque(self):
+        if self.ataque_actual:
+            self.ataque_actual.kill()
+        self.ataque_actual = None
