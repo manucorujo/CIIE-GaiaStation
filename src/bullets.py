@@ -74,6 +74,7 @@ class Projectile(dinamic_sprites.DinamicSprite):
 
     def get_image(self):
         self.update_pose()
+        # TODO: dejar solo una linea que bien vale
         if self.orientacion == dinamic_sprites.RIGHT:
             return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
         elif self.orientacion == dinamic_sprites.LEFT:

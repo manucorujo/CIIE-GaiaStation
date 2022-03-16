@@ -25,8 +25,8 @@ COOLDOWN_DAMAGE_TAKEN = 1500
 # -------------------------------------------------
 
 class Player(dinamic_sprites.DinamicSprite, Subject):
-    def __init__(self, pos, groups, obstacle_sprites, enemies_sprites, crear_ataque, borrar_ataque, image_file, coordeanada_file):
-        dinamic_sprites.DinamicSprite.__init__(self, groups, obstacle_sprites, image_file)
+    def __init__(self, pos, groups, collision_groups, crear_ataque, borrar_ataque, image_file, coordeanada_file):
+        dinamic_sprites.DinamicSprite.__init__(self, groups, collision_groups, image_file)
         Subject.__init__(self)
 
         # Leemos las coordenadas de un archivo de texto
@@ -138,12 +138,17 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
 
         # if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
         enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
-        if enemy_hitted and not self.damage_taken and not enemy_hitted.is_death:
-            self.vida -= 1
-            self.notify_obervers()
+        if enemy_hitted and not enemy_hitted.is_death:
+            self.perder_vida(1)
+            
+
+    def perder_vida(self, damage=1):
+        if not self.damage_taken:
             self.damage_taken = True
             self.damage_taken_time = pygame.time.get_ticks()
             self.hit_countdown = 6
+            self.vida -= damage
+            self.notify_obervers()
 
 
     def cooldown(self):

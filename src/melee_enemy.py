@@ -210,8 +210,7 @@ class MeleeEnemy(enemies.Enemy):
 
     def _delete_attack(self):
         if self._is_player_in_attack_range() and self.attack_count < 0:
-            # TODO: Incluir llamada a perder vida del player
-            print("Te ha atacado - Perder vida")
+            self.player.perder_vida(1)
 
         self.is_attacking = False
         self.is_walking = False
