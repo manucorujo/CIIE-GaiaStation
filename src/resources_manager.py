@@ -61,6 +61,22 @@ class ResourcesManager(object):
             return image
 
     @classmethod
+    def loadFont(cls, name, size):
+        # Si el name de archivo está entre los recursos ya cargados
+        if (name, size) in cls.resources:
+            # Se devuelve ese recurso
+            return cls.resources[name]
+        # Si no ha sido cargado anteriormente
+        else:
+            # Se carga el recurso indicando el name de su carpeta
+            fullname = os.path.join('../res/fonts', name)
+            datos = pygame.font.Font(fullname, size)
+            # Se almacena
+            cls.resources[name] = datos
+            # Se devuelve
+            return datos
+
+    @classmethod
     def LoadLevelObstaclesFile(cls, name):
         # Se o nome do arquivo está nos recursos xa cargados
         if name in cls.resources:
