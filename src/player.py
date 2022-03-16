@@ -2,6 +2,7 @@ import pygame
 from resources_manager import *
 import dinamic_sprites
 from subject import Subject
+from math import *
 
 # -------------------------------------------------
 
@@ -187,9 +188,20 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
                 self.numImagenPostura = 0
             if self.numImagenPostura < 0:
                 self.numImagenPostura = len(self.coordenadasHoja[self.postura])-1
-
+        
+        # Parpadeo se recibimos dano
+        if self.damage_taken:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)
 
     def update(self):
         self.input()
         self.cooldown()
         self.move(self.speed)
+
+    # Obtenemos la frecuncia del parpadeo (subir a la clase padre de enemigos y player)
+    def wave_value(self):
+        value = sin(pygame.time.get_ticks())
+        return 255 if value >= 0 else 0
