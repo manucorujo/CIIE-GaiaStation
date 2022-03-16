@@ -8,14 +8,14 @@ RETARDO_ANIMACION_BALA = 7
 
 # -------------------------------------------------
 
-class Proyectil(dinamic_sprites.DinamicSprite):
-    def __init__(self, player, groups, obstacle_sprites, image_file, coordeanada_file, borrar_ataque):
-        super().__init__(groups, obstacle_sprites, image_file)
-        self.orientacion = player.get_orientacionAtaque()
+class Projectile(dinamic_sprites.DinamicSprite):
+    def __init__(self, player, groups, collision_groups, image_file, coordeanada_file, borrar_ataque):
+        super().__init__(groups, collision_groups, image_file)
 
         # Leemos las coordenadas de un archivo de texto
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
         datos = datos.split()
+        self.orientacion = player.get_orientacionAtaque()
         self.numImagenPostura = 0
         cont = 0
         numImagenes = [3]
@@ -31,6 +31,10 @@ class Proyectil(dinamic_sprites.DinamicSprite):
         self.speed = 3
 
         self.borrar_ataque = borrar_ataque
+
+        # Grupos para colisions
+        self.obstacle_sprites = collision_groups[0]
+        self.enemies_sprites = collision_groups[1]
         
         # placement
         aux_img = self.get_image() # para que se cargue la imagen BIEN
@@ -54,12 +58,18 @@ class Proyectil(dinamic_sprites.DinamicSprite):
             self.rect.y -= speed
         elif self.orientacion == dinamic_sprites.DOWN:
             self.rect.y += speed
-        self.collision('')
+        self.collision(self.orientacion)
+
 
     def collision(self, direction):
         for sprite in self.obstacle_sprites:
             if sprite.hitbox.colliderect(self.rect):
                 self.borrar_ataque()
+
+        enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
+        if enemy_hitted and not enemy_hitted.is_death:
+            enemy_hitted.get_damage(10)
+            self.borrar_ataque()
 
 
     def get_image(self):

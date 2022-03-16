@@ -1,4 +1,4 @@
-from bullets import Proyectil
+from bullets import Projectile
 from melee_enemy import MeleeEnemy
 from world_objects import *
 from player import Player
@@ -52,11 +52,13 @@ class Level:
                     x, y = col_index * self.tile_size, row_index * self.tile_size
                     Obstacle((x,y), [self.obstacle_sprites], 'invisible')
 
-        self.player = Player((700,700), [self.visible_sprites, self.player_sprites], self.obstacle_sprites, self.enemies_sprites, self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
-        MeleeEnemy((900,900), self.player, [self.visible_sprites, self.enemies_sprites], self.obstacle_sprites, "Robots/Scarab.png", "Robots/Scarab.txt")
+        self.player = Player((700,700), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites], self.crear_ataque, self.borrar_ataque, "Player/Assault-Class.png", "Player/Assault-Class.txt")
+        MeleeEnemy((900,950), self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], "Robots/Scarab.png", "Robots/Scarab.txt")
+        MeleeEnemy((800,900), self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], "Robots/Scarab.png", "Robots/Scarab.txt")
+        MeleeEnemy((1000,1050), self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], "Robots/Scarab.png", "Robots/Scarab.txt")
 
     def crear_ataque(self):
-        self.ataque_actual = Proyectil(self.player, [self.visible_sprites], self.obstacle_sprites, "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
+        self.ataque_actual = Projectile(self.player, [self.visible_sprites], [self.obstacle_sprites, self.enemies_sprites], "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
 
     def borrar_ataque(self):
         if self.ataque_actual:
