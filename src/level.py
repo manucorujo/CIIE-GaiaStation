@@ -50,7 +50,12 @@ class Level:
             for col_index, col in enumerate(row):
                 if col != '-1':
                     x, y = col_index * self.tile_size, row_index * self.tile_size
-                    Obstacle((x,y), [self.obstacle_sprites], 'invisible')
+                    if col == 'p':
+                        pass
+                    elif col == 'e':
+                        pass
+                    else:
+                        Obstacle((x,y), [self.obstacle_sprites, self.visible_sprites], 'Obstacles/' + col + '.png', (255,0,245))
 
         self.player = Player((700,700), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
         MeleeEnemy((900,950), self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], "Robots/Scarab.png", "Robots/Scarab.txt")
