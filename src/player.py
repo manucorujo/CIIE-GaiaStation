@@ -45,28 +45,28 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
                 tmp.append(pygame.Rect((int(datos[cont]), int(datos[cont+1])), (int(datos[cont+2]), int(datos[cont+3]))))
                 cont += 4
 
-        # Hitbox: se corresponde al rect del personaje, pero recortando por arriba y por abajo para así tener un comportamiento más realista con las paredes superiores e inferiores
+        # Hitbox: correspondese co rect da perxoase, pero recortado por arriba e por abaixo para asi ter un comportamento mais real cas paredes 
         self.rect = pygame.Rect(pos[0],pos[1],self.coordenadasHoja[self.postura][self.numImagenPostura][2],self.coordenadasHoja[self.postura][self.numImagenPostura][3])
         self.hitbox = self.rect.inflate(0, -12)
 
-        # El retardo a la hora de cambiar la imagen del Sprite (para que no se mueva demasiado rápido)
+        # O retardo a hora de cambiar a imaxe do Sprite, para que non se faga moi rapido
         self.retardoMovimiento = 0
 
-        # Orientacion del personaja (der o izq)
+        # Orientacion da peroxonase (der ou esq)
         self.orientacion = dinamic_sprites.RIGHT
-        self.orientacionAtaque = dinamic_sprites.RIGHT
+        self.orientacion_ataque = dinamic_sprites.RIGHT
 
-        # movimiento
+        # movemento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
 
         # cooldowns
         self.is_attacking = False
-        self.cooldownAtaque = TIEMPO_ATAQUE
-        self.tiempoAtaque = 0
+        self.cooldown_ataque = TIEMPO_ATAQUE
+        self.attack_time = 0
 
-        self.recargando = False
-        self.cooldownRecarga = TIEMPO_RECARGA
-        self.tiempoRecarga = 0
+        self.reloading = False
+        self.cooldown_reloading = TIEMPO_RECARGA
+        self.reloading_time = 0
 
         self.damage_taken = False
         self.cooldown_damage_taken = COOLDOWN_DAMAGE_TAKEN
@@ -98,32 +98,32 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         # movimiento
         if keys[pygame.K_w]:
             self.direction.y = -1
-            self.orientacionAtaque = dinamic_sprites.UP
+            self.orientacion_ataque = dinamic_sprites.UP
         elif keys[pygame.K_s]:
             self.direction.y = 1
-            self.orientacionAtaque = dinamic_sprites.DOWN
+            self.orientacion_ataque = dinamic_sprites.DOWN
         else:
             self.direction.y = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
             self.orientacion = dinamic_sprites.RIGHT
-            self.orientacionAtaque = dinamic_sprites.RIGHT
+            self.orientacion_ataque = dinamic_sprites.RIGHT
         elif keys[pygame.K_a]:
             self.direction.x = -1
             self.orientacion = dinamic_sprites.LEFT
-            self.orientacionAtaque = dinamic_sprites.LEFT
+            self.orientacion_ataque = dinamic_sprites.LEFT
         else:
             self.direction.x = 0
 
         self.postura = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
 
         # ataque
-        if keys[pygame.K_SPACE] and not self.recargando:
+        if keys[pygame.K_SPACE] and not self.reloading:
             self.direction.x = 0
             self.direction.y = 0
             self.is_attacking = True
-            self.tiempoAtaque = pygame.time.get_ticks()
+            self.attack_time = pygame.time.get_ticks()
 
             self.numImagenPostura = 0 # para que empiece a atacar desde la primera imagen
             self.postura = ATACANDO # postura atacando
@@ -135,11 +135,7 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
 
         super().collision(direction)
 
-        # mejorasPersonaje
-        # if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
-        #   if not self.damage_taken:
-
-        # if pygame.sprite.groupcollide(self.groups()[1], self.enemies_sprites, False, False) != {}:
+        # TODO: seria mellor cambiar o nome da varaible?
         enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
         if enemy_hitted and not enemy_hitted.is_death:
             self.perder_vida(1)
@@ -159,14 +155,14 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
 
         # cooldown para cuando se realiza un ataque
         if self.is_attacking:
-            if current_time - self.tiempoAtaque > self.cooldownAtaque:
+            if current_time - self.attack_time > self.cooldown_ataque:
                 self.is_attacking = False
-                self.recargando = True
-                self.tiempoRecarga = current_time
+                self.reloading = True
+                self.reloading_time = current_time
 
-        elif self.recargando:
-            if current_time - self.tiempoRecarga > self.cooldownRecarga:
-                self.recargando = False
+        elif self.reloading:
+            if current_time - self.reloading_time > self.cooldown_reloading:
+                self.reloading = False
                 self.borrar_ataque() 
 
         elif self.damage_taken:
@@ -182,15 +178,12 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
             return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura]), 1, 0)
 
 
-    def get_orientacion(self):
-        return self.orientacion
-
-
     def get_orientacionAtaque(self):
-        return self.orientacionAtaque
+        return self.orientacion_ataque
 
 
     def update_pose(self):
+        # TODO: unificar con melee_enemy en la clase padre
         self.retardoMovimiento -= 1
         # Miramos si ha pasado el retardo
         if (self.retardoMovimiento < 0):
@@ -215,9 +208,9 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.move(self.speed)
 
     # Obtenemos la frecuncia del parpadeo (subir a la clase padre de enemigos y player)
-    def wave_value(self):
-        value = sin(pygame.time.get_ticks())
-        return 255 if value >= 0 else 0
+    # def wave_value(self):
+    #     value = sin(pygame.time.get_ticks())
+    #     return 255 if value >= 0 else 0
 
     def crear_ataque(self):
         self.ataque_actual = Projectile(self, self.visible_sprites, [self.obstacle_sprites, self.enemies_sprites], "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
@@ -230,4 +223,3 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
     def sumar_puntos(self, puntos):
         self.puntos += puntos
         self.notify_obervers()
-        print(self.puntos)

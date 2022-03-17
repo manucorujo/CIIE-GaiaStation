@@ -61,4 +61,5 @@ class Puntuacion(pygame.sprite.Sprite, Observer):
 
     def dibujar_ui(self):
         # TODO: Añadir el tamaño de la pantalla real
-        self.display_surface.blit(self.tipoLetra.render(str(self.puntos), True, (160, 160, 160)), (800-60, 10))
+        tam_x = 800
+        self.display_surface.blit(self.tipoLetra.render(str(self.puntos), True, (160, 160, 160)), (tam_x-60, 10))

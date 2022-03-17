@@ -291,6 +291,7 @@ class MeleeEnemy(enemies.Enemy):
 
 
     def update_pose(self):
+        # TODO: unificar con player en clase padre
         if self.direction.x > 0:
             self.orientation = dinamic_sprites.RIGHT
         elif self.direction.x < 0:
