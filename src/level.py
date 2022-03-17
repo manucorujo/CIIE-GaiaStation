@@ -50,9 +50,9 @@ class Level:
             for col_index, col in enumerate(row):
                 if col != '-1':
                     x, y = col_index * self.tile_size, row_index * self.tile_size
-                    if col == 'p':
+                    if col == '0':
                         self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
-                    elif col == 'e':
+                    elif col == '1':
                         MeleeEnemy((x,y), self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], "Robots/Scarab.png", "Robots/Scarab.txt")
                     else:
                         Obstacle((x,y), [self.obstacle_sprites, self.visible_sprites], 'Obstacles/' + col + '.png', (255,0,245))
