@@ -1,7 +1,7 @@
 import configparser
 import pygame
 from resources_manager import *
-import dynamic_sprites
+import dinamic_sprites
 from subject import Subject
 from bullets import Projectile
 from math import *
@@ -22,43 +22,32 @@ TIEMPO_RECARGA = int(parser.get("player", "TIEMPO_RECARGA"))
 RETARDO_ANIMACION_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
 
 # la caurta posicion, ataque, hay que ajustarla y coordinarla
-RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que durará cada imagen del personaje
-# hay un valor para cada postura: el primero para idle, el segundo para andar, etc.
+ANIMATION_TRANSITION_TIME = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que durará cada imagen del personaje
+# hay un valor para cada current_pose: el primero para idle, el segundo para andar, etc.
 
 COOLDOWN_DAMAGE_TAKEN = int(parser.get("player", "COOLDOWN_DAMAGE_TAKEN"))
+NUM_FRAMES_PER_POSE = [2, 2, 2, 2, 3, 5, 3]
 
 # -------------------------------------------------
 
-class Player(dynamic_sprites.DynamicSprite, Subject):
+class Player(dinamic_sprites.DinamicSprite, Subject):
     def __init__(self, pos, groups, collision_groups, image_file, coordeanada_file):
-        dynamic_sprites.DynamicSprite.__init__(self, groups, collision_groups, image_file)
+        dinamic_sprites.DinamicSprite.__init__(self, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
         Subject.__init__(self)
 
-        # Leemos las coordenadas de un archivo de texto
-        datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
-        datos = datos.split()
-        self.postura = IDLE # postura idle
-        self.numImagenPostura = 0
-        cont = 0
-        numImagenes = [2, 2, 2, 2, 3, 5, 3]
-        self.coordenadasHoja = []
-        for linea in range(0, 7):
-            self.coordenadasHoja.append([])
-            tmp = self.coordenadasHoja[linea]
-            for postura in range(1, numImagenes[linea]+1):
-                tmp.append(pygame.Rect((int(datos[cont]), int(datos[cont+1])), (int(datos[cont+2]), int(datos[cont+3]))))
-                cont += 4
+        self.current_pose = IDLE # current_pose idle
+        self.current_pose_frame = 0
 
         # Hitbox: correspondese co rect da perxoase, pero recortado por arriba e por abaixo para asi ter un comportamento mais real cas paredes 
-        self.rect = pygame.Rect(pos[0],pos[1],self.coordenadasHoja[self.postura][self.numImagenPostura][2],self.coordenadasHoja[self.postura][self.numImagenPostura][3])
+        self.rect = pygame.Rect(pos[0],pos[1],self.coordinates_sheet[self.current_pose][self.current_pose_frame][2],self.coordinates_sheet[self.current_pose][self.current_pose_frame][3])
         self.hitbox = self.rect.inflate(0, -12)
 
         # O retardo a hora de cambiar a imaxe do Sprite, para que non se faga moi rapido
-        self.retardoMovimiento = 0
+        self.animation_delay = 0
 
-        # Orientacion da peroxonase (der ou esq)
-        self.orientacion = dynamic_sprites.RIGHT
-        self.orientacion_ataque = dynamic_sprites.RIGHT
+        # orientation da peroxonase (der ou esq)
+        self.orientation = dinamic_sprites.RIGHT
+        self.attack_orientation = dinamic_sprites.RIGHT
 
         # movemento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
@@ -102,25 +91,23 @@ class Player(dynamic_sprites.DynamicSprite, Subject):
         # movimiento
         if keys[pygame.K_w]:
             self.direction.y = -1
-            self.orientacion_ataque = dynamic_sprites.UP
+            self.attack_orientation = dinamic_sprites.UP
         elif keys[pygame.K_s]:
             self.direction.y = 1
-            self.orientacion_ataque = dynamic_sprites.DOWN
+            self.attack_orientation = dinamic_sprites.DOWN
         else:
             self.direction.y = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
-            self.orientacion = dynamic_sprites.RIGHT
-            self.orientacion_ataque = dynamic_sprites.RIGHT
+            self.attack_orientation = dinamic_sprites.RIGHT
         elif keys[pygame.K_a]:
             self.direction.x = -1
-            self.orientacion = dynamic_sprites.LEFT
-            self.orientacion_ataque = dynamic_sprites.LEFT
+            self.attack_orientation = dinamic_sprites.LEFT
         else:
             self.direction.x = 0
 
-        self.postura = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
+        self.current_pose = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
 
         # ataque
         if keys[pygame.K_SPACE] and not self.reloading:
@@ -129,8 +116,8 @@ class Player(dynamic_sprites.DynamicSprite, Subject):
             self.is_attacking = True
             self.attack_time = pygame.time.get_ticks()
 
-            self.numImagenPostura = 0 # para que empiece a atacar desde la primera imagen
-            self.postura = ATACANDO # postura atacando
+            self.current_pose_frame = 0 # para que empiece a atacar desde la primera imagen
+            self.current_pose = ATACANDO # current_pose atacando
 
             self.crear_ataque()
 
@@ -142,10 +129,10 @@ class Player(dynamic_sprites.DynamicSprite, Subject):
         # TODO: seria mellor cambiar o nome da varaible?
         enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
         if enemy_hitted and not enemy_hitted.is_death:
-            self.perder_vida(1)
+            self.take_damage(1)
             
 
-    def perder_vida(self, damage=1):
+    def take_damage(self, damage=1):
         if not self.damage_taken:
             self.damage_taken = True
             self.damage_taken_time = pygame.time.get_ticks()
@@ -173,48 +160,23 @@ class Player(dynamic_sprites.DynamicSprite, Subject):
             if current_time - self.damage_taken_time > self.cooldown_damage_taken:
                 self.damage_taken = False
 
-
-    def get_image(self):
-        self.update_pose()
-        if self.orientacion == dynamic_sprites.RIGHT:
-            return self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura])
-        elif self.orientacion == dynamic_sprites.LEFT:
-            return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura]), 1, 0)
-
-
-    def get_orientacionAtaque(self):
-        return self.orientacion_ataque
-
-
     def update_pose(self):
-        # TODO: unificar con melee_enemy en la clase padre
-        self.retardoMovimiento -= 1
-        # Miramos si ha pasado el retardo
-        if (self.retardoMovimiento < 0):
-            self.retardoMovimiento = RETARDO_ANIMACION_JUGADOR[self.postura]
-            # Si ha pasado, actualizamos la postura
-            self.numImagenPostura += 1
-            if self.numImagenPostura >= len(self.coordenadasHoja[self.postura]):
-                self.numImagenPostura = 0
-            if self.numImagenPostura < 0:
-                self.numImagenPostura = len(self.coordenadasHoja[self.postura])-1
-        
+        super().update_pose()
+
         # Parpadeo se recibimos dano
         if self.damage_taken:
             alpha = self.wave_value()
             self.image.set_alpha(alpha)
         else:
             self.image.set_alpha(255)
+    
+    def get_attackOrientation(self):
+        return self.attack_orientation
 
     def update(self):
         self.input()
         self.cooldown()
         self.move(self.speed)
-
-    # Obtenemos la frecuncia del parpadeo (subir a la clase padre de enemigos y player)
-    # def wave_value(self):
-    #     value = sin(pygame.time.get_ticks())
-    #     return 255 if value >= 0 else 0
 
     def crear_ataque(self):
         self.ataque_actual = Projectile(self, self.visible_sprites, [self.obstacle_sprites, self.enemies_sprites], "Projectiles/bullets+plasma.png", "Projectiles/bullets+plasma.txt", self.borrar_ataque)
