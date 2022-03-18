@@ -1,5 +1,4 @@
-from bullets import Proyectil
-from escena import Escena
+from scene import Scene
 from melee_enemy import MeleeEnemy
 from world_objects import *
 from player import Player
@@ -10,9 +9,9 @@ import configparser
 #==============================================================================
 # Clase para cargar un nivel
 
-class Level(Escena):
+class Level(Scene):
     def __init__(self, director, map_image, obstacles_file):
-        Escena.__init__(self, director)
+        Scene.__init__(self, director)
 
         # Garda o ficheiro que define o nivel
         self.obstacles_file = obstacles_file
@@ -75,9 +74,9 @@ class Level(Escena):
                 # Si la tecla es Escape
                 if event.key == K_ESCAPE:
                     # Se sale del programa
-                    self.director.salirPrograma()
+                    self.director.quit_program()
             if event.type == pygame.QUIT:
-                self.director.salirPrograma()
+                self.director.quit_program()
 
     def draw(self, screen):
         self.visible_sprites.custom_draw(self.player)

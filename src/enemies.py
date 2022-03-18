@@ -1,10 +1,9 @@
 from resources_manager import *
-import dinamic_sprites
-import pygame
+import dynamic_sprites
 
 # -------------------------------------------------
 
-class Enemy(dinamic_sprites.DinamicSprite):
+class Enemy(dynamic_sprites.DynamicSprite):
 
     def __init__(self, player, groups, collision_groups, image_file):
         super().__init__(groups, collision_groups, image_file)

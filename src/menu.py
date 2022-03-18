@@ -1,12 +1,10 @@
 import sys
 import pygame
 from pygame.locals import *
-from escena import Escena
+from scene import Scene
 from level import Level
-#from escena import *
 from resources_manager import *
 from itertools import cycle
-
 
 # -------------------------------------------------
 # Clase abstracta GUIElement
@@ -170,10 +168,10 @@ class GUIInitialScreen(GUIScreen):
 # -------------------------------------------------
 # Clase Menu, a escena
 
-class Menu(Escena):
+class Menu(Scene):
 
     def __init__(self, director):
-        Escena.__init__(self, director)
+        Scene.__init__(self, director)
 
         self.screens_list = []
         # Créase a pantalla e añádese á lista
@@ -196,7 +194,7 @@ class Menu(Escena):
 
     def execute_game(self):
          level = Level(self.director, 'level1.png', 'level1_obstacles.csv')
-         self.director.apilarEscena(level)
+         self.director.stack_scene(level)
 
     def show_initial_screen(self):
         self.current_screen = 0

@@ -9,17 +9,17 @@ import math
 # Lectura do ficheiro de configuración
 parser = configparser.ConfigParser()
 parser.read("GaiaStation.config")
-HORIZONTAL = int(parser.get("dinamic_sprites", "HORIZONTAL"))
-VERTICAL = int(parser.get("dinamic_sprites", "VERTICAL"))
+HORIZONTAL = int(parser.get("dynamic_sprites", "HORIZONTAL"))
+VERTICAL = int(parser.get("dynamic_sprites", "VERTICAL"))
 
-LEFT = int(parser.get("dinamic_sprites", "LEFT"))
-RIGHT = int(parser.get("dinamic_sprites", "RIGHT"))
-UP = int(parser.get("dinamic_sprites", "UP"))
-DOWN = int(parser.get("dinamic_sprites", "DOWN"))
+LEFT = int(parser.get("dynamic_sprites", "LEFT"))
+RIGHT = int(parser.get("dynamic_sprites", "RIGHT"))
+UP = int(parser.get("dynamic_sprites", "UP"))
+DOWN = int(parser.get("dynamic_sprites", "DOWN"))
 
 # -------------------------------------------------
 
-class DinamicSprite(mi_sprite.MiSprite):
+class DynamicSprite(mi_sprite.MiSprite):
     "Los Sprites que tendra este juego"
     def __init__(self, groups, collision_groups, image_file):
         super().__init__(groups, image_file)

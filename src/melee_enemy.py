@@ -2,7 +2,7 @@ import configparser
 import random
 import enemies
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 import pygame
 
 # -------------------------------------------------
@@ -17,7 +17,7 @@ MELEE = int(parser.get("melee_enemy", "MELEE"))
 DIYING = int(parser.get("melee_enemy", "DIYING"))
 
 ATTACK_DURATION = int(parser.get("melee_enemy", "ATTACK_DURATION"))
-ATTACK_COOLDOWN = int(parser.get("melee_enemy", "ATTACK_COOLDOWN"))
+COOLDOWN_DURATION = int(parser.get("melee_enemy", "COOLDOWN_DURATION"))
 
 MOVE_DURATION = int(parser.get("melee_enemy", "MOVE_DURATION"))
 STOP_DURATION = int(parser.get("melee_enemy", "STOP_DURATION"))
@@ -42,7 +42,7 @@ class MeleeEnemy(enemies.Enemy):
     def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file):
         super().__init__(player, groups, collision_groups, image_file)
 
-        self.orientation = dinamic_sprites.LEFT if random.randint(1,2) == 1 else dinamic_sprites.RIGHT
+        self.orientation = dynamic_sprites.LEFT if random.randint(1,2) == 1 else dynamic_sprites.RIGHT
         self.orientacion = player.get_orientacionAtaque()
         self.current_pose = 0
         self.current_pose_frame = 0
@@ -287,18 +287,18 @@ class MeleeEnemy(enemies.Enemy):
 
     def get_image(self):
         self.update_pose()
-        if self.orientation == dinamic_sprites.RIGHT:
+        if self.orientation == dynamic_sprites.RIGHT:
             return self.image.subsurface(self.coordinates_sheet[self.current_pose][self.current_pose_frame])
-        elif self.orientation == dinamic_sprites.LEFT:
+        elif self.orientation == dynamic_sprites.LEFT:
             return pygame.transform.flip(self.image.subsurface(self.coordinates_sheet[self.current_pose][self.current_pose_frame]), 1, 0)
 
 
     def update_pose(self):
         # TODO: unificar con player en clase padre
         if self.direction.x > 0:
-            self.orientation = dinamic_sprites.RIGHT
+            self.orientation = dynamic_sprites.RIGHT
         elif self.direction.x < 0:
-            self.orientation = dinamic_sprites.LEFT
+            self.orientation = dynamic_sprites.LEFT
 
         self.movement_cooldown -= 1
 

@@ -1,4 +1,3 @@
-import pygame
 from mi_sprite import *
 from pygame.locals import *
 from resources_manager import *

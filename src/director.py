@@ -1,76 +1,65 @@
+import configparser
 import pygame
-import sys
-#import escena
-from escena import *
+from scene import *
 from pygame.locals import *
+
+# -------------------------------------------------
+# Lectura do ficheiro de configuración
+
+parser = configparser.ConfigParser()
+parser.read("GaiaStation.config")
+SCREEN_WIDTH = int(parser.get("director", "SCREEN_WIDTH"))
+SCREEN_HEIGHT = int(parser.get("director", "SCREEN_HEIGHT"))
 
 class Director():
 
     def __init__(self):
-        # Inicializamos la pantalla y el modo grafico
-        self.screen = pygame.display.set_mode((800, 600))
-        pygame.display.set_caption("Juego con escenas")
+        # Inicializamos a pantalla e o modo gráfico
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption("Gaia Station")
         # Pila de escenas
-        self.pila = []
-        # Flag que nos indica cuando quieren salir de la escena
-        self.salir_escena = False
-        # Reloj
-        self.reloj = pygame.time.Clock()
+        self.stack = []
+        # Flag que indica cando queren salir da escena
+        self.quit_scene = False
+        self.clock = pygame.time.Clock()
 
-    def bucle(self, escena):
+    def loop(self, scene):
+        self.quit_scene = False
 
-        self.salir_escena = False
-
-        # Eliminamos todos los eventos producidos antes de entrar en el bucle
+        # Eliminamos todos os eventos producidos antes de entrar no bucle
         pygame.event.clear()
         
-        # El bucle del juego, las acciones que se realicen se harán en cada escena
-        while not self.salir_escena:
-
-            # Sincronizar el juego a 60 fps
-            tiempo_pasado = self.reloj.tick(60)
-
-            # Pasamos los eventos a la escena
-            escena.events(pygame.event.get())
-
-            # Actualiza la escena
-            escena.update(tiempo_pasado)
-
-            # Se dibuja en pantalla
-            escena.draw(self.screen)
+        # O bucle do xogo, as accións que se realicen faranse en cada escena
+        while not self.quit_scene:
+            tiempo_pasado = self.clock.tick(60)
+            # Pasamos os eventos á escena
+            scene.events(pygame.event.get())
+            # Actualiza a escena
+            scene.update(tiempo_pasado)
+            # Debúxase na pantalla
+            scene.draw(self.screen)
             pygame.display.flip()
 
-    def ejecutar(self):
+    def execute(self):
+        while (len(self.stack)>0):
+            scene = self.stack[len(self.stack)-1]
+            # Execútase o bucle de eventos ata que remate a escena
+            self.loop(scene)
 
-        # Mientras haya escenas en la pila, ejecutaremos la de arriba
-        while (len(self.pila)>0):
+    def quit_scene(self):
+        self.quit_scene = True
+        # Eliminamos a escena actual da pila
+        if (len(self.stack)>0):
+            self.stack.pop()
 
-            # Se coge la escena a ejecutar como la que este en la cima de la pila
-            escena = self.pila[len(self.pila)-1]
+    def quit_program(self):
+        self.stack = []
+        self.quit_scene = True
 
-            # Ejecutamos el bucle de eventos hasta que termine la escena
-            self.bucle(escena)
+    def change_scene(self, scene):
+        self.quit_scene()
+        self.stack.append(scene)
 
-
-    def salirEscena(self):
-        # Indicamos en el flag que se quiere salir de la escena
-        self.salir_escena = True
-        # Eliminamos la escena actual de la pila (si la hay)
-        if (len(self.pila)>0):
-            self.pila.pop()
-
-    def salirPrograma(self):
-        # Vaciamos la lista de escenas pendientes
-        self.pila = []
-        self.salir_escena = True
-
-    def cambiarEscena(self, escena):
-        self.salirEscena()
-        # Ponemos la escena pasada en la cima de la pila
-        self.pila.append(escena)
-
-    def apilarEscena(self, escena):
-        self.salir_escena = True
-        # Ponemos la escena pasada en la cima de la pila
-        #  (por encima de la actual)
-        self.pila.append(escena)
+    def stack_scene(self, scene):
+        self.quit_scene = True
+        self.stack.append(scene)

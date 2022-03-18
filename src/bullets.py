@@ -1,6 +1,6 @@
 import configparser
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 import pygame
 
 # -------------------------------------------------
@@ -12,7 +12,7 @@ RETARDO_ANIMACION_BALA = int(parser.get("bullets", "RETARDO_ANIMACION_BALA"))
 
 # -------------------------------------------------
 
-class Projectile(dinamic_sprites.DinamicSprite):
+class Projectile(dynamic_sprites.DynamicSprite):
     def __init__(self, player, groups, collision_groups, image_file, coordeanada_file, borrar_ataque):
         super().__init__(groups, collision_groups, image_file)
 
@@ -42,25 +42,25 @@ class Projectile(dinamic_sprites.DinamicSprite):
         
         # placement
         aux_img = self.get_image() # para que se cargue la imagen BIEN
-        if self.orientacion == dinamic_sprites.RIGHT: 
+        if self.orientacion == dynamic_sprites.RIGHT: 
             self.rect = aux_img.get_rect(midleft = player.rect.midright)
-        elif self.orientacion == dinamic_sprites.LEFT:
+        elif self.orientacion == dynamic_sprites.LEFT:
             # se mide desde el 0,0, y el jugador ha sido girado... no se
             self.rect = aux_img.get_rect(midright = player.rect.midleft) # (player.rect.midleft[0] + player.rect.width, player.rect.midleft[1])) 
-        elif self.orientacion == dinamic_sprites.UP:
+        elif self.orientacion == dynamic_sprites.UP:
             self.rect = aux_img.get_rect(midbottom = player.rect.midtop)
-        elif self.orientacion == dinamic_sprites.DOWN:
+        elif self.orientacion == dynamic_sprites.DOWN:
             self.rect = aux_img.get_rect(midtop = player.rect.midbottom) # (player.rect.midbottom[0], player.rect.midbottom[1] + player.rect.height))
 
 
     def move(self, speed):
-        if self.orientacion == dinamic_sprites.RIGHT:
+        if self.orientacion == dynamic_sprites.RIGHT:
             self.rect.x += speed
-        elif self.orientacion == dinamic_sprites.LEFT:
+        elif self.orientacion == dynamic_sprites.LEFT:
             self.rect.x -= speed
-        elif self.orientacion == dinamic_sprites.UP:
+        elif self.orientacion == dynamic_sprites.UP:
             self.rect.y -= speed
-        elif self.orientacion == dinamic_sprites.DOWN:
+        elif self.orientacion == dynamic_sprites.DOWN:
             self.rect.y += speed
         self.collision(self.orientacion)
 
@@ -79,14 +79,14 @@ class Projectile(dinamic_sprites.DinamicSprite):
     def get_image(self):
         self.update_pose()
         # TODO: dejar solo una linea que bien vale
-        if self.orientacion == dinamic_sprites.RIGHT:
+        if self.orientacion == dynamic_sprites.RIGHT:
             return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
-        elif self.orientacion == dinamic_sprites.LEFT:
+        elif self.orientacion == dynamic_sprites.LEFT:
             #return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
             return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura]), 0, 0)
-        elif self.orientacion == dinamic_sprites.UP:
+        elif self.orientacion == dynamic_sprites.UP:
             return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
-        elif self.orientacion == dinamic_sprites.DOWN:
+        elif self.orientacion == dynamic_sprites.DOWN:
             return self.image.subsurface(self.coordenadasHoja[0][self.numImagenPostura])
 
 

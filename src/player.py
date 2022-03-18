@@ -1,7 +1,7 @@
 import configparser
 import pygame
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 from subject import Subject
 from bullets import Projectile
 from math import *
@@ -29,9 +29,9 @@ COOLDOWN_DAMAGE_TAKEN = int(parser.get("player", "COOLDOWN_DAMAGE_TAKEN"))
 
 # -------------------------------------------------
 
-class Player(dinamic_sprites.DinamicSprite, Subject):
+class Player(dynamic_sprites.DynamicSprite, Subject):
     def __init__(self, pos, groups, collision_groups, image_file, coordeanada_file):
-        dinamic_sprites.DinamicSprite.__init__(self, groups, collision_groups, image_file)
+        dynamic_sprites.DynamicSprite.__init__(self, groups, collision_groups, image_file)
         Subject.__init__(self)
 
         # Leemos las coordenadas de un archivo de texto
@@ -57,8 +57,8 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.retardoMovimiento = 0
 
         # Orientacion da peroxonase (der ou esq)
-        self.orientacion = dinamic_sprites.RIGHT
-        self.orientacion_ataque = dinamic_sprites.RIGHT
+        self.orientacion = dynamic_sprites.RIGHT
+        self.orientacion_ataque = dynamic_sprites.RIGHT
 
         # movemento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
@@ -102,21 +102,21 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         # movimiento
         if keys[pygame.K_w]:
             self.direction.y = -1
-            self.orientacion_ataque = dinamic_sprites.UP
+            self.orientacion_ataque = dynamic_sprites.UP
         elif keys[pygame.K_s]:
             self.direction.y = 1
-            self.orientacion_ataque = dinamic_sprites.DOWN
+            self.orientacion_ataque = dynamic_sprites.DOWN
         else:
             self.direction.y = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
-            self.orientacion = dinamic_sprites.RIGHT
-            self.orientacion_ataque = dinamic_sprites.RIGHT
+            self.orientacion = dynamic_sprites.RIGHT
+            self.orientacion_ataque = dynamic_sprites.RIGHT
         elif keys[pygame.K_a]:
             self.direction.x = -1
-            self.orientacion = dinamic_sprites.LEFT
-            self.orientacion_ataque = dinamic_sprites.LEFT
+            self.orientacion = dynamic_sprites.LEFT
+            self.orientacion_ataque = dynamic_sprites.LEFT
         else:
             self.direction.x = 0
 
@@ -176,9 +176,9 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
 
     def get_image(self):
         self.update_pose()
-        if self.orientacion == dinamic_sprites.RIGHT:
+        if self.orientacion == dynamic_sprites.RIGHT:
             return self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura])
-        elif self.orientacion == dinamic_sprites.LEFT:
+        elif self.orientacion == dynamic_sprites.LEFT:
             return pygame.transform.flip(self.image.subsurface(self.coordenadasHoja[self.postura][self.numImagenPostura]), 1, 0)
 
 
