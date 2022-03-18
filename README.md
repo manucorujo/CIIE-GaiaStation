@@ -32,6 +32,9 @@ Además se debería incluir en que sección lo utilizamos, para la realización 
 
 Define una dependencia del tipo uno a muchos entre objetos, de manera que cuando uno de los objetos cambia su estado, notifica este cambio a todos los dependientes.
 
+Clases observer.py, subject.py, de las cuales heredan el jugador y los elementos de la
+HUD, que observan a este
+
 ### Singletone
 
 Se asegura de que solo exista una única instancia del objeto y proporciona un acceso global a esta. Ejemplos: Gestor de recursos.
@@ -51,6 +54,10 @@ De esta no estoy tan seguro. Se suministran objetos a una clase en lugar de ser 
 ESTE CREO QUE TENÍA OTRO NOMBRE, ES QUE NO LOS TENGO APUNTADOS. El patrón Flyweight (u objeto ligero) sirve para eliminar o reducir la redundancia cuando tenemos gran cantidad de objetos que contienen información idéntica, además de lograr un equilibrio entre flexibilidad y rendimiento (uso de recursos)
 
 GESTOR DE RECURSOS
+
+### Patron estrategia
+
+Controles: clases control.py y keyboardControl.py
 
 - - - -
 
