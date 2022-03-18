@@ -6,6 +6,9 @@ from subject import Subject
 from bullets import Projectile
 from math import *
 
+import control
+import keyboardControl
+
 # -------------------------------------------------
 # Lectura do ficheiro de configuración
 
@@ -77,31 +80,31 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.max_vida = 3 # golpes para morir
         self.vida = self.max_vida 
         self.speed = 3.5 # velocidad de movimiento
-
         self.puntos = 0
 
+        self.control = keyboardControl.KeyboardControl()
 
     def input(self):
 
         if self.is_attacking:
             return
 
-        keys = pygame.key.get_pressed()
+        keys = pygame.key.get_pressed() # TODO: ¿Esto vale para mando?
 
         # movimiento
-        if keys[pygame.K_w]:
+        if self.control.up(keys):
             self.direction.y = -1
             self.attack_orientation = dinamic_sprites.UP
-        elif keys[pygame.K_s]:
+        elif self.control.down(keys):
             self.direction.y = 1
             self.attack_orientation = dinamic_sprites.DOWN
         else:
             self.direction.y = 0
 
-        if keys[pygame.K_d]:
+        if self.control.right(keys):
             self.direction.x = 1
             self.attack_orientation = dinamic_sprites.RIGHT
-        elif keys[pygame.K_a]:
+        elif self.control.left(keys):
             self.direction.x = -1
             self.attack_orientation = dinamic_sprites.LEFT
         else:
@@ -110,7 +113,7 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.current_pose = IDLE if self.direction.x == 0 and self.direction.y == 0 else ANDANDO
 
         # ataque
-        if keys[pygame.K_SPACE] and not self.reloading:
+        if self.control.attack(keys) and not self.reloading:
             self.direction.x = 0
             self.direction.y = 0
             self.is_attacking = True
