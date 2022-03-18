@@ -43,17 +43,17 @@ class GUIText(GUIElement):
 class PlayText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Jugar', (380, 300))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
 
     def select(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (138, 41, 10), 'Jugar', (380, 300))
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Xogar', (380, 300))
 
     # Igual que o __init__, pero replícoo porque só son dúas líneas e ao chamar á función
     # enténdese mellor así o funcionamento
     def unselect(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Jugar', (380, 300))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
 
     def action(self):
         self.screen.menu.execute_game()
@@ -77,15 +77,15 @@ class ConfigText(GUIText):
 class ExitText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Salir', (382, 370))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Saír', (382, 370))
 
     def select(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (138, 41, 10), 'Salir', (382, 370))
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Saír', (382, 370))
 
     def unselect(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Salir', (382, 370))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Saír', (382, 370))
 
     def action(self):
         self.screen.menu.exit_program()
