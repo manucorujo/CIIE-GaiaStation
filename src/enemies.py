@@ -1,6 +1,5 @@
 from resources_manager import *
 import dinamic_sprites
-import pygame
 
 # -------------------------------------------------
 

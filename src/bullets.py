@@ -1,11 +1,17 @@
+import configparser
 from resources_manager import *
 import dinamic_sprites
 import pygame
 
 # -------------------------------------------------
+# Lectura do ficheiro de configuración
 
 ANIMATION_TRANSITION_TIME = 7
 NUM_FRAMES_PER_POSE = [3]
+
+'''parser = configparser.ConfigParser()
+parser.read("GaiaStation.config")
+ANIMATION_TRANSITION_TIME = int(parser.get("bullets", "RETARDO_ANIMACION_BALA"))'''
 
 # -------------------------------------------------
 

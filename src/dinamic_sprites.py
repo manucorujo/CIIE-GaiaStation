@@ -1,3 +1,4 @@
+import configparser
 from resources_manager import *
 import mi_sprite
 import pygame
@@ -5,13 +6,16 @@ import math
 
 # -------------------------------------------------
 
-HORIZONTAL = 1
-VERTICAL = 2
+# Lectura do ficheiro de configuración
+parser = configparser.ConfigParser()
+parser.read("GaiaStation.config")
+HORIZONTAL = int(parser.get("dynamic_sprites", "HORIZONTAL"))
+VERTICAL = int(parser.get("dynamic_sprites", "VERTICAL"))
 
-LEFT = 1
-RIGHT = 2
-UP = 3
-DOWN = 4
+LEFT = int(parser.get("dynamic_sprites", "LEFT"))
+RIGHT = int(parser.get("dynamic_sprites", "RIGHT"))
+UP = int(parser.get("dynamic_sprites", "UP"))
+DOWN = int(parser.get("dynamic_sprites", "DOWN"))
 
 # -------------------------------------------------
 

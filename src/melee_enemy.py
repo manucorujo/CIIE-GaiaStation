@@ -1,3 +1,4 @@
+import configparser
 import random
 import enemies
 from resources_manager import *
@@ -5,21 +6,28 @@ import dinamic_sprites
 import pygame
 
 # -------------------------------------------------
+# Lectura do ficheiro de configuración
 
-IDLE = 0
-WALKING = 1
-FIRING = 2
-MELEE = 3
-DIYING = 4
+parser = configparser.ConfigParser()
+parser.read("GaiaStation.config")
+IDLE = int(parser.get("melee_enemy", "IDLE"))
+WALKING = int(parser.get("melee_enemy", "WALKING"))
+FIRING = int(parser.get("melee_enemy", "FIRING"))
+MELEE = int(parser.get("melee_enemy", "MELEE"))
+DIYING = int(parser.get("melee_enemy", "DIYING"))
 
+################## POR REVISAR ### COMENTARIO DE AG
+ATTACK_DURATION = int(parser.get("melee_enemy", "ATTACK_DURATION"))
+COOLDOWN_DURATION = int(parser.get("melee_enemy", "COOLDOWN_DURATION"))
+################## POR REVISAR
+
+MOVE_DURATION = int(parser.get("melee_enemy", "MOVE_DURATION"))
+STOP_DURATION = int(parser.get("melee_enemy", "STOP_DURATION"))
+
+NUM_FRAMES_PER_POSE = list(map(int, str.split(parser.get("melee_enemy", "NUM_FRAMES_PER_POSE"))))
+COOLDOWN_ANIMATION = list(map(int, str.split(parser.get("melee_enemy", "COOLDOWN_ANIMATION"))))
 ENEMY_BASE_SPEED = 1
 ENEMY_BASE_LIFE = 3
-
-# is_attacking
-ATTACK_DURATION = 300
-
-# has_cooldown
-COOLDOWN_DURATION = 700
 
 # is_walking
 WALK_DURATION = 1000

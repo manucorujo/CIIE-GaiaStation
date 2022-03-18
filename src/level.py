@@ -1,3 +1,4 @@
+from scene import Scene
 from melee_enemy import MeleeEnemy
 from world_objects import *
 from player import Player
@@ -8,8 +9,9 @@ import configparser
 #==============================================================================
 # Clase para cargar un nivel
 
-class Level:
-    def __init__(self, map_image, obstacles_file):
+class Level(Scene):
+    def __init__(self, director, map_image, obstacles_file):
+        Scene.__init__(self, director)
 
         # Garda o ficheiro que define o nivel
         self.obstacles_file = obstacles_file
@@ -65,6 +67,25 @@ class Level:
         # mostrar os sprites dentro do grupo "ui_sprites"
         self.ui_sprites.custom_draw()
         self.ui_sprites.update()
+
+    def events(self, events_list):
+        for event in events_list:
+            if event.type == KEYDOWN:
+                # Si la tecla es Escape
+                if event.key == K_ESCAPE:
+                    # Se sale del programa
+                    self.director.quit_program()
+            if event.type == pygame.QUIT:
+                self.director.quit_program()
+
+    def draw(self, screen):
+        self.visible_sprites.custom_draw(self.player)
+        self.ui_sprites.custom_draw()
+
+    def update(self, time):
+        self.visible_sprites.update()
+        self.ui_sprites.update()
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, map_image):
