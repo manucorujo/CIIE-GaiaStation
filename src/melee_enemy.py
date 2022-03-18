@@ -13,7 +13,7 @@ MELEE = 3
 DIYING = 4
 
 ENEMY_BASE_SPEED = 1
-ENEMY_BASE_LIFE = 30
+ENEMY_BASE_LIFE = 3
 
 # is_attacking
 ATTACK_DURATION = 300
@@ -31,43 +31,17 @@ INVENCIBILITY_DURATION = 200
 DEATH_DURATION = 200
 
 NUM_FRAMES_PER_POSE = [2, 4, 2, 5, 1]
-COOLDOWN_ANIMATION = [25, 20, 0, 25, 100]
+ANIMATION_TRANSITION_TIME = [25, 20, 0, 25, 100]
 
 # -------------------------------------------------
 
 class MeleeEnemy(enemies.Enemy):
     def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file):
-        super().__init__(player, groups, collision_groups, image_file)
+        super().__init__(player, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
 
         self.orientation = dinamic_sprites.LEFT if random.randint(1,2) == 1 else dinamic_sprites.RIGHT
-        self.orientacion = player.get_orientacionAtaque()
         self.current_pose = 0
         self.current_pose_frame = 0
-        self.coordinates_sheet = []
-
-        # Cargamos o arquivo de coordenadas
-        datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
-        datos = datos.split()
-        
-        # Inicialización dos frames para as animacions
-        cont = 0
-        for pose in range(len(NUM_FRAMES_PER_POSE)):
-            self.coordinates_sheet.append([])
-
-            for frame in range(NUM_FRAMES_PER_POSE[pose]):
-                self.coordinates_sheet[pose].append( 
-                    pygame.Rect(
-                        (
-                            int(datos[cont]), 
-                            int(datos[cont+1])
-                        ), 
-                        (
-                            int(datos[cont+2]), 
-                            int(datos[cont+3])
-                        )
-                    )
-                )
-                cont += 4
         
         # O rect do enemigo, da mesma forma ca do xogador, recortase por arriba
         # e por abaixo, para que poda achegarse ás paredes
@@ -86,7 +60,7 @@ class MeleeEnemy(enemies.Enemy):
         self.hitbox = self.rect.inflate(0, -12)
 
         # Un cooldown do movemento para que non cambie de sprite moi rapido
-        self.movement_cooldown = 0
+        self.animation_delay = 0
         self.attack_count = 12
 
         # Movemento
@@ -210,7 +184,7 @@ class MeleeEnemy(enemies.Enemy):
 
     def _delete_attack(self):
         if self._is_player_in_attack_range() and self.attack_count < 0:
-            self.player.perder_vida(1)
+            self.player.take_damage(1)
 
         self.is_attacking = False
         self.is_walking = False
@@ -248,7 +222,7 @@ class MeleeEnemy(enemies.Enemy):
         return
 
     
-    def get_damage(self, damage):
+    def take_damage(self, damage):
         if not self.damage_taken:
             self._stop_walking()
             self.health -= damage
@@ -280,36 +254,6 @@ class MeleeEnemy(enemies.Enemy):
 
     def _is_player_in_attack_range(self):
         return self.attack_range.colliderect(self.player.rect)
-
-
-    def get_image(self):
-        self.update_pose()
-        if self.orientation == dinamic_sprites.RIGHT:
-            return self.image.subsurface(self.coordinates_sheet[self.current_pose][self.current_pose_frame])
-        elif self.orientation == dinamic_sprites.LEFT:
-            return pygame.transform.flip(self.image.subsurface(self.coordinates_sheet[self.current_pose][self.current_pose_frame]), 1, 0)
-
-
-    def update_pose(self):
-        # TODO: unificar con player en clase padre
-        if self.direction.x > 0:
-            self.orientation = dinamic_sprites.RIGHT
-        elif self.direction.x < 0:
-            self.orientation = dinamic_sprites.LEFT
-
-        self.movement_cooldown -= 1
-
-        if (self.movement_cooldown < 0):
-            self.movement_cooldown = COOLDOWN_ANIMATION[self.current_pose]
-            self.current_pose_frame += 1
-
-            if self.current_pose_frame >= len(self.coordinates_sheet[self.current_pose]):
-                self.current_pose_frame = 0
-
-            elif self.current_pose_frame < 0:
-                self.current_pose_frame = len(self.coordinates_sheet[self.current_pose])-1
-
-        return
 
 
     def update(self):
