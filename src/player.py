@@ -1,3 +1,4 @@
+import configparser
 import pygame
 from resources_manager import *
 import dinamic_sprites
@@ -6,22 +7,25 @@ from bullets import Projectile
 from math import *
 
 # -------------------------------------------------
+# Lectura do ficheiro de configuración
 
-IDLE = 0
-ANDANDO = 1
-AGACHADO = 2 # sin usar
-ATACANDO = 3
+parser = configparser.ConfigParser()
+parser.read("GaiaStation.config")
+IDLE = int(parser.get("player", "IDLE"))
+ANDANDO = int(parser.get("player", "ANDANDO"))
+AGACHADO = int(parser.get("player", "AGACHADO"))
+ATACANDO = int(parser.get("player", "ATACANDO"))
 
 # esto de al animación y retardos del ataque está completamente abierto a cambios
-TIEMPO_ATAQUE = 300
-TIEMPO_RECARGA = 600
+TIEMPO_ATAQUE = int(parser.get("player", "TIEMPO_ATAQUE"))
+TIEMPO_RECARGA = int(parser.get("player", "TIEMPO_RECARGA"))
 RETARDO_ANIMACION_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
 
 # la caurta posicion, ataque, hay que ajustarla y coordinarla
 RETARDO_ANIMACION_JUGADOR = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que durará cada imagen del personaje
 # hay un valor para cada postura: el primero para idle, el segundo para andar, etc.
 
-COOLDOWN_DAMAGE_TAKEN = 1500
+COOLDOWN_DAMAGE_TAKEN = int(parser.get("player", "COOLDOWN_DAMAGE_TAKEN"))
 
 # -------------------------------------------------
 

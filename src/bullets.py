@@ -1,10 +1,14 @@
+import configparser
 from resources_manager import *
 import dinamic_sprites
 import pygame
 
 # -------------------------------------------------
+# Lectura do ficheiro de configuración
 
-RETARDO_ANIMACION_BALA = 7
+parser = configparser.ConfigParser()
+parser.read("GaiaStation.config")
+RETARDO_ANIMACION_BALA = int(parser.get("bullets", "RETARDO_ANIMACION_BALA"))
 
 # -------------------------------------------------
 
