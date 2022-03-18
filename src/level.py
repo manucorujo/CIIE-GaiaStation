@@ -4,7 +4,25 @@ from world_objects import *
 from player import Player
 from ui import UIGroup, BarraVida, Puntuacion
 import pygame
+import random
 import configparser
+
+#==============================================================================
+
+enemies_types_list = [
+    ({
+        # Scarab
+        "name" : "Robots/Scarab",
+        "speed" : 1,
+        "health" : 3
+    }, 65),
+    ({
+        # Spider
+        "name" : "Robots/Spider",
+        "speed" : 1.1,
+        "health" : 2
+    }, 35)
+]
 
 #==============================================================================
 # Clase para cargar un nivel
@@ -25,6 +43,8 @@ class Level(Scene):
         self.obstacle_sprites = pygame.sprite.Group()
         self.enemies_sprites = pygame.sprite.Group()
         self.player_sprites = pygame.sprite.Group()
+
+        self.weighted_enemies_types = self._get_enemies_thresholds(enemies_types_list)
 
         # Lectura do ficheiro de configuración
         self.parser = configparser.ConfigParser()
@@ -55,9 +75,26 @@ class Level(Scene):
                     if col == '0':
                         self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
                     elif col == '1':
-                        MeleeEnemy((x,y), self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], "Robots/Scarab.png", "Robots/Scarab.txt")
+                        self._generate_random_enemy((x,y))
                     else:
                         Obstacle((x,y), [self.obstacle_sprites, self.visible_sprites], 'Obstacles/' + col + '.png', (255,0,245))
+
+    def _get_enemies_thresholds(self, enemies_types_list):
+        weighted_enemies_types = []
+        for (e_type, percent) in enemies_types_list:
+            [weighted_enemies_types.append(e_type) for _ in range(0, percent)]
+        return weighted_enemies_types
+
+    def _generate_random_enemy(self, pos):
+        enemy_type = random.choice(self.weighted_enemies_types)
+        image = enemy_type["name"] + ".png"
+        coord_file = enemy_type["name"] + ".txt"
+        speed = enemy_type["speed"]
+        health = enemy_type["health"]
+
+        MeleeEnemy( pos, self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], 
+                        image, coord_file, speed, health)
+        return
 
     def run(self):
         # mostrar os sprites dentro do grupo "visible_sprites"

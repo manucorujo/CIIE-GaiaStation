@@ -26,8 +26,6 @@ STOP_DURATION = int(parser.get("melee_enemy", "STOP_DURATION"))
 
 NUM_FRAMES_PER_POSE = list(map(int, str.split(parser.get("melee_enemy", "NUM_FRAMES_PER_POSE"))))
 COOLDOWN_ANIMATION = list(map(int, str.split(parser.get("melee_enemy", "COOLDOWN_ANIMATION"))))
-ENEMY_BASE_SPEED = 1
-ENEMY_BASE_LIFE = 3
 
 # is_walking
 WALK_DURATION = 1000
@@ -44,8 +42,8 @@ ANIMATION_TRANSITION_TIME = [25, 20, 0, 25, 100]
 # -------------------------------------------------
 
 class MeleeEnemy(enemies.Enemy):
-    def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file):
-        super().__init__(player, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
+    def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file, speed, health):
+        super().__init__(player, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME, speed, health)
 
         self.orientation = dinamic_sprites.LEFT if random.randint(1,2) == 1 else dinamic_sprites.RIGHT
         self.current_pose = 0
@@ -60,9 +58,9 @@ class MeleeEnemy(enemies.Enemy):
             self.coordinates_sheet[self.current_pose][self.current_pose_frame][3]
         )
 
-        # Parametros básicos do enemigo
-        self.speed = ENEMY_BASE_SPEED
-        self.health = ENEMY_BASE_LIFE
+        # Parametros
+        self.speed = speed
+        self.health = health
 
         # A hitbox para detectar colisions
         self.hitbox = self.rect.inflate(0, -12)
@@ -233,6 +231,8 @@ class MeleeEnemy(enemies.Enemy):
     def take_damage(self, damage):
         if not self.damage_taken:
             self._stop_walking()
+            self.current_pose = FIRING
+            self.current_pose_frame = 0
             self.health -= damage
 
             if self.health <= 0:
