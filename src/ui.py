@@ -53,7 +53,7 @@ class Puntuacion(pygame.sprite.Sprite, Observer):
     def __init__(self, groups, puntos):
         super().__init__(groups)
         self.display_surface = pygame.display.get_surface()
-        self.tipoLetra = pygame.font.SysFont('arial', 24)
+        self.font = ResourcesManager.loadFont("upheavtt.ttf", 24)
         self.puntos = puntos
 
     def notify(self,player):
@@ -62,4 +62,4 @@ class Puntuacion(pygame.sprite.Sprite, Observer):
     def dibujar_ui(self):
         # TODO: Añadir el tamaño de la pantalla real
         tam_x = 800
-        self.display_surface.blit(self.tipoLetra.render(str(self.puntos), True, (160, 160, 160)), (tam_x-60, 10))
+        self.display_surface.blit(self.font.render(str(self.puntos), True, (160, 160, 160)), (tam_x-60, 10))
