@@ -19,7 +19,7 @@ DOWN = int(parser.get("dynamic_sprites", "DOWN"))
 
 # -------------------------------------------------
 
-class DinamicSprite(mi_sprite.MiSprite):
+class DynamicSprites(mi_sprite.MiSprite):
     "Los Sprites que tendra este juego"
     def __init__(self, groups, collision_groups, image_file, coordeanada_file, num_frames_per_pose, animation_transition_time):
         super().__init__(groups, image_file)

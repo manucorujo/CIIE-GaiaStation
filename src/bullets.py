@@ -1,6 +1,6 @@
 import configparser
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 import pygame
 
 # -------------------------------------------------
@@ -15,7 +15,7 @@ ANIMATION_TRANSITION_TIME = int(parser.get("bullets", "RETARDO_ANIMACION_BALA"))
 
 # -------------------------------------------------
 
-class Projectile(dinamic_sprites.DinamicSprite):
+class Projectile(dynamic_sprites.DynamicSprites):
     def __init__(self, player, groups, collision_groups, image_file, coordeanada_file, borrar_ataque):
         super().__init__(groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
 
@@ -33,24 +33,24 @@ class Projectile(dinamic_sprites.DinamicSprite):
         
         # placement
         aux_img = self.get_image() # para que se cargue el rect de la imagen
-        if self.orientation == dinamic_sprites.RIGHT: 
+        if self.orientation == dynamic_sprites.RIGHT: 
             self.rect = aux_img.get_rect(midleft = player.rect.midright)
-        elif self.orientation == dinamic_sprites.LEFT:
+        elif self.orientation == dynamic_sprites.LEFT:
             self.rect = aux_img.get_rect(midright = player.rect.midleft) 
-        elif self.orientation == dinamic_sprites.UP:
+        elif self.orientation == dynamic_sprites.UP:
             self.rect = aux_img.get_rect(midbottom = player.rect.midtop)
-        elif self.orientation == dinamic_sprites.DOWN:
+        elif self.orientation == dynamic_sprites.DOWN:
             self.rect = aux_img.get_rect(midtop = player.rect.midbottom) 
 
 
     def move(self, speed):
-        if self.orientation == dinamic_sprites.RIGHT:
+        if self.orientation == dynamic_sprites.RIGHT:
             self.rect.x += speed
-        elif self.orientation == dinamic_sprites.LEFT:
+        elif self.orientation == dynamic_sprites.LEFT:
             self.rect.x -= speed
-        elif self.orientation == dinamic_sprites.UP:
+        elif self.orientation == dynamic_sprites.UP:
             self.rect.y -= speed
-        elif self.orientation == dinamic_sprites.DOWN:
+        elif self.orientation == dynamic_sprites.DOWN:
             self.rect.y += speed
         self.collision(self.orientation)
 

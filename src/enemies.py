@@ -1,9 +1,9 @@
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 
 # -------------------------------------------------
 
-class Enemy(dinamic_sprites.DinamicSprite):
+class Enemy(dynamic_sprites.DynamicSprites):
 
     def __init__(self, player, groups, collision_groups, image_file, coordeanada_file, num_frames_per_pose, animation_transition_time, speed, health):
         super().__init__(groups, collision_groups, image_file, coordeanada_file, num_frames_per_pose, animation_transition_time)

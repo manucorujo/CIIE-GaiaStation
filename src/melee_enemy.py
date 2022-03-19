@@ -1,8 +1,9 @@
 import configparser
 import random
 import enemies
+from objects import HeartObject
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 import pygame
 
 # -------------------------------------------------
@@ -45,7 +46,7 @@ class MeleeEnemy(enemies.Enemy):
     def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file, speed, health):
         super().__init__(player, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME, speed, health)
 
-        self.orientation = dinamic_sprites.LEFT if random.randint(1,2) == 1 else dinamic_sprites.RIGHT
+        self.orientation = dynamic_sprites.LEFT if random.randint(1,2) == 1 else dynamic_sprites.RIGHT
         self.current_pose = 0
         self.current_pose_frame = 0
         
@@ -172,6 +173,7 @@ class MeleeEnemy(enemies.Enemy):
         if self.is_death:
             if current_time - self.death_time > DEATH_DURATION:
                 self.kill()
+                self._generate_heart()
                 self.player.sumar_puntos(10)
         return
 
@@ -258,6 +260,13 @@ class MeleeEnemy(enemies.Enemy):
 
         self.death_time = pygame.time.get_ticks()
         return
+
+    
+    #TODO: Revisar como generar corazones desde el nivel al morir un enemigo
+    def _generate_heart(self):
+        value = random.uniform(0,1)
+        if value >= 0.8:
+            print("Crear corazon")
 
 
     def _is_player_in_attack_range(self):

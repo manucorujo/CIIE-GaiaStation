@@ -1,7 +1,8 @@
 import configparser
 import pygame
+from objects import HeartObject
 from resources_manager import *
-import dinamic_sprites
+import dynamic_sprites
 from subject import Subject
 from bullets import Projectile
 from math import *
@@ -33,9 +34,9 @@ NUM_FRAMES_PER_POSE = [2, 2, 2, 2, 3, 5, 3]
 
 # -------------------------------------------------
 
-class Player(dinamic_sprites.DinamicSprite, Subject):
+class Player(dynamic_sprites.DynamicSprites, Subject):
     def __init__(self, pos, groups, collision_groups, image_file, coordeanada_file):
-        dinamic_sprites.DinamicSprite.__init__(self, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
+        dynamic_sprites.DynamicSprites.__init__(self, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
         Subject.__init__(self)
 
         self.current_pose = IDLE # current_pose idle
@@ -49,8 +50,8 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         self.animation_delay = 0
 
         # orientation da peroxonase (der ou esq)
-        self.orientation = dinamic_sprites.RIGHT
-        self.attack_orientation = dinamic_sprites.RIGHT
+        self.orientation = dynamic_sprites.RIGHT
+        self.attack_orientation = dynamic_sprites.RIGHT
 
         # movemento
         self.direction = pygame.math.Vector2() # [x:0, y:0]
@@ -75,6 +76,7 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         # Grupos para colisions
         self.obstacle_sprites = collision_groups[0]
         self.enemies_sprites = collision_groups[1]
+        self.objects_sprites = collision_groups[2]
 
         # Estadisticas: vida, etc
         self.max_vida = 3 # golpes para morir
@@ -94,19 +96,19 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         # movimiento
         if self.control.up(keys):
             self.direction.y = -1
-            self.attack_orientation = dinamic_sprites.UP
+            self.attack_orientation = dynamic_sprites.UP
         elif self.control.down(keys):
             self.direction.y = 1
-            self.attack_orientation = dinamic_sprites.DOWN
+            self.attack_orientation = dynamic_sprites.DOWN
         else:
             self.direction.y = 0
 
         if self.control.right(keys):
             self.direction.x = 1
-            self.attack_orientation = dinamic_sprites.RIGHT
+            self.attack_orientation = dynamic_sprites.RIGHT
         elif self.control.left(keys):
             self.direction.x = -1
-            self.attack_orientation = dinamic_sprites.LEFT
+            self.attack_orientation = dynamic_sprites.LEFT
         else:
             self.direction.x = 0
 
@@ -133,7 +135,16 @@ class Player(dinamic_sprites.DinamicSprite, Subject):
         enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
         if enemy_hitted and not enemy_hitted.is_death:
             self.take_damage(1)
+
+        object_touched = pygame.sprite.spritecollideany(self, self.objects_sprites)
+        if object_touched:
+            self.heal(object_touched.get_heal_value())
+            object_touched.kill()
+
             
+    def heal(self, heal_value):
+        self.vida = min(self.vida + heal_value, self.max_vida)
+        self.notify_obervers()
 
     def take_damage(self, damage=1):
         if not self.damage_taken:

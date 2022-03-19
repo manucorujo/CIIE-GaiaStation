@@ -1,3 +1,4 @@
+from objects import HeartObject
 from scene import Scene
 from melee_enemy import MeleeEnemy
 from world_objects import *
@@ -41,6 +42,7 @@ class Level(Scene):
         self.ui_sprites = UIGroup()
         self.visible_sprites = CameraGroup(map_image)
         self.obstacle_sprites = pygame.sprite.Group()
+        self.objects_sprites = pygame.sprite.Group()
         self.enemies_sprites = pygame.sprite.Group()
         self.player_sprites = pygame.sprite.Group()
 
@@ -73,7 +75,7 @@ class Level(Scene):
                 if col != '-1':
                     x, y = col_index * self.tile_size, row_index * self.tile_size
                     if col == '0':
-                        self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
+                        self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites, self.objects_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
                     elif col == '1':
                         self._generate_random_enemy((x,y))
                     else:
