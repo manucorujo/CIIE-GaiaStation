@@ -13,3 +13,15 @@ class Obstacle(MiSprite):
 
     def get_image(self):
         return self.image
+
+
+#==============================================================================
+# Clase Flag
+
+class Flag(MiSprite):
+    def init(self, pos, tilesize):
+        MiSprite.init(self)
+        self.rect = Rect(pos, tilesize)
+        self.hitbox = self.rect.inflate(0, -6)
+        self.image = pygame.Surface((0, 0))
+

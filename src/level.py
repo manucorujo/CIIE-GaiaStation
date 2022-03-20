@@ -53,6 +53,7 @@ class Level(Scene):
         self.parser.read("GaiaStation.config")
 
         self.player = None
+        self.alive_enemies = 0
         
         self.tile_size = int(self.parser.get("level", "TILE_SIZE"))
 
@@ -77,7 +78,10 @@ class Level(Scene):
                     if col == '0':
                         self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites, self.objects_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
                     elif col == '1':
+                        self.alive_enemies += 1
                         self._generate_random_enemy((x,y))
+                    elif col == '2':
+                        Flag((x,y), (self.tile_size, self.tile_size))
                     else:
                         Obstacle((x,y), [self.obstacle_sprites, self.visible_sprites], 'Obstacles/' + col + '.png', (255,0,245))
 
@@ -97,15 +101,6 @@ class Level(Scene):
         MeleeEnemy( pos, self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], 
                         image, coord_file, speed, health)
         return
-
-    def run(self):
-        # mostrar os sprites dentro do grupo "visible_sprites"
-        self.visible_sprites.custom_draw(self.player)
-        self.visible_sprites.update()
-
-        # mostrar os sprites dentro do grupo "ui_sprites"
-        self.ui_sprites.custom_draw()
-        self.ui_sprites.update()
 
     def events(self, events_list):
         for event in events_list:
