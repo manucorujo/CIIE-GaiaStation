@@ -1,4 +1,5 @@
 from objects import HeartObject
+from observer import SpriteObserver
 from scene import Scene
 from melee_enemy import MeleeEnemy
 from world_objects import *
@@ -46,6 +47,10 @@ class Level(Scene):
         self.enemies_sprites = pygame.sprite.Group()
         self.player_sprites = pygame.sprite.Group()
 
+        # Observadores para os enemigos/obxectos
+        self.hearts_observer = None
+        self.enemies_counter_observer = None
+
         self.weighted_enemies_types = self._get_enemies_thresholds(enemies_types_list)
 
         # Lectura do ficheiro de configuración
@@ -57,6 +62,7 @@ class Level(Scene):
         
         self.tile_size = int(self.parser.get("level", "TILE_SIZE"))
 
+        self.init_observers()
         self.create_map()
 
         # Elementos UI
@@ -65,6 +71,10 @@ class Level(Scene):
 
         self.player.add_observer(barra_vida)
         self.player.add_observer(puntuacion)
+
+    def init_observers(self):
+        self.hearts_observer = Level.HeartsGenerator(self)
+        self.enemies_counter_observer = Level.EnemiesCounter(self)
 
     def create_map(self):
 
@@ -98,8 +108,12 @@ class Level(Scene):
         speed = enemy_type["speed"]
         health = enemy_type["health"]
 
+        observers = {
+            "hearts": self.hearts_observer, 
+            "counter": self.enemies_counter_observer}
+
         MeleeEnemy( pos, self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], 
-                        image, coord_file, speed, health)
+                        image, coord_file, speed, health, observers)
         return
 
     def events(self, events_list):
@@ -120,6 +134,33 @@ class Level(Scene):
         self.visible_sprites.update()
         self.ui_sprites.update()
 
+    #==========================================================================
+
+    class HeartsGenerator(SpriteObserver):
+
+        def __init__(self, level):
+            self.level = level
+
+        def notify(self, enemy_pos):
+            threshold = 1 - (self.level.player.vida * 0.3)
+            value = random.uniform(0, 1)
+            if value <= threshold:
+                groups = [self.level.visible_sprites, self.level.objects_sprites]
+                HeartObject(enemy_pos, groups, "Objects/heart.png")
+            return
+
+    #==========================================================================
+
+    class EnemiesCounter(SpriteObserver):
+
+        def __init__(self, level):
+            self.level = level
+
+        def notify(self, enemy_pos):
+            print("Enemigo muerto - Restar uno al contador global de enemigos")
+            return
+
+#==============================================================================
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, map_image):

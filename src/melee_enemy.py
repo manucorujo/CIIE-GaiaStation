@@ -43,7 +43,7 @@ ANIMATION_TRANSITION_TIME = [25, 20, 0, 25, 100]
 # -------------------------------------------------
 
 class MeleeEnemy(enemies.Enemy):
-    def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file, speed, health):
+    def __init__(self, pos, player, groups, collision_groups, image_file, coordeanada_file, speed, health, observers):
         super().__init__(player, groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME, speed, health)
 
         self.orientation = dynamic_sprites.LEFT if random.randint(1,2) == 1 else dynamic_sprites.RIGHT
@@ -62,6 +62,9 @@ class MeleeEnemy(enemies.Enemy):
         # Parametros
         self.speed = speed
         self.health = health
+
+        # Observadores
+        self.observers = observers
 
         # A hitbox para detectar colisions
         self.hitbox = self.rect.inflate(0, -12)
@@ -172,8 +175,10 @@ class MeleeEnemy(enemies.Enemy):
 
         if self.is_death:
             if current_time - self.death_time > DEATH_DURATION:
+                pos = self.rect.x, self.rect.y
                 self.kill()
-                self._generate_heart()
+                self.observers["hearts"].notify(pos)
+                self.observers["counter"].notify(pos)
                 self.player.sumar_puntos(10)
         return
 
@@ -260,13 +265,6 @@ class MeleeEnemy(enemies.Enemy):
 
         self.death_time = pygame.time.get_ticks()
         return
-
-    
-    #TODO: Revisar como generar corazones desde el nivel al morir un enemigo
-    def _generate_heart(self):
-        value = random.uniform(0,1)
-        if value >= 0.8:
-            print("Crear corazon")
 
 
     def _is_player_in_attack_range(self):
