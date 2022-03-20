@@ -18,10 +18,9 @@ class Obstacle(MiSprite):
 #==============================================================================
 # Clase Flag
 
-class Flag(MiSprite):
-    def init(self, pos, tilesize):
-        MiSprite.init(self)
+class Flag(pygame.sprite.Sprite):
+    def __init__(self, pos, tilesize, groups):
+        super().__init__(groups)
         self.rect = Rect(pos, tilesize)
-        self.hitbox = self.rect.inflate(0, -6)
         self.image = pygame.Surface((0, 0))
 

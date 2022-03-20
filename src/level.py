@@ -1,8 +1,9 @@
 from objects import HeartObject
-from observer import SpriteObserver
+from observer import Observer, SpriteObserver
 from scene import Scene
 from melee_enemy import MeleeEnemy
-from world_objects import *
+from world_objects import Obstacle, Flag
+from resources_manager import *
 from player import Player
 from ui import UIGroup, BarraVida, Puntuacion
 import pygame
@@ -29,7 +30,7 @@ enemies_types_list = [
 #==============================================================================
 # Clase para cargar un nivel
 
-class Level(Scene):
+class Level(Scene, Observer):
     def __init__(self, director, map_image, obstacles_file):
         Scene.__init__(self, director)
 
@@ -46,6 +47,7 @@ class Level(Scene):
         self.objects_sprites = pygame.sprite.Group()
         self.enemies_sprites = pygame.sprite.Group()
         self.player_sprites = pygame.sprite.Group()
+        self.goal_flag_sprites = pygame.sprite.Group()
 
         # Observadores para os enemigos/obxectos
         self.hearts_observer = None
@@ -59,6 +61,8 @@ class Level(Scene):
 
         self.player = None
         self.alive_enemies = 0
+        self.goal = False ### TODO: En un futuro se puede quitar
+        self.lose = False
         
         self.tile_size = int(self.parser.get("level", "TILE_SIZE"))
 
@@ -71,6 +75,7 @@ class Level(Scene):
 
         self.player.add_observer(barra_vida)
         self.player.add_observer(puntuacion)
+        self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
@@ -86,12 +91,12 @@ class Level(Scene):
                 if col != '-1':
                     x, y = col_index * self.tile_size, row_index * self.tile_size
                     if col == '0':
-                        self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites, self.objects_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
+                        self.player = Player((x,y), [self.visible_sprites, self.player_sprites], [self.obstacle_sprites, self.enemies_sprites, self.objects_sprites, self.goal_flag_sprites], "Player/Assault-Class.png", "Player/Assault-Class.txt")
                     elif col == '1':
                         self.alive_enemies += 1
                         self._generate_random_enemy((x,y))
-                    elif col == '2':
-                        Flag((x,y), (self.tile_size, self.tile_size))
+                    elif col == 'f':
+                        Flag((x,y), (self.tile_size, self.tile_size), [self.goal_flag_sprites])
                     else:
                         Obstacle((x,y), [self.obstacle_sprites, self.visible_sprites], 'Obstacles/' + col + '.png', (255,0,245))
 
@@ -110,12 +115,21 @@ class Level(Scene):
 
         observers = {
             "hearts": self.hearts_observer, 
-            "counter": self.enemies_counter_observer}
+            "counter": self.enemies_counter_observer
+        }
 
         MeleeEnemy( pos, self.player, [self.visible_sprites, self.enemies_sprites], [self.obstacle_sprites], 
                         image, coord_file, speed, health, observers)
         return
 
+    def notify(self,player):
+        self.goal = player.goal
+        self.lose = player.lose
+        if self.lose:
+            print("Muerto")
+        elif self.goal:
+            print("Ganado")
+            
     def events(self, events_list):
         for event in events_list:
             if event.type == KEYDOWN:

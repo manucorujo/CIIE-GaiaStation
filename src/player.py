@@ -77,12 +77,15 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
         self.obstacle_sprites = collision_groups[0]
         self.enemies_sprites = collision_groups[1]
         self.objects_sprites = collision_groups[2]
+        self.goal_flag_sprites = collision_groups[3]
 
         # Estadisticas: vida, etc
         self.max_vida = 3 # golpes para morir
         self.vida = self.max_vida 
         self.speed = 3.5 # velocidad de movimiento
         self.puntos = 0
+        self.goal = False
+        self.lose = False
 
         self.control = keyboardControl.KeyboardControl()
 
@@ -141,6 +144,11 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
             self.heal(object_touched.get_heal_value())
             object_touched.kill()
 
+        flag_touched = pygame.sprite.spritecollideany(self, self.goal_flag_sprites)
+        if flag_touched:
+            self.goal = True
+            self.notify_obervers()
+
             
     def heal(self, heal_value):
         self.vida = min(self.vida + heal_value, self.max_vida)
@@ -152,6 +160,9 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
             self.damage_taken_time = pygame.time.get_ticks()
             self.hit_countdown = 6
             self.vida -= damage
+            if self.vida <= 0:
+                self.kill() ## POR HACER
+                self.lose = True
             self.notify_obervers()
 
 
