@@ -112,3 +112,19 @@ class ResourcesManager(object):
             cls.resources[name] = datos
             # Se devuelve
             return datos
+
+    @classmethod
+    def loadMusic(cls, name):
+        # Si el name de archivo está entre los recursos ya cargados
+        if name in cls.resources:
+            # Se devuelve ese recurso
+            return cls.resources[name]
+        # Si no ha sido cargado anteriormente
+        else:
+            # Se carga el recurso indicando el name de su carpeta
+            fullname = os.path.join('../res/music', name)
+            datos = pygame.mixer.music.load(fullname)
+            # Se almacena
+            cls.resources[name] = datos
+            # Se devuelve
+            return datos

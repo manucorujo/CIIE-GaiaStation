@@ -43,7 +43,7 @@ class GUIText(GUIElement):
 class PlayText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Xogar', (380, 300))
 
     def select(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
@@ -182,7 +182,7 @@ class Menu(Scene):
         return
 
     def events(self, events_list):
-        # Pásaselle a lista de eventos a pantalla actual
+        # Pásaselle a lista de eventos á pantalla actual
         self.screens_list[self.current_screen].events(events_list)
 
     def draw(self, screen):
@@ -199,5 +199,6 @@ class Menu(Scene):
     def show_initial_screen(self):
         self.current_screen = 0
 
-    # def mostrarPantallaConfiguracion(self):
-    #    self.pantallaActual = ...
+    def mostrarPantallaConfiguracion(self):
+         pass
+        #self.pantallaActual = ...

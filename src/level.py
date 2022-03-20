@@ -77,6 +77,12 @@ class Level(Scene, Observer):
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
+        # Está comentada a do xestor de recursos por se o erro era por eso, pero non; así que
+        # hai que facelo coa línea comentada e borrar a de arriba
+        pygame.mixer.music.load('../res/music/level.mp3')
+        #ResourcesManager.loadMusic('level.mp3')
+        pygame.mixer.music.play(loops=-1)
+
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
         self.enemies_counter_observer = Level.EnemiesCounter(self)
@@ -126,10 +132,17 @@ class Level(Scene, Observer):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            print("Muerto")
+            print("Pantalla: TE HAN MATADO")
         elif self.goal:
-            print("Ganado")
-            
+            if (self.obstacles_file == 'level1_obstacles.csv'):
+                level = Level(self.director, 'level2.png', 'level2_obstacles.csv')
+                self.director.stack_scene(level)
+            elif (self.obstacles_file == 'level2_obstacles.csv'):
+                level = Level(self.director, 'level3.png', 'level3_obstacles.csv')
+                self.director.stack_scene(level)
+            elif (self.obstacles_file == 'level3_obstacles.csv'):
+                print('Pantalla: VICTORIA')
+
     def events(self, events_list):
         for event in events_list:
             if event.type == KEYDOWN:
