@@ -1,4 +1,5 @@
 import configparser
+from types import DynamicClassAttribute
 import pygame
 from objects import HeartObject
 from resources_manager import *
@@ -19,6 +20,7 @@ IDLE = int(parser.get("player", "IDLE"))
 ANDANDO = int(parser.get("player", "ANDANDO"))
 AGACHADO = int(parser.get("player", "AGACHADO"))
 ATACANDO = int(parser.get("player", "ATACANDO"))
+DIYING = int(parser.get("player", "DEAD"))
 
 # esto de al animación y retardos del ataque está completamente abierto a cambios
 TIEMPO_ATAQUE = int(parser.get("player", "TIEMPO_ATAQUE"))
@@ -26,7 +28,7 @@ TIEMPO_RECARGA = int(parser.get("player", "TIEMPO_RECARGA"))
 RETARDO_ANIMACION_ATAQUE = int((60 * int(TIEMPO_ATAQUE / 2))/1000)
 
 # la caurta posicion, ataque, hay que ajustarla y coordinarla
-ANIMATION_TRANSITION_TIME = [50, 25, 0, RETARDO_ANIMACION_ATAQUE] # updates que durará cada imagen del personaje
+ANIMATION_TRANSITION_TIME = [50, 25, 0, RETARDO_ANIMACION_ATAQUE, 50, 50] # updates que durará cada imagen del personaje
 # hay un valor para cada current_pose: el primero para idle, el segundo para andar, etc.
 
 COOLDOWN_DAMAGE_TAKEN = int(parser.get("player", "COOLDOWN_DAMAGE_TAKEN"))
@@ -91,7 +93,7 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
 
     def input(self):
 
-        if self.is_attacking:
+        if self.is_attacking or self.current_pose == DIYING:
             return
 
         keys = pygame.key.get_pressed() # TODO: ¿Esto vale para mando?
@@ -134,7 +136,6 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
 
         super().collision(direction)
 
-        # TODO: seria mellor cambiar o nome da varaible?
         enemy_hitted = pygame.sprite.spritecollideany(self, self.enemies_sprites)
         if enemy_hitted and not enemy_hitted.is_death:
             self.take_damage(1)
@@ -144,8 +145,7 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
             self.heal(object_touched.get_heal_value())
             object_touched.kill()
 
-        flag_touched = pygame.sprite.spritecollideany(self, self.goal_flag_sprites)
-        if flag_touched:
+        if pygame.sprite.spritecollideany(self, self.goal_flag_sprites):
             self.goal = True
             self.notify_obervers()
 
@@ -155,16 +155,21 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
         self.notify_obervers()
 
     def take_damage(self, damage=1):
-        if not self.damage_taken:
+        if not self.damage_taken and self.current_pose != DIYING:
             self.damage_taken = True
             self.damage_taken_time = pygame.time.get_ticks()
             self.hit_countdown = 6
             self.vida -= damage
             if self.vida <= 0:
-                self.kill() ## POR HACER
-                self.lose = True
+                self._die()
             self.notify_obervers()
 
+    # separase nunha nova funcion por se queremos engadir novas formas de morir
+    def _die(self):
+        self.damage_taken = False
+        self.direction.x = 0; self.direction.y = 0
+        self.current_pose = DIYING
+        self.current_pose_frame = 0
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()
@@ -186,6 +191,13 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
                 self.damage_taken = False
 
     def update_pose(self):
+
+        if self.current_pose == DIYING and self.current_pose_frame == NUM_FRAMES_PER_POSE[DIYING] - 1:
+            self.lose = True
+            self.kill()
+            self.notify_obervers()
+            return 
+        
         super().update_pose()
 
         # Parpadeo se recibimos dano
