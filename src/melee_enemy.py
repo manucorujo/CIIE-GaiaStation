@@ -1,5 +1,7 @@
 import configparser
 import random
+
+from numpy import False_
 import enemies
 from objects import HeartObject
 from resources_manager import *
@@ -89,6 +91,7 @@ class MeleeEnemy(enemies.Enemy):
         self.has_cooldown = False
         self.damage_taken = False
         self.is_death = False
+        self.is_active = False
 
         # Tempos para cada estado
         self.walk_time = pygame.time.get_ticks()
@@ -99,43 +102,39 @@ class MeleeEnemy(enemies.Enemy):
 
 
     def move_ai(self):
-        #TODO: Sacar los parametros de tamaño de pantalla constantes
-        offset_x = (800/2)
-        offset_y = (600/2)
-
-        is_visible = False
         speed_buff = 0
 
         self.field_of_view = self.rect.inflate(256, 256)
         self.attack_range = self.rect.inflate(6,6)
 
-        if self.rect.x > self.player.rect.centerx - offset_x and self.rect.x < self.player.rect.centerx + offset_x \
-            and self.rect.y > self.player.rect.centery - offset_y and self.rect.y < self.player.rect.centery + offset_y:
-            # O enemigo está en pantalla
-            is_visible = True
+        self._is_on_screen()
 
-        if self.field_of_view.colliderect(self.player.rect) and not self.player_detected:
-            # O xogador entrou no campo de visión do enemigo
-            self.player_detected = True
-            self._start_walking()
+        if self.is_active:
+            # Comportamento para enemigos en pantalla
 
-        if self.player_detected and self.is_walking:
-            # Detectou ao xogador e está ao perseguir
+            if self.field_of_view.colliderect(self.player.rect) and not self.player_detected:
+                # O xogador entrou no campo de visión do enemigo
+                self.player_detected = True
+                self._start_walking()
 
-            if self._is_player_in_attack_range() and not self.is_attacking and not self.has_cooldown:
-                # O xogador está no rango de ataque do enemigo
-                self._create_attack()
-            else:
-                # Todavía non alcanzou ao xogador
-                self.direction.update(self.player.rect.centerx - self.rect.centerx,
-                                      self.player.rect.centery - self.rect.centery)
-                speed_buff = 2.5
+            if self.player_detected and self.is_walking:
+                # Detectou ao xogador e está ao perseguir
 
-        elif not self.player_detected and self.is_walking and is_visible:
-            # Non detectou a ningún xogador e está paseando tranquilo
-            speed_buff = 1
+                if self._is_player_in_attack_range() and not self.is_attacking and not self.has_cooldown:
+                    # O xogador está no rango de ataque do enemigo
+                    self._create_attack()
+                else:
+                    # Todavía non alcanzou ao xogador
+                    self.direction.update(self.player.rect.centerx - self.rect.centerx,
+                                        self.player.rect.centery - self.rect.centery)
+                    speed_buff = 2.5
 
-        self.move(self.speed * speed_buff)
+            elif not self.player_detected and self.is_walking and self.is_active:
+                # Non detectou a ningún xogador e está paseando tranquilo
+                speed_buff = 1
+
+            self.move(self.speed * speed_buff)
+
         return
 
 
@@ -180,6 +179,19 @@ class MeleeEnemy(enemies.Enemy):
                 self.observers["hearts"].notify(pos)
                 self.observers["counter"].notify(pos)
                 self.player.sumar_puntos(10)
+        return
+
+    
+    def _is_on_screen(self):
+        offset_x = (800/2)
+        offset_y = (600/2)
+
+        if self.rect.x > self.player.rect.centerx - offset_x and self.rect.x < self.player.rect.centerx + offset_x \
+            and self.rect.y > self.player.rect.centery - offset_y and self.rect.y < self.player.rect.centery + offset_y:
+            # O enemigo está en pantalla
+            self.is_active = True
+        elif not self.player_detected:
+            self.is_active = False
         return
 
 
