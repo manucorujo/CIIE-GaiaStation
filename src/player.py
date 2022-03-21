@@ -16,6 +16,9 @@ import keyboardControl
 
 parser = configparser.ConfigParser()
 parser.read("GaiaStation.config")
+
+TILE_SIZE = int(parser.get("level", "TILE_SIZE"))
+
 IDLE = int(parser.get("player", "IDLE"))
 ANDANDO = int(parser.get("player", "ANDANDO"))
 AGACHADO = int(parser.get("player", "AGACHADO"))
@@ -46,7 +49,7 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
 
         # Hitbox: correspondese co rect da perxoase, pero recortado por arriba e por abaixo para asi ter un comportamento mais real cas paredes 
         self.rect = pygame.Rect(pos[0],pos[1],self.coordinates_sheet[self.current_pose][self.current_pose_frame][2],self.coordinates_sheet[self.current_pose][self.current_pose_frame][3])
-        self.hitbox = self.rect.inflate(0, -12)
+        self.hitbox = self.rect.inflate(0, -round(TILE_SIZE * 1/3))
 
         # O retardo a hora de cambiar a imaxe do Sprite, para que non se faga moi rapido
         self.animation_delay = 0
@@ -151,8 +154,9 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
 
             
     def heal(self, heal_value):
-        self.vida = min(self.vida + heal_value, self.max_vida)
-        self.notify_obervers()
+        if self.current_pose != DIYING:
+            self.vida = min(self.vida + heal_value, self.max_vida)
+            self.notify_obervers()
 
     def take_damage(self, damage=1):
         if not self.damage_taken and self.current_pose != DIYING:
@@ -160,6 +164,7 @@ class Player(dynamic_sprites.DynamicSprites, Subject):
             self.damage_taken_time = pygame.time.get_ticks()
             self.hit_countdown = 6
             self.vida -= damage
+            self.puntos -= 5 # perde 5 puntos por golpe
             if self.vida <= 0:
                 self._die()
             self.notify_obervers()

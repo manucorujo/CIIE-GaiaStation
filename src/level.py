@@ -16,15 +16,15 @@ enemies_types_list = [
     ({
         # Scarab
         "name" : "Robots/Scarab",
-        "speed" : 1,
-        "health" : 3
-    }, 65),
+        "speed" : 1.1,
+        "health" : 2
+    }, 35),
     ({
         # Spider
         "name" : "Robots/Spider",
-        "speed" : 1.1,
-        "health" : 2
-    }, 35)
+        "speed" : 1,
+        "health" : 3
+    }, 65)
 ]
 
 #==============================================================================
