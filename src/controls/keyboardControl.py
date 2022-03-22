@@ -1,5 +1,5 @@
 import pygame
-import control
+import controls.control as control
 
 # -------------------------------------------------
 # Clase Control

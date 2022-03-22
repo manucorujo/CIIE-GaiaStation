@@ -1,6 +1,6 @@
 import configparser
 import pygame
-from scene import *
+from director.scene import *
 from pygame.locals import *
 
 # -------------------------------------------------

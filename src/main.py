@@ -5,9 +5,9 @@
 #==============================================================================
 
 import pygame
-import director
-from director import *
-from menu import Menu
+import director.director as director
+from director.director import *
+from director.menu import Menu
 from pygame.locals import *
 
 #==============================================================================

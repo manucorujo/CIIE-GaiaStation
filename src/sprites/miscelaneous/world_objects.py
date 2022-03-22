@@ -1,6 +1,6 @@
-from mi_sprite import *
+from sprites.mi_sprite import *
 from pygame.locals import *
-from resources_manager import *
+from utils.resources_manager import *
 import configparser
 
 parser = configparser.ConfigParser()

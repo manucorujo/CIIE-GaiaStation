@@ -1,6 +1,6 @@
-from resources_manager import *
-from mi_sprite import MiSprite
-from observer import Observer
+from utils.resources_manager import *
+from sprites.mi_sprite import MiSprite
+from sprites.observer import Observer
 import pygame
 
 class UIGroup(pygame.sprite.Group):

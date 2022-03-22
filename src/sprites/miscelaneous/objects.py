@@ -1,6 +1,6 @@
 import configparser
-from resources_manager import *
-import mi_sprite
+from utils.resources_manager import *
+import sprites.mi_sprite as mi_sprite
 import pygame
 
 # -------------------------------------------------

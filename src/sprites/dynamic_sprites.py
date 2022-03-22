@@ -1,6 +1,6 @@
-from resources_manager import *
-from constants import *
-import mi_sprite
+from utils.resources_manager import *
+from utils.constants import *
+import sprites.mi_sprite as mi_sprite
 import pygame
 import math
 

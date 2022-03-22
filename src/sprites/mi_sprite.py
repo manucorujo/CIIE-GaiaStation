@@ -1,5 +1,5 @@
 import pygame
-from resources_manager import *
+from utils.resources_manager import *
 
 # -------------------------------------------------
 # Clase MiSprite

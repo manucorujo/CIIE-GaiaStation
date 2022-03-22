@@ -1,9 +1,9 @@
 import sys
 import pygame
 from pygame.locals import *
-from scene import Scene
-from level import Level
-from resources_manager import *
+from director.scene import Scene
+from director.level import Level
+from utils.resources_manager import *
 from itertools import cycle
 
 # -------------------------------------------------

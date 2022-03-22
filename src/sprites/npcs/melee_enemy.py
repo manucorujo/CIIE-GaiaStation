@@ -1,11 +1,10 @@
 import configparser
 import random
 
-from numpy import False_
-import enemies
-from objects import HeartObject
-from resources_manager import *
-import dynamic_sprites
+import sprites.npcs.enemies as enemies
+from sprites.miscelaneous.objects import HeartObject
+from utils.resources_manager import *
+import sprites.dynamic_sprites as dynamic_sprites
 import pygame
 
 # -------------------------------------------------

@@ -1,6 +1,6 @@
 import configparser
-from resources_manager import *
-import dynamic_sprites
+from utils.resources_manager import *
+import sprites.dynamic_sprites as dynamic_sprites
 import pygame
 
 # -------------------------------------------------
