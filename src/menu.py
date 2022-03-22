@@ -2,7 +2,7 @@ import sys
 import pygame
 from pygame.locals import *
 from scene import Scene
-from level import Level
+from level import Level1, Level3
 from resources_manager import *
 from itertools import cycle
 
@@ -43,7 +43,7 @@ class GUIText(GUIElement):
 class PlayText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (138, 41, 10), 'Xogar', (380, 300))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
 
     def select(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
@@ -163,7 +163,9 @@ class GUIInitialScreen(GUIScreen):
         self.GUI_interactive_elements.append(play_text)
         self.GUI_interactive_elements.append(config_text)
         self.GUI_interactive_elements.append(exit_text)
+        #Marcamos como seleccionado por defecto o primero elemento da lista (xogar)
         self.selected = self.GUI_interactive_elements[0]
+        self.selected.select(self)
 
 # -------------------------------------------------
 # Clase Menu, a escena
@@ -193,7 +195,7 @@ class Menu(Scene):
         sys.exit()
 
     def execute_game(self):
-         level = Level(self.director, 'level3.png', 'level3_obstacles.csv')
+         level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
          self.director.stack_scene(level)
 
     def show_initial_screen(self):
