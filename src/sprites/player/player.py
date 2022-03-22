@@ -101,7 +101,7 @@ class Player(DynamicSprites, Subject):
         if self.is_attacking or self.current_pose == DIYING:
             return
 
-        keys = pygame.key.get_pressed() # TODO: ¿Esto vale para mando?
+        keys = pygame.key.get_pressed() 
 
         # movimiento
         if self.control.up(keys):
