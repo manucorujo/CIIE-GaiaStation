@@ -129,7 +129,7 @@ class Level(Scene, Observer):
         return
 
     def notify(self,player):
-        self.goal = player.goal
+        self.goal = player.goal or self.goal
         self.lose = player.lose
         if self.lose:
             print("Pantalla: TE HAN MATADO")
@@ -184,7 +184,11 @@ class Level(Scene, Observer):
             self.level = level
 
         def notify(self, enemy_pos):
-            print("Enemigo muerto - Restar uno al contador global de enemigos")
+            if (self.level.obstacles_file == 'level1_obstacles.csv' or
+                self.level.obstacles_file == 'level2_obstacles.csv'):
+                self.level.alive_enemies -= 1
+                if (self.level.alive_enemies == 0): 
+                    self.level.goal = True
             return
 
 #==============================================================================
