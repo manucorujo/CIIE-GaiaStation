@@ -49,9 +49,6 @@ class ResourcesManager(object):
                 raise SystemExit(message)
             image = image.convert()
 
-            # reescalado para ver como queda
-            image = pygame.transform.scale(image, (image.get_width()*2, image.get_height()*2))
-
             # Almacénase
             cls.resources[name] = image
             # Devólvese
