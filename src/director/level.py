@@ -189,7 +189,7 @@ class Level1(Level):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            dead = Dead(self.director)
+            dead = Final(self.director, False)
             self.director.stack_scene(dead)
         elif self.goal:
             level = Level2(self.director, 'level2.png', 'level2_obstacles.csv')
@@ -205,7 +205,7 @@ class Level2(Level):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            dead = Dead(self.director)
+            dead = Final(self.director, False)
             self.director.stack_scene(dead)
         elif self.goal:
             level = Level3(self.director, 'level3.png', 'level3_obstacles.csv')
@@ -221,11 +221,11 @@ class Level3(Level):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            dead = Dead(self.director)
+            dead = Final(self.director, False)
             self.director.stack_scene(dead)
         elif self.goal:
-            print("Pantalla: VICTORIA")
-
+            dead = Final(self.director, True)
+            self.director.stack_scene(dead)
 
 #==============================================================================
 
@@ -264,16 +264,18 @@ class CameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.get_image(), offset_pos)
 
-class Dead(Scene):
+#==============================================================================
 
-    def __init__(self, director):
+class Final(Scene):
+
+    def __init__(self, director, win):
         Scene.__init__(self, director)
 
         self.image = ResourcesManager.LoadImage('black.jpg')
         self.image = pygame.transform.scale(self.image, (800, 600))
         title_font = ResourcesManager.loadFont("upheavtt.ttf", 52)
         text_font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        self.title = title_font.render('DERROTA', True, (255, 0, 0))
+        self.title = title_font.render('VICTORIA', True, (0, 255, 0)) if win else title_font.render('DERROTA', True, (255, 0, 0))
         self.text = text_font.render('Pulsa ESPACIO para reiniciar', True, (255, 255, 255))
 
     def update(self, *args):
@@ -283,23 +285,14 @@ class Dead(Scene):
         for event in events_list:
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                    self.exit_program()
                 elif event.key == K_SPACE:
                     level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
                     self.director.stack_scene(level)
             elif event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                self.exit_program()
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect())
         screen.blit(self.title, (300, 210))
         screen.blit(self.text, (200, 300))
-
-    def exit_program(self):
-        pygame.quit()
-        sys.exit()
-
-    def return_game(self):
-        self.director.exit_scene()
