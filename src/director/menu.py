@@ -242,9 +242,8 @@ class Menu(Scene):
         self.screens_list = []
         # Créase a pantalla e añádese á lista
         self.screens_list.append(GUIInitialScreen(self))
-        ResourcesManager.loadMusic('level.mp3')
+        ResourcesManager.loadMusic('menu.mp3')
         pygame.mixer.music.play(loops=-1)
-        pygame.mixer.music.stop()
         self.show_initial_screen()
 
     def update(self, *args):
