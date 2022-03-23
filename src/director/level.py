@@ -263,6 +263,18 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
 
+        # evitamos que la camara se mueva fuera del mapa
+        if self.offset.x < self.floor_rect.left:
+            self.offset.x = self.floor_rect.left
+        elif self.offset.x > self.floor_rect.right - self.half_width*2:
+            self.offset.x = self.floor_rect.right - self.half_width*2
+        
+        if self.offset.y < self.floor_rect.top:
+            self.offset.y = self.floor_rect.top
+        elif self.offset.y > self.floor_rect.bottom - self.half_height*2:
+            self.offset.y = self.floor_rect.bottom - self.half_height*2
+
+
         # Debuxando o chan
         floor_offset_pos = self.floor_rect.topleft - self.offset
         self.display_surface.blit(self.floor_surf, floor_offset_pos)
