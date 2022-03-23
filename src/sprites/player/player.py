@@ -167,6 +167,9 @@ class Player(DynamicSprites, Subject):
             self.hit_countdown = 6
             self.vida -= damage
             self.puntos -= 5 # perde 5 puntos por golpe
+            
+            if self.puntos < 0: self.puntos = 0
+
             if self.vida <= 0:
                 self._die()
             self.notify_obervers()
@@ -236,5 +239,9 @@ class Player(DynamicSprites, Subject):
 
     def set_stats_dto(self, dto):
         if dto is not None:
-            self.vida = dto.get_vida()
-            self.puntos = dto.get_puntos()
+            if dto.get_vida() > 0:
+                self.vida = dto.get_vida()
+                self.puntos = dto.get_puntos() 
+            else: # En caso de haber muerto
+                self.vida = self.max_vida
+                self.puntos = dto.get_puntos() // 2 # penalizacion 

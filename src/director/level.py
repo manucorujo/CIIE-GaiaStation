@@ -71,20 +71,19 @@ class Level(Scene, Observer):
         self.init_observers()
         self.create_map()
 
+        # engadir dto
+        self.player.set_stats_dto(dto)
+
         # Elementos UI
         barra_vida = BarraVida([self.ui_sprites], "UI/health-bars.png", "UI/health-bars.txt", self.player.vida)
-        puntuacion = Puntuacion([self.ui_sprites], 0)
+        puntuacion = Puntuacion([self.ui_sprites], self.player.puntos)
 
         self.player.add_observer(barra_vida)
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
-        # engadir dto
-        self.player.set_stats_dto(dto)
-
         ResourcesManager.loadMusic('level.mp3')
         pygame.mixer.music.play(loops=-1)
-        pygame.mixer.music.stop()
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
@@ -141,6 +140,12 @@ class Level(Scene, Observer):
                 if event.key == K_p:
                     pause = Pause(self.director)
                     self.director.stack_scene(pause)
+
+                # if e then goal = True
+                if event.key == K_e:
+                    self.goal = True
+                    self.player.notify_obervers()
+
             if event.type == pygame.QUIT:
                 self.director.quit_program()
 
@@ -193,7 +198,7 @@ class Level1(Level):
         dto = PlayerDTO(player)
         if self.lose:
             dead = Final(self.director, False)
-            self.director.stack_scene(Level1(self.director, 'level1.png', 'level1_obstacles.csv'))
+            self.director.stack_scene(Level1(self.director, 'level1.png', 'level1_obstacles.csv', dto))
             self.director.stack_scene(dead)
         elif self.goal:
             level = Level2(self.director, 'level2.png', 'level2_obstacles.csv', dto)
@@ -210,7 +215,7 @@ class Level2(Level):
         dto = PlayerDTO(player)
         if self.lose:
             dead = Final(self.director, False)
-            self.director.stack_scene(Level2(self.director, 'level2.png', 'level2_obstacles.csv'))
+            self.director.stack_scene(Level2(self.director, 'level2.png', 'level2_obstacles.csv', dto))
             self.director.stack_scene(dead)
         elif self.goal:
             level = Level3(self.director, 'level3.png', 'level3_obstacles.csv', dto)
@@ -225,15 +230,14 @@ class Level3(Level):
     def notify(self,player):
         self.goal = player.goal
         self.lose = player.lose
+        dto = PlayerDTO(player)
         if self.lose:
             dead = Final(self.director, False)
-            self.director.stack_scene(Level3(self.director, 'level3.png', 'level3_obstacles.csv'))
+            self.director.stack_scene(Level3(self.director, 'level3.png', 'level3_obstacles.csv', dto))
             self.director.stack_scene(dead)
         elif self.goal:
-            self.director.stack_scene(dead)
-        elif self.goal:
-            dead = Final(self.director, True)
-            self.director.stack_scene(dead)
+            victory = Final(self.director, True)
+            self.director.stack_scene(victory)
 
 #==============================================================================
 
