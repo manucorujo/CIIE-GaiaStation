@@ -1,3 +1,4 @@
+import sys
 from director.pause import Pause
 from sprites.miscelaneous.objects import HeartObject
 from sprites.observer import Observer, SpriteObserver
@@ -78,9 +79,9 @@ class Level(Scene, Observer):
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
-        # ResourcesManager.loadMusic('level.mp3')
-        # pygame.mixer.music.play(loops=-1)
-        # pygame.mixer.music.stop()
+        ResourcesManager.loadMusic('level.mp3')
+        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.stop()
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
@@ -184,7 +185,8 @@ class Level1(Level):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            print("Pantalla: TE HAN MATADO")
+            dead = Dead(self.director)
+            self.director.stack_scene(dead)
         elif self.goal:
             level = Level2(self.director, 'level2.png', 'level2_obstacles.csv')
             self.director.stack_scene(level)
@@ -255,3 +257,43 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.get_image(), offset_pos)
+
+class Dead(Scene):
+
+    def __init__(self, director):
+        Scene.__init__(self, director)
+
+        self.image = ResourcesManager.LoadImage('black.jpg')
+        self.image = pygame.transform.scale(self.image, (800, 600))
+        title_font = ResourcesManager.loadFont("upheavtt.ttf", 52)
+        text_font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        self.title = title_font.render('DERROTA', True, (255, 0, 0))
+        self.text = text_font.render('Pulsa ESPACIO para reiniciar', True, (255, 255, 255))
+
+    def update(self, *args):
+        return
+
+    def events(self, events_list):
+        for event in events_list:
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == K_SPACE:
+                    level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
+                    self.director.stack_scene(level)
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    def draw(self, screen):
+        screen.blit(self.image, self.image.get_rect())
+        screen.blit(self.title, (300, 210))
+        screen.blit(self.text, (200, 300))
+
+    def exit_program(self):
+        pygame.quit()
+        sys.exit()
+
+    def return_game(self):
+        self.director.exit_scene()
