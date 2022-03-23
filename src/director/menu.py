@@ -262,7 +262,7 @@ class Menu(Scene):
         sys.exit()
 
     def execute_game(self):
-         level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
+         level = Level1(self.director, 'level1.png', 'level1_obstacles.csv', None)
          self.director.stack_scene(level)
 
     def show_initial_screen(self):

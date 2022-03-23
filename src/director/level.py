@@ -1,10 +1,10 @@
-import sys
 from director.pause import Pause
 from sprites.miscelaneous.objects import HeartObject
 from sprites.observer import Observer, SpriteObserver
 from director.scene import Scene
 from sprites.npcs.melee_enemy import MeleeEnemy
 from sprites.miscelaneous.world_objects import Obstacle, Flag
+from sprites.player.player_dto import PlayerDTO
 from utils.resources_manager import *
 from sprites.player.player import Player
 from sprites.miscelaneous.ui import UIGroup, BarraVida, Puntuacion
@@ -33,7 +33,7 @@ enemies_types_list = [
 # Clase para cargar un nivel
 
 class Level(Scene, Observer):
-    def __init__(self, director, map_image, obstacles_file):
+    def __init__(self, director, map_image, obstacles_file, dto):
         Scene.__init__(self, director)
 
         # Garda o ficheiro que define o nivel
@@ -78,6 +78,9 @@ class Level(Scene, Observer):
         self.player.add_observer(barra_vida)
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
+
+        # engadir dto
+        self.player.set_stats_dto(dto)
 
         ResourcesManager.loadMusic('level.mp3')
         pygame.mixer.music.play(loops=-1)
@@ -182,38 +185,40 @@ class Level(Scene, Observer):
 #==============================================================================
 
 class Level1(Level):
-    def __init__(self, director, map_image, obstacles_file):
-        super().__init__(director, map_image, obstacles_file)
+    def __init__(self, director, map_image, obstacles_file, dto):
+        super().__init__(director, map_image, obstacles_file, dto)
 
     def notify(self,player):
         self.lose = player.lose
+        dto = PlayerDTO(player)
         if self.lose:
             dead = Final(self.director, False)
             self.director.stack_scene(dead)
         elif self.goal:
-            level = Level2(self.director, 'level2.png', 'level2_obstacles.csv')
+            level = Level2(self.director, 'level2.png', 'level2_obstacles.csv', dto)
             self.director.stack_scene(level)
 
 #==============================================================================
 
 class Level2(Level):
-    def __init__(self, director, map_image, obstacles_file):
-        super().__init__(director, map_image, obstacles_file)
+    def __init__(self, director, map_image, obstacles_file, dto):
+        super().__init__(director, map_image, obstacles_file, dto)
 
     def notify(self,player):
         self.lose = player.lose
+        dto = PlayerDTO(player)
         if self.lose:
             dead = Final(self.director, False)
             self.director.stack_scene(dead)
         elif self.goal:
-            level = Level3(self.director, 'level3.png', 'level3_obstacles.csv')
+            level = Level3(self.director, 'level3.png', 'level3_obstacles.csv', dto)
             self.director.stack_scene(level)
 
 #==============================================================================
 
 class Level3(Level):
-    def __init__(self, director, map_image, obstacles_file):
-        super().__init__(director, map_image, obstacles_file)
+    def __init__(self, director, map_image, obstacles_file, dto):
+        super().__init__(director, map_image, obstacles_file, dto)
 
     def notify(self,player):
         self.goal = player.goal

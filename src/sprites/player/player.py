@@ -233,3 +233,8 @@ class Player(DynamicSprites, Subject):
     def sumar_puntos(self, puntos):
         self.puntos += puntos
         self.notify_obervers()
+
+    def set_stats_dto(self, dto):
+        if dto is not None:
+            self.vida = dto.get_vida()
+            self.puntos = dto.get_puntos()
