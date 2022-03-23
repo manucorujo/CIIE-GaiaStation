@@ -6,16 +6,6 @@ src/__pycache__
 debug.py
 extra
 ignore.txt
-src/controls/__pycache__/
 
-src/director/__pycache__/
+*__pycache__
 
-src/sprites/__pycache__/
-
-src/sprites/miscelaneous/__pycache__/
-
-src/sprites/npcs/__pycache__/
-
-src/sprites/player/__pycache__/
-
-src/utils/__pycache__/

@@ -2,7 +2,7 @@ import sys
 import pygame
 from pygame.locals import *
 from director.scene import Scene
-from director.level import Level
+from director.level import Level1
 from utils.resources_manager import *
 from itertools import cycle
 
@@ -43,7 +43,7 @@ class GUIText(GUIElement):
 class PlayText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (138, 41, 10), 'Xogar', (380, 300))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
 
     def select(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
@@ -72,7 +72,7 @@ class ConfigText(GUIText):
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Configuración', (330, 335))
 
     def action(self):
-        pass
+        self.screen.menu.show_config_screen()
 
 class ExitText(GUIText):
     def __init__(self, screen):
@@ -90,14 +90,26 @@ class ExitText(GUIText):
     def action(self):
         self.screen.menu.exit_program()
 
+class ReturnText(GUIText):
+    def __init__(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (360, 240))
+
+    def select(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Volver', (360, 240))
+
+    def unselect(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (360, 240))
+
+    def action(self):
+        self.screen.menu.return_screen()
+
 class TitleText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 52)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'GAIA STATION', (260, 250))
-
-    def action(self):
-        pass
-
 
 # -------------------------------------------------
 # Clase GUIScreen e as distintas pantallas
@@ -145,6 +157,8 @@ class GUIScreen:
         for element in self.GUI_elements:
             element.draw(screen)
 
+#=======================================================================================
+
 class GUIInitialScreen(GUIScreen):
     def __init__(self, menu):
         GUIScreen.__init__(self, menu, "portada.jpg")
@@ -164,7 +178,59 @@ class GUIInitialScreen(GUIScreen):
         self.GUI_interactive_elements.append(config_text)
         self.GUI_interactive_elements.append(exit_text)
         self.selected = self.GUI_interactive_elements[0]
+        self.selected.select(self)
 
+#=======================================================================================
+
+class GUIConfigScreen(GUIScreen):
+    def __init__(self, menu):
+        GUIScreen.__init__(self, menu, "config.jpg")
+
+        # Créase o texto e añádese á lista
+        return_text = ReturnText(self)
+        self.GUI_elements.append(return_text)
+
+        #Tamén creamos unha lista cos elementos que queremos que sexan interactivos
+        self.GUI_interactive_elements.append(return_text)
+        self.selected = self.GUI_interactive_elements[0]
+        self.selected.select(self)
+
+class Dead(Scene):
+
+    def __init__(self, director):
+        Scene.__init__(self, director)
+
+        self.image = ResourcesManager.LoadImage('black.jpg')
+        self.image = pygame.transform.scale(self.image, (800, 600))
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        self.text = font.render('DERROTA', True, (255, 255, 255))
+
+    def update(self, *args):
+        return
+
+    def events(self, events_list):
+        for event in events_list:
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == K_SPACE:
+                    level = Menu(self.director)
+                    self.director.stack_scene(level)
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    def draw(self, screen):
+        screen.blit(self.image, self.image.get_rect())
+        screen.blit(self.text, (360, 270))
+
+    def exit_program(self):
+        pygame.quit()
+        sys.exit()
+
+    def return_game(self):
+        self.director.exit_scene()
 # -------------------------------------------------
 # Clase Menu, a escena
 
@@ -176,6 +242,9 @@ class Menu(Scene):
         self.screens_list = []
         # Créase a pantalla e añádese á lista
         self.screens_list.append(GUIInitialScreen(self))
+        ResourcesManager.loadMusic('level.mp3')
+        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.stop()
         self.show_initial_screen()
 
     def update(self, *args):
@@ -193,12 +262,53 @@ class Menu(Scene):
         sys.exit()
 
     def execute_game(self):
-         level = Level(self.director, 'level1.png', 'level1_obstacles.csv')
+         level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
          self.director.stack_scene(level)
 
     def show_initial_screen(self):
         self.current_screen = 0
 
-    def mostrarPantallaConfiguracion(self):
-         pass
-        #self.pantallaActual = ...
+    def show_config_screen(self):
+        self.screens_list.append(GUIConfigScreen(self))
+        self.current_screen += 1
+
+    def return_screen(self):
+        self.screens_list.pop()
+        self.current_screen = self.current_screen - 1
+
+class Dead(Scene):
+
+    def __init__(self, director):
+        Scene.__init__(self, director)
+
+        self.image = ResourcesManager.LoadImage('black.jpg')
+        self.image = pygame.transform.scale(self.image, (800, 600))
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        self.text = font.render('DERROTA', True, (255, 255, 255))
+
+    def update(self, *args):
+        return
+
+    def events(self, events_list):
+        for event in events_list:
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == K_SPACE:
+                    level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
+                    self.director.stack_scene(level)
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    def draw(self, screen):
+        screen.blit(self.image, self.image.get_rect())
+        screen.blit(self.text, (360, 270))
+
+    def exit_program(self):
+        pygame.quit()
+        sys.exit()
+
+    def return_game(self):
+        self.director.exit_scene()

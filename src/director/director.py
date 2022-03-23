@@ -46,7 +46,7 @@ class Director():
             # Execútase o bucle de eventos ata que remate a escena
             self.loop(scene)
 
-    def quit_scene(self):
+    def exit_scene(self):
         self.quit_scene = True
         # Eliminamos a escena actual da pila
         if (len(self.stack)>0):
@@ -57,7 +57,7 @@ class Director():
         self.quit_scene = True
 
     def change_scene(self, scene):
-        self.quit_scene()
+        self.exit_scene()
         self.stack.append(scene)
 
     def stack_scene(self, scene):
