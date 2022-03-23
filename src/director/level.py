@@ -172,7 +172,11 @@ class Level(Scene, Observer):
             self.level = level
 
         def notify(self, enemy_pos):
-            print("Enemigo muerto - Restar uno al contador global de enemigos")
+            if (self.level.obstacles_file == 'level1_obstacles.csv' or
+                self.level.obstacles_file == 'level2_obstacles.csv'):
+                self.level.alive_enemies -= 1
+                if (self.level.alive_enemies == 0): 
+                    self.level.goal = True
             return
 
 #==============================================================================
@@ -201,7 +205,8 @@ class Level2(Level):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            print("Pantalla: TE HAN MATADO")
+            dead = Dead(self.director)
+            self.director.stack_scene(dead)
         elif self.goal:
             level = Level3(self.director, 'level3.png', 'level3_obstacles.csv')
             self.director.stack_scene(level)
@@ -216,7 +221,8 @@ class Level3(Level):
         self.goal = player.goal
         self.lose = player.lose
         if self.lose:
-            print("Pantalla: TE HAN MATADO")
+            dead = Dead(self.director)
+            self.director.stack_scene(dead)
         elif self.goal:
             print("Pantalla: VICTORIA")
 

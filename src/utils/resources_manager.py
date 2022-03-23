@@ -28,9 +28,6 @@ class ResourcesManager(object):
                     colorkey = image.get_at((0,0))
                 image.set_colorkey(colorkey, RLEACCEL)
 
-            # reescalado para ver como queda
-            image = pygame.transform.scale(image, (image.get_width()*2, image.get_height()*2))
-
             # Almacénase
             cls.resources[name] = image
             # Devólvese
@@ -51,9 +48,6 @@ class ResourcesManager(object):
                 print('Cannot load image: ' + fullname)
                 raise SystemExit(message)
             image = image.convert()
-
-            # reescalado para ver como queda
-            image = pygame.transform.scale(image, (image.get_width()*2, image.get_height()*2))
 
             # Almacénase
             cls.resources[name] = image
