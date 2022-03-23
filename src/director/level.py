@@ -18,15 +18,15 @@ enemies_types_list = [
     ({
         # Scarab
         "name" : "Robots/Scarab",
-        "speed" : 1,
-        "health" : 3
-    }, 65),
+        "speed" : 1.1,
+        "health" : 2
+    }, 35),
     ({
         # Spider
         "name" : "Robots/Spider",
-        "speed" : 1.1,
-        "health" : 2
-    }, 35)
+        "speed" : 1,
+        "health" : 3
+    }, 65)
 ]
 
 #==============================================================================
@@ -189,6 +189,7 @@ class Level1(Level):
         self.lose = player.lose
         if self.lose:
             dead = Final(self.director, False)
+            self.director.stack_scene(Level1(self.director, 'level1.png', 'level1_obstacles.csv'))
             self.director.stack_scene(dead)
         elif self.goal:
             level = Level2(self.director, 'level2.png', 'level2_obstacles.csv')
@@ -204,6 +205,7 @@ class Level2(Level):
         self.lose = player.lose
         if self.lose:
             dead = Final(self.director, False)
+            self.director.stack_scene(Level2(self.director, 'level2.png', 'level2_obstacles.csv'))
             self.director.stack_scene(dead)
         elif self.goal:
             level = Level3(self.director, 'level3.png', 'level3_obstacles.csv')
@@ -220,6 +222,9 @@ class Level3(Level):
         self.lose = player.lose
         if self.lose:
             dead = Final(self.director, False)
+            self.director.stack_scene(Level3(self.director, 'level3.png', 'level3_obstacles.csv'))
+            self.director.stack_scene(dead)
+        elif self.goal:
             self.director.stack_scene(dead)
         elif self.goal:
             dead = Final(self.director, True)
@@ -274,7 +279,7 @@ class Final(Scene):
         title_font = ResourcesManager.loadFont("upheavtt.ttf", 52)
         text_font = ResourcesManager.loadFont("upheavtt.ttf", 26)
         self.title = title_font.render('VICTORIA', True, (0, 255, 0)) if win else title_font.render('DERROTA', True, (255, 0, 0))
-        self.text = text_font.render('Pulsa ESPACIO para reiniciar', True, (255, 255, 255))
+        self.text = text_font.render('Pulsa R para reiniciar', True, (255, 255, 255))
 
     def update(self, *args):
         return
@@ -284,13 +289,12 @@ class Final(Scene):
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self.exit_program()
-                elif event.key == K_SPACE:
-                    level = Level1(self.director, 'level1.png', 'level1_obstacles.csv')
-                    self.director.stack_scene(level)
+                elif event.key == K_r:
+                    self.director.exit_scene()
             elif event.type == pygame.QUIT:
                 self.exit_program()
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect())
         screen.blit(self.title, (300, 210))
-        screen.blit(self.text, (200, 300))
+        screen.blit(self.text, (235, 300))
