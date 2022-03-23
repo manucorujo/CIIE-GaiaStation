@@ -186,7 +186,6 @@ class Level1(Level):
         super().__init__(director, map_image, obstacles_file)
 
     def notify(self,player):
-        self.goal = player.goal
         self.lose = player.lose
         if self.lose:
             dead = Final(self.director, False)
@@ -202,7 +201,6 @@ class Level2(Level):
         super().__init__(director, map_image, obstacles_file)
 
     def notify(self,player):
-        self.goal = player.goal
         self.lose = player.lose
         if self.lose:
             dead = Final(self.director, False)
