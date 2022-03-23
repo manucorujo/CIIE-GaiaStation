@@ -1,3 +1,4 @@
+from director.pause import Pause
 from sprites.miscelaneous.objects import HeartObject
 from sprites.observer import Observer, SpriteObserver
 from director.scene import Scene
@@ -16,15 +17,15 @@ enemies_types_list = [
     ({
         # Scarab
         "name" : "Robots/Scarab",
-        "speed" : 1.1,
-        "health" : 2
-    }, 35),
+        "speed" : 1,
+        "health" : 3
+    }, 65),
     ({
         # Spider
         "name" : "Robots/Spider",
-        "speed" : 1,
-        "health" : 3
-    }, 65)
+        "speed" : 1.1,
+        "health" : 2
+    }, 35)
 ]
 
 #==============================================================================
@@ -77,11 +78,9 @@ class Level(Scene, Observer):
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
-        # Está comentada a do xestor de recursos por se o erro era por eso, pero non; así que
-        # hai que facelo coa línea comentada e borrar a de arriba
-        pygame.mixer.music.load('../res/music/level.mp3')
-        #ResourcesManager.loadMusic('level.mp3')
-        pygame.mixer.music.play(loops=-1)
+        # ResourcesManager.loadMusic('level.mp3')
+        # pygame.mixer.music.play(loops=-1)
+        # pygame.mixer.music.stop()
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
@@ -128,21 +127,6 @@ class Level(Scene, Observer):
                         image, coord_file, speed, health, observers)
         return
 
-    def notify(self,player):
-        self.goal = player.goal
-        self.lose = player.lose
-        if self.lose:
-            print("Pantalla: TE HAN MATADO")
-        elif self.goal:
-            if (self.obstacles_file == 'level1_obstacles.csv'):
-                level = Level(self.director, 'level2.png', 'level2_obstacles.csv')
-                self.director.stack_scene(level)
-            elif (self.obstacles_file == 'level2_obstacles.csv'):
-                level = Level(self.director, 'level3.png', 'level3_obstacles.csv')
-                self.director.stack_scene(level)
-            elif (self.obstacles_file == 'level3_obstacles.csv'):
-                print('Pantalla: VICTORIA')
-
     def events(self, events_list):
         for event in events_list:
             if event.type == KEYDOWN:
@@ -150,6 +134,9 @@ class Level(Scene, Observer):
                 if event.key == K_ESCAPE:
                     # Se sale del programa
                     self.director.quit_program()
+                if event.key == K_p:
+                    pause = Pause(self.director)
+                    self.director.stack_scene(pause)
             if event.type == pygame.QUIT:
                 self.director.quit_program()
 
@@ -186,6 +173,51 @@ class Level(Scene, Observer):
         def notify(self, enemy_pos):
             print("Enemigo muerto - Restar uno al contador global de enemigos")
             return
+
+#==============================================================================
+
+class Level1(Level):
+    def __init__(self, director, map_image, obstacles_file):
+        super().__init__(director, map_image, obstacles_file)
+
+    def notify(self,player):
+        self.goal = player.goal
+        self.lose = player.lose
+        if self.lose:
+            print("Pantalla: TE HAN MATADO")
+        elif self.goal:
+            level = Level2(self.director, 'level2.png', 'level2_obstacles.csv')
+            self.director.stack_scene(level)
+
+#==============================================================================
+
+class Level2(Level):
+    def __init__(self, director, map_image, obstacles_file):
+        super().__init__(director, map_image, obstacles_file)
+
+    def notify(self,player):
+        self.goal = player.goal
+        self.lose = player.lose
+        if self.lose:
+            print("Pantalla: TE HAN MATADO")
+        elif self.goal:
+            level = Level3(self.director, 'level3.png', 'level3_obstacles.csv')
+            self.director.stack_scene(level)
+
+#==============================================================================
+
+class Level3(Level):
+    def __init__(self, director, map_image, obstacles_file):
+        super().__init__(director, map_image, obstacles_file)
+
+    def notify(self,player):
+        self.goal = player.goal
+        self.lose = player.lose
+        if self.lose:
+            print("Pantalla: TE HAN MATADO")
+        elif self.goal:
+            print("Pantalla: VICTORIA")
+
 
 #==============================================================================
 

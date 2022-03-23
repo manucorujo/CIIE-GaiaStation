@@ -6,3 +6,5 @@ src/__pycache__
 debug.py
 extra
 ignore.txt
+
+*__pycache__
