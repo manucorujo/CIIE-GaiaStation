@@ -1,3 +1,4 @@
+import math
 import sys
 import pygame
 from pygame.locals import *
@@ -93,18 +94,40 @@ class ExitText(GUIText):
 class ReturnText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (360, 240))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (50, 200))
 
     def select(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (138, 41, 10), 'Volver', (360, 240))
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Volver', (50, 200))
 
     def unselect(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (360, 240))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (50, 200))
 
     def action(self):
         self.screen.menu.return_screen()
+
+class SetVolumeText(GUIText):
+    def __init__(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volume: ' + str(round(pygame.mixer.music.get_volume() * 10)), (50, 250))
+
+    def select(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Volume: ' + str(round(pygame.mixer.music.get_volume() * 10)), (50, 250))
+
+    def unselect(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Volume: ' + str(round(pygame.mixer.music.get_volume() * 10)), (50, 250))
+
+    def action(self):
+        return
+
+    def minus(self):
+        pygame.mixer.music.set_volume(round(pygame.mixer.music.get_volume() - 0.1, 1))
+
+    def plus(self):
+        pygame.mixer.music.set_volume(round(pygame.mixer.music.get_volume() + 0.1, 1))
 
 class TitleText(GUIText):
     def __init__(self, screen):
@@ -137,8 +160,8 @@ class GUIScreen:
                     sys.exit()
                 elif event.key == K_UP:
                     self.selected.unselect(self)
-                    self.selected = next(self.iterator)
-                    self.selected = next(self.iterator)
+                    for _ in range(len(self.GUI_interactive_elements) - 1):
+                        self.selected = next(self.iterator)
                     self.selected.select(self)
                 elif event.key == K_DOWN:
                     self.selected.unselect(self)
@@ -146,6 +169,13 @@ class GUIScreen:
                     self.selected.select(self)
                 elif event.key == K_RETURN:
                     self.selected.action()
+                elif isinstance(self.selected, SetVolumeText):
+                    if event.key == K_LEFT:
+                        self.selected.minus()
+                        self.selected.select(self)
+                    elif event.key == K_RIGHT:
+                        self.selected.plus()
+                        self.selected.select(self)
             elif event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -189,48 +219,15 @@ class GUIConfigScreen(GUIScreen):
         # Créase o texto e añádese á lista
         return_text = ReturnText(self)
         self.GUI_elements.append(return_text)
+        volume_text = SetVolumeText(self)
+        self.GUI_elements.append(volume_text)
 
         #Tamén creamos unha lista cos elementos que queremos que sexan interactivos
         self.GUI_interactive_elements.append(return_text)
+        self.GUI_interactive_elements.append(volume_text)
         self.selected = self.GUI_interactive_elements[0]
-        self.selected.select(self)
+        self.selected.select(self) # Para actualizar o print
 
-class Dead(Scene):
-
-    def __init__(self, director):
-        Scene.__init__(self, director)
-
-        self.image = ResourcesManager.LoadImage('black.jpg')
-        self.image = pygame.transform.scale(self.image, (800, 600))
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        self.text = font.render('DERROTA', True, (255, 255, 255))
-
-    def update(self, *args):
-        return
-
-    def events(self, events_list):
-        for event in events_list:
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                elif event.key == K_SPACE:
-                    level = Menu(self.director)
-                    self.director.stack_scene(level)
-            elif event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-    def draw(self, screen):
-        screen.blit(self.image, self.image.get_rect())
-        screen.blit(self.text, (360, 270))
-
-    def exit_program(self):
-        pygame.quit()
-        sys.exit()
-
-    def return_game(self):
-        self.director.exit_scene()
 # -------------------------------------------------
 # Clase Menu, a escena
 
