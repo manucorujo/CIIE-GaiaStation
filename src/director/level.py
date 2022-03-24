@@ -84,7 +84,7 @@ class Level(Scene, Observer):
 
         ResourcesManager.loadMusic('level.mp3')
         pygame.mixer.music.play(loops=-1)
-        pygame.mixer.set_volume(0.5)
+        pygame.mixer.music.set_volume(0.5)
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
@@ -184,7 +184,7 @@ class Level(Scene, Observer):
             if (self.level.obstacles_file == 'level1_obstacles.csv' or
                 self.level.obstacles_file == 'level2_obstacles.csv'):
                 self.level.alive_enemies -= 1
-                if (self.level.alive_enemies == 0): 
+                if (self.level.alive_enemies <= 100): 
                     self.level.goal = True
             return
 
