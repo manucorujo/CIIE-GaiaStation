@@ -82,8 +82,8 @@ class Level(Scene, Observer):
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
-        ResourcesManager.loadMusic('level.mp3')
-        pygame.mixer.music.play(loops=-1)
+        #ResourcesManager.loadMusic('level.mp3')
+        #pygame.mixer.music.play(loops=-1)
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
@@ -197,7 +197,7 @@ class Level1(Level):
         self.lose = player.lose
         dto = PlayerDTO(player)
         if self.lose:
-            dead = Final(self.director, False)
+            dead = Final(self.director, False, self.player.puntos)
             self.director.stack_scene(Level1(self.director, 'level1.png', 'level1_obstacles.csv', dto))
             self.director.stack_scene(dead)
         elif self.goal:
@@ -214,7 +214,7 @@ class Level2(Level):
         self.lose = player.lose
         dto = PlayerDTO(player)
         if self.lose:
-            dead = Final(self.director, False)
+            dead = Final(self.director, False, self.player.puntos)
             self.director.stack_scene(Level2(self.director, 'level2.png', 'level2_obstacles.csv', dto))
             self.director.stack_scene(dead)
         elif self.goal:
@@ -232,11 +232,11 @@ class Level3(Level):
         self.lose = player.lose
         dto = PlayerDTO(player)
         if self.lose:
-            dead = Final(self.director, False)
+            dead = Final(self.director, False, self.player.puntos)
             self.director.stack_scene(Level3(self.director, 'level3.png', 'level3_obstacles.csv', dto))
             self.director.stack_scene(dead)
         elif self.goal:
-            victory = Final(self.director, True)
+            victory = Final(self.director, True, self.player.puntos)
             self.director.stack_scene(victory)
 
 #==============================================================================
@@ -292,15 +292,17 @@ class CameraGroup(pygame.sprite.Group):
 
 class Final(Scene):
 
-    def __init__(self, director, win):
+    def __init__(self, director, win, score):
         Scene.__init__(self, director)
-
+        self.win = win
         self.image = ResourcesManager.LoadImage('black.jpg')
         self.image = pygame.transform.scale(self.image, (800, 600))
         title_font = ResourcesManager.loadFont("upheavtt.ttf", 52)
-        text_font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        text_font = ResourcesManager.loadFont("upheavtt.ttf", 22)
+        score_font = ResourcesManager.loadFont("upheavtt.ttf", 14)
         self.title = title_font.render('VICTORIA', True, (0, 255, 0)) if win else title_font.render('DERROTA', True, (255, 0, 0))
-        self.text = text_font.render('Pulsa R para reiniciar', True, (255, 255, 255))
+        self.text = text_font.render('Pulsa R para reiniciar o Q para salir del juego', True, (255, 255, 255))
+        self.score_text = score_font.render('Puntuación: ' + str(score), True, (230, 245, 66))
 
     def update(self, *args):
         return
@@ -308,14 +310,19 @@ class Final(Scene):
     def events(self, events_list):
         for event in events_list:
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    self.exit_program()
+                if event.key == K_ESCAPE or event.key == K_q:
+                    self.director_quit_program()
                 elif event.key == K_r:
-                    self.director.exit_scene()
+                    if (not self.win):
+                        self.director.exit_scene()
+                    else:
+                        level = Level1(self.director, 'level1.png', 'level1_obstacles.csv', None)
+                        self.director.stack_scene(level)
             elif event.type == pygame.QUIT:
-                self.exit_program()
+                self.director.quit_program()
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect())
         screen.blit(self.title, (300, 210))
-        screen.blit(self.text, (235, 300))
+        screen.blit(self.text, (120, 300))
+        screen.blit(self.score_text, (660, 40))
