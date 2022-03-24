@@ -195,42 +195,6 @@ class GUIConfigScreen(GUIScreen):
         self.selected = self.GUI_interactive_elements[0]
         self.selected.select(self)
 
-class Dead(Scene):
-
-    def __init__(self, director):
-        Scene.__init__(self, director)
-
-        self.image = ResourcesManager.LoadImage('black.jpg')
-        self.image = pygame.transform.scale(self.image, (800, 600))
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        self.text = font.render('DERROTA', True, (255, 255, 255))
-
-    def update(self, *args):
-        return
-
-    def events(self, events_list):
-        for event in events_list:
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                elif event.key == K_SPACE:
-                    level = Menu(self.director)
-                    self.director.stack_scene(level)
-            elif event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-    def draw(self, screen):
-        screen.blit(self.image, self.image.get_rect())
-        screen.blit(self.text, (360, 270))
-
-    def exit_program(self):
-        pygame.quit()
-        sys.exit()
-
-    def return_game(self):
-        self.director.exit_scene()
 # -------------------------------------------------
 # Clase Menu, a escena
 
@@ -242,8 +206,9 @@ class Menu(Scene):
         self.screens_list = []
         # Créase a pantalla e añádese á lista
         self.screens_list.append(GUIInitialScreen(self))
-        #ResourcesManager.loadMusic('menu.mp3')
-        #pygame.mixer.music.play(loops=-1)
+        ResourcesManager.loadMusic('menu.mp3')
+        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.set_volume(0.5)
         self.show_initial_screen()
 
     def update(self, *args):

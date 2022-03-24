@@ -82,8 +82,9 @@ class Level(Scene, Observer):
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
-        #ResourcesManager.loadMusic('level.mp3')
-        #pygame.mixer.music.play(loops=-1)
+        ResourcesManager.loadMusic('level.mp3')
+        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.set_volume(0.5)
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
