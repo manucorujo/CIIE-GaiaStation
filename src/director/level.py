@@ -184,7 +184,7 @@ class Level(Scene, Observer):
             if (self.level.obstacles_file == 'level1_obstacles.csv' or
                 self.level.obstacles_file == 'level2_obstacles.csv'):
                 self.level.alive_enemies -= 1
-                if (self.level.alive_enemies <= 100): 
+                if (self.level.alive_enemies == 0): 
                     self.level.goal = True
             return
 
