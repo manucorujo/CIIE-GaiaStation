@@ -160,7 +160,7 @@ class GUIScreen:
                     sys.exit()
                 elif event.key == K_UP:
                     self.selected.unselect(self)
-                    for _ in range(len(self.GUI_interactive_elements) - 1):
+                    for x in range(len(self.GUI_interactive_elements) - 1):
                         self.selected = next(self.iterator)
                     self.selected.select(self)
                 elif event.key == K_DOWN:
@@ -241,7 +241,6 @@ class Menu(Scene):
         self.screens_list.append(GUIInitialScreen(self))
         ResourcesManager.loadMusic('menu.mp3')
         pygame.mixer.music.play(loops=-1)
-        pygame.mixer.music.set_volume(0.5)
         self.show_initial_screen()
 
     def update(self, *args):
