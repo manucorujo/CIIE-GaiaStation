@@ -11,6 +11,8 @@ class KeyboardControl(control.Control):
         self.left_key = pygame.K_a
         self.right_key = pygame.K_d
         self.attack_key = pygame.K_SPACE
+        self.pause_key = pygame.K_p
+        self.select_key = pygame.K_RETURN
 
     # Estos métodos reciben los eventos y/o la lista de teclas/botones pulsados y 
     # dicen si se quiso realizar una acción determinada
@@ -29,3 +31,9 @@ class KeyboardControl(control.Control):
     
     def attack(self, keys):
         return keys[self.attack_key]
+
+    def pause(self, keys):
+        return keys[self.pause_key]
+
+    def select(self, keys):
+        return keys[self.select_key]

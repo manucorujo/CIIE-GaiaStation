@@ -48,7 +48,7 @@ class BarraVida(MiSprite, Observer):
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10 + self.separacion_barras, 10))
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10 + self.separacion_barras * 2, 10))  
 
-
+# TODO: cambiar nombre por Score
 class Puntuacion(pygame.sprite.Sprite, Observer):
     def __init__(self, groups, puntos):
         super().__init__(groups)

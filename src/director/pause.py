@@ -9,10 +9,11 @@ class Pause(Scene):
     def __init__(self, director):
         Scene.__init__(self, director)
 
-        self.image = ResourcesManager.LoadImage('black.jpg')
-        self.image = pygame.transform.scale(self.image, (800, 600))
+        self.image = ResourcesManager.LoadImage('end.jpg')
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        self.text = font.render('PAUSA', True, (255, 255, 255))
+        self.title = font.render('PAUSA', True, (255, 255, 255))
+        self.title_rect = self.title.get_rect()
 
     def update(self, *args):
         return
@@ -31,7 +32,8 @@ class Pause(Scene):
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect())
-        screen.blit(self.text, (360, 270))
+        self.title_rect.center = (self.width // 2, self.height // 2 - 100)
+        screen.blit(self.title, self.title_rect)
 
     def exit_program(self):
         pygame.quit()

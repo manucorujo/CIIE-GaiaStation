@@ -296,14 +296,23 @@ class Final(Scene):
     def __init__(self, director, win, score):
         Scene.__init__(self, director)
         self.win = win
-        self.image = ResourcesManager.LoadImage('black.jpg')
-        self.image = pygame.transform.scale(self.image, (800, 600))
+        self.image = ResourcesManager.LoadImage('end.jpg')
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         title_font = ResourcesManager.loadFont("upheavtt.ttf", 52)
         text_font = ResourcesManager.loadFont("upheavtt.ttf", 22)
-        score_font = ResourcesManager.loadFont("upheavtt.ttf", 14)
+        score_font = ResourcesManager.loadFont("upheavtt.ttf", 22)
+
         self.title = title_font.render('VICTORIA', True, (0, 255, 0)) if win else title_font.render('DERROTA', True, (255, 0, 0))
-        self.text = text_font.render('Pulsa R para reiniciar o Q para salir del juego', True, (255, 255, 255))
+        self.title_rect = self.title.get_rect()
+
+        self.text1 = text_font.render('Pulse R para reiniciar', True, (255, 255, 255))
+        self.text1_rect = self.text1.get_rect()
+
+        self.text2 = text_font.render('Pulse Q para salir del juego', True, (255, 255, 255))
+        self.text2_rect = self.text2.get_rect()
+
         self.score_text = score_font.render('Puntuación: ' + str(score), True, (230, 245, 66))
+        self.score_text_rect = self.score_text.get_rect()
 
     def update(self, *args):
         return
@@ -324,6 +333,15 @@ class Final(Scene):
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect())
-        screen.blit(self.title, (300, 210))
-        screen.blit(self.text, (120, 300))
-        screen.blit(self.score_text, (660, 40))
+        self.title_rect.center = (self.width // 2, self.height // 2 - 100)
+        screen.blit(self.title, self.title_rect)
+        #screen.blit(self.title, (300, 210))
+        # blit text1 centered using self.width and self.height 
+        self.title_rect.center = (self.width // 2, self.height // 2)
+        screen.blit(self.text1, (self.width // 2 - self.text1_rect.width // 2, self.height // 2))
+        # blit text1 below text2
+        self.text1_rect.center = (self.width // 2, self.height // 2 + self.text1_rect.height)
+        screen.blit(self.text2, (self.width // 2 - self.text2_rect.width // 2, self.height // 2 + self.text1_rect.height + self.text2_rect.height))
+        # blit score below text 2
+        self.score_text_rect.center = (self.width // 2, self.height // 2 + self.text1_rect.height + self.text2_rect.height + self.score_text_rect.height)
+        screen.blit(self.score_text, (self.width // 2 - self.score_text_rect.width // 2, self.height // 2 + self.text1_rect.height + self.text2_rect.height + self.score_text_rect.height * 2))

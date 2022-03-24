@@ -26,6 +26,12 @@ class Control():
     def attack(self, keys):
         pass
 
+    def pause(self, keys):
+        pass
+
+    def select(self, keys):
+        pass
+
     # Metodos que asignan a una tecla/boton una accion concreta
 
     def set_up(self, key):
@@ -42,3 +48,9 @@ class Control():
 
     def set_attack(self, key):
         self.attack_key = key
+
+    def set_pause(self, key):
+        self.pause_key = key
+
+    def set_select(self, key):
+        self.select_key = key
