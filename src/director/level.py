@@ -85,7 +85,6 @@ class Level(Scene, Observer):
 
         ResourcesManager.loadMusic('level.mp3')
         pygame.mixer.music.play(loops=-1)
-        pygame.mixer.music.set_volume(0.5)
 
     def init_observers(self):
         self.hearts_observer = Level.HeartsGenerator(self)
