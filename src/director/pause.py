@@ -10,9 +10,9 @@ class Pause(Scene):
     def __init__(self, director):
         Scene.__init__(self, director)
 
-        self.image = ResourcesManager.LoadImage('pause.jpg')
+        self.image = ResourcesManager.load_image('pause.jpg')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        font = ResourcesManager.loadFont("upheavtt.ttf", 52)
+        font = ResourcesManager.load_font("upheavtt.ttf", 52)
         self.title = font.render('PAUSA', True, (237, 82, 47))
         self.title_rect = self.title.get_rect()
 

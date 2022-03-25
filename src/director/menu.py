@@ -43,17 +43,17 @@ class GUIText(GUIElement):
 
 class PlayText(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
 
     def select(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (138, 41, 10), 'Xogar', (380, 300))
 
     # Igual que o __init__, pero replícoo porque só son dúas líneas e ao chamar á función
     # enténdese mellor así o funcionamento
     def unselect(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Xogar', (380, 300))
 
     def action(self):
@@ -61,15 +61,15 @@ class PlayText(GUIText):
 
 class ConfigText(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Configuración', (330, 335))
     
     def select(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (138, 41, 10), 'Configuración', (330, 335))
 
     def unselect(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Configuración', (330, 335))
 
     def action(self):
@@ -77,15 +77,15 @@ class ConfigText(GUIText):
 
 class ExitText(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Saír', (382, 370))
 
     def select(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (138, 41, 10), 'Saír', (382, 370))
 
     def unselect(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Saír', (382, 370))
 
     def action(self):
@@ -93,15 +93,15 @@ class ExitText(GUIText):
 
 class ReturnText(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (50, 200))
 
     def select(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (138, 41, 10), 'Volver', (50, 200))
 
     def unselect(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Volver', (50, 200))
 
     def action(self):
@@ -109,15 +109,15 @@ class ReturnText(GUIText):
 
 class SetVolumeText(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Volume: ' + str(round(pygame.mixer.music.get_volume() * 10)), (50, 250))
 
     def select(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (138, 41, 10), 'Volume: ' + str(round(pygame.mixer.music.get_volume() * 10)), (50, 250))
 
     def unselect(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Volume: ' + str(round(pygame.mixer.music.get_volume() * 10)), (50, 250))
 
     def action(self):
@@ -131,15 +131,15 @@ class SetVolumeText(GUIText):
 
 class ToggleFullScreem(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa o ventana', (50, 300))
 
     def select(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (138, 41, 10), 'Cambiar entre pantalla completa o ventana', (50, 300))
 
     def unselect(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        font = ResourcesManager.load_font("upheavtt.ttf", 26)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa o ventana', (50, 300))
 
     def action(self):
@@ -147,7 +147,7 @@ class ToggleFullScreem(GUIText):
 
 class TitleText(GUIText):
     def __init__(self, screen):
-        font = ResourcesManager.loadFont("upheavtt.ttf", 52)
+        font = ResourcesManager.load_font("upheavtt.ttf", 52)
         GUIText.__init__(self, screen, font, (237, 82, 47), 'GAIA STATION', (260, 250))
 
 # -------------------------------------------------
@@ -162,7 +162,7 @@ class GUIScreen:
 
         self.menu = menu
         # Cárgase a imaxe de fondo
-        self.image = ResourcesManager.LoadImage(image_name)
+        self.image = ResourcesManager.load_image(image_name)
         self.image = pygame.transform.scale(self.image, (int(parser.get("director", "SCREEN_WIDTH")), int(parser.get("director", "SCREEN_HEIGHT"))))
         # Lista cos elementos da GUI
         self.GUI_elements = []
@@ -263,7 +263,7 @@ class Menu(Scene):
         self.screens_list = []
         # Créase a pantalla e añádese á lista
         self.screens_list.append(GUIInitialScreen(self))
-        ResourcesManager.loadMusic('menu.mp3')
+        ResourcesManager.load_music('menu.mp3')
         pygame.mixer.music.play(loops=-1)
         self.show_initial_screen()
 

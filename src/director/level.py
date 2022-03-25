@@ -83,7 +83,7 @@ class Level(Scene, Observer):
         self.player.add_observer(puntuacion)
         self.player.add_observer(self) # o level tamen observa, para ver se terminou
 
-        ResourcesManager.loadMusic('level.mp3')
+        ResourcesManager.load_music('level.mp3')
         pygame.mixer.music.play(loops=-1)
 
     def init_observers(self):
@@ -93,7 +93,7 @@ class Level(Scene, Observer):
     def create_map(self):
 
         # Usa o xestor de recursos para conseguir o mapa
-        obstacles = ResourcesManager.LoadLevelObstaclesFile(self.obstacles_file)
+        obstacles = ResourcesManager.load_level_obstacles_file(self.obstacles_file)
 
         for row_index, row in enumerate(obstacles):
             for col_index, col in enumerate(row):
@@ -253,7 +253,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2() # [x:0, y:0]
 
         # Creando o chan
-        self.floor_surf = ResourcesManager.LoadImage('maps/' + map_image)
+        self.floor_surf = ResourcesManager.load_image('maps/' + map_image)
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
     
     def custom_draw(self,player):
@@ -293,11 +293,11 @@ class Final(Scene):
     def __init__(self, director, win, score):
         Scene.__init__(self, director)
         self.win = win
-        self.image = ResourcesManager.LoadImage('end.jpg')
+        self.image = ResourcesManager.load_image('end.jpg')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        title_font = ResourcesManager.loadFont("upheavtt.ttf", 52)
-        text_font = ResourcesManager.loadFont("upheavtt.ttf", 22)
-        score_font = ResourcesManager.loadFont("upheavtt.ttf", 22)
+        title_font = ResourcesManager.load_font("upheavtt.ttf", 52)
+        text_font = ResourcesManager.load_font("upheavtt.ttf", 22)
+        score_font = ResourcesManager.load_font("upheavtt.ttf", 22)
 
         self.title = title_font.render('VICTORIA', True, (0, 255, 0)) if win else title_font.render('DERROTA', True, (255, 0, 0))
         self.title_rect = self.title.get_rect()

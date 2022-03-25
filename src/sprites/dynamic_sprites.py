@@ -22,7 +22,7 @@ class DynamicSprites(mi_sprite.MiSprite):
         self.animation_delay = 0
 
         # Cargamos o arquivo de coordenadas
-        datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
+        datos = ResourcesManager.load_coordinates_file(coordeanada_file)
         datos = datos.split()
         
         # Inicialización dos frames para as animacions

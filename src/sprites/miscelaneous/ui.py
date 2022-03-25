@@ -22,7 +22,7 @@ class BarraVida(MiSprite, Observer):
         self.vida = max_vida
 
         # Leemos las coordenadas de un archivo de texto
-        datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
+        datos = ResourcesManager.load_coordinates_file(coordeanada_file)
         datos = datos.split() 
         cont = 0
         numImagenes = [3]
@@ -54,7 +54,7 @@ class Score(pygame.sprite.Sprite, Observer):
     def __init__(self, groups, puntos):
         super().__init__(groups)
         self.display_surface = pygame.display.get_surface()
-        self.font = ResourcesManager.loadFont("upheavtt.ttf", 24)
+        self.font = ResourcesManager.load_font("upheavtt.ttf", 24)
         self.puntos = puntos
 
         # Lectura do ficheiro de configuracion

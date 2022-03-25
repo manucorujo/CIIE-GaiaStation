@@ -9,7 +9,7 @@ class ResourcesManager(object):
     resources = {}
 
     @classmethod
-    def LoadSprite(cls, name, colorkey=None):
+    def load_sprite(cls, name, colorkey=None):
 
         # Se o nome do arquivo está entre os recursos xa cargados
         if name in cls.resources:
@@ -34,7 +34,7 @@ class ResourcesManager(object):
             return image
 
     @classmethod
-    def LoadImage(cls, name):
+    def load_image(cls, name):
 
         # Se o nome do arquivo está entre os recursos xa cargados
         if name in cls.resources:
@@ -55,7 +55,7 @@ class ResourcesManager(object):
             return image
 
     @classmethod
-    def loadFont(cls, name, size):
+    def load_font(cls, name, size):
         # Si el name de archivo está entre los recursos ya cargados
         if (name, size) in cls.resources:
             # Se devuelve ese recurso
@@ -71,7 +71,7 @@ class ResourcesManager(object):
             return datos
 
     @classmethod
-    def LoadLevelObstaclesFile(cls, name):
+    def load_level_obstacles_file(cls, name):
         # Se o nome do arquivo está nos recursos xa cargados
         if name in cls.resources:
             return cls.resources[name]
@@ -90,7 +90,7 @@ class ResourcesManager(object):
             return data
 
     @classmethod
-    def CargarArchivoCoordenadas(cls, name):
+    def load_coordinates_file(cls, name):
         # Si el name de archivo está entre los recursos ya cargados
         if name in cls.resources:
             # Se devuelve ese recurso
@@ -108,7 +108,7 @@ class ResourcesManager(object):
             return datos
 
     @classmethod
-    def loadMusic(cls, name):
+    def load_music(cls, name):
         # Si el name de archivo está entre los recursos ya cargados
         if name in cls.resources:
             # Se devuelve ese recurso

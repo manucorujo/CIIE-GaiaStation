@@ -7,7 +7,7 @@ class MiSprite(pygame.sprite.Sprite):
     "Los Sprites que tendra este juego"
     def __init__(self, groups, image_file, colorkey=-1):
         super().__init__(groups)
-        self.image = ResourcesManager.LoadSprite(image_file, colorkey)
+        self.image = ResourcesManager.load_sprite(image_file, colorkey)
 
     def get_image(self):
         return self.image

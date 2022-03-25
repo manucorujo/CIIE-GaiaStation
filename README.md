@@ -5,10 +5,10 @@
 
 Tenemos tres funciones para cargar datos:
 
- * LoadImage: cargamos una imagen tal cual, por ejemplo la de fondo (carpeta Image)
- * LoadSprite: es como la anterior pero con la utilidad de colorKey para borrar el fondo (carpeta Sprite)
+ * load_image: cargamos una imagen tal cual, por ejemplo la de fondo (carpeta Image)
+ * load_sprite: es como la anterior pero con la utilidad de colorKey para borrar el fondo (carpeta Sprite)
  * LoadLevelDefinitionFile: carga el archivo de definición de un nivel (carpeta levels)
- * CargarArchivoCoordenadas: carga un archivo de coordenadas de un sprite sheet determinado (carpeta Sprites)
+ * load_coordinates_file: carga un archivo de coordenadas de un sprite sheet determinado (carpeta Sprites)
 
 ## Sprites
 
