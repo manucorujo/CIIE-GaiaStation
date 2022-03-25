@@ -9,6 +9,7 @@ a equivocarse.
 
 HORIZONTAL = 1
 VERTICAL = 2
+
 LEFT = 1
 RIGHT = 2
 UP = 3

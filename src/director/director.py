@@ -15,8 +15,9 @@ class Director():
 
     def __init__(self):
         # Inicializamos a pantalla e o modo gráfico
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN)
         pygame.display.set_caption("Gaia Station")
+        pygame.mouse.set_visible(False)
         # Pila de escenas
         self.stack = []
         # Flag que indica cando queren salir da escena

@@ -53,9 +53,6 @@ class Player(DynamicSprites, Subject):
         self.rect = pygame.Rect(pos[0],pos[1],self.coordinates_sheet[self.current_pose][self.current_pose_frame][2],self.coordinates_sheet[self.current_pose][self.current_pose_frame][3])
         self.hitbox = self.rect.inflate(0, -round(TILE_SIZE * 1/3))
 
-        # O retardo a hora de cambiar a imaxe do Sprite, para que non se faga moi rapido
-        self.animation_delay = 0
-
         # orientation da peroxonase (der ou esq)
         self.orientation = RIGHT
         self.attack_orientation = RIGHT

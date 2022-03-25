@@ -1,4 +1,4 @@
-import math
+import configparser
 import sys
 import pygame
 from pygame.locals import *
@@ -129,6 +129,22 @@ class SetVolumeText(GUIText):
     def plus(self):
         pygame.mixer.music.set_volume(round(pygame.mixer.music.get_volume() + 0.1, 1))
 
+class ToggleFullScreem(GUIText):
+    def __init__(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa o ventana', (50, 300))
+
+    def select(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Cambiar entre pantalla completa o ventana', (50, 300))
+
+    def unselect(self, screen):
+        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa o ventana', (50, 300))
+
+    def action(self):
+        pygame.display.toggle_fullscreen()
+
 class TitleText(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.loadFont("upheavtt.ttf", 52)
@@ -139,10 +155,15 @@ class TitleText(GUIText):
 
 class GUIScreen:
     def __init__(self, menu, image_name):
+
+        # Lectura do ficheiro de configuracion
+        parser = configparser.ConfigParser()
+        parser.read("GaiaStation.config")
+
         self.menu = menu
         # Cárgase a imaxe de fondo
         self.image = ResourcesManager.LoadImage(image_name)
-        self.image = pygame.transform.scale(self.image, (800, 600))
+        self.image = pygame.transform.scale(self.image, (int(parser.get("director", "SCREEN_WIDTH")), int(parser.get("director", "SCREEN_HEIGHT"))))
         # Lista cos elementos da GUI
         self.GUI_elements = []
         # Lista cos elementos interactivos
@@ -221,10 +242,13 @@ class GUIConfigScreen(GUIScreen):
         self.GUI_elements.append(return_text)
         volume_text = SetVolumeText(self)
         self.GUI_elements.append(volume_text)
+        fullscreen_text = ToggleFullScreem(self)
+        self.GUI_elements.append(fullscreen_text)
 
         #Tamén creamos unha lista cos elementos que queremos que sexan interactivos
         self.GUI_interactive_elements.append(return_text)
         self.GUI_interactive_elements.append(volume_text)
+        self.GUI_interactive_elements.append(fullscreen_text)
         self.selected = self.GUI_interactive_elements[0]
         self.selected.select(self) # Para actualizar o print
 

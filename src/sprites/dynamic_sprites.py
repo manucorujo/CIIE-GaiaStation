@@ -1,8 +1,9 @@
-from utils.resources_manager import *
-from utils.constants import *
-import sprites.mi_sprite as mi_sprite
 import pygame
 import math
+
+import sprites.mi_sprite as mi_sprite
+from utils.resources_manager import *
+from utils.constants import *
 
 # -------------------------------------------------
 
@@ -18,6 +19,8 @@ class DynamicSprites(mi_sprite.MiSprite):
         self.num_frames_per_pose = num_frames_per_pose
         self.animation_transition_time = animation_transition_time 
         self.coordinates_sheet = []
+        # O retardo a hora de cambiar a imaxe do Sprite, para que non se faga moi rapido
+        self.animation_delay = 0
 
         # Cargamos o arquivo de coordenadas
         datos = ResourcesManager.CargarArchivoCoordenadas(coordeanada_file)
@@ -86,7 +89,6 @@ class DynamicSprites(mi_sprite.MiSprite):
 
 
     def update_pose(self):
-        # TODO: unificar con player en clase padre
         if self.direction.x > 0:
             self.orientation = RIGHT
         elif self.direction.x < 0:

@@ -1,3 +1,7 @@
+import pygame
+import random
+import configparser
+
 from director.pause import Pause
 from sprites.miscelaneous.objects import HeartObject
 from sprites.observer import Observer, SpriteObserver
@@ -7,10 +11,7 @@ from sprites.miscelaneous.world_objects import Obstacle, Flag
 from sprites.player.player_dto import PlayerDTO
 from utils.resources_manager import *
 from sprites.player.player import Player
-from sprites.miscelaneous.ui import UIGroup, BarraVida, Puntuacion
-import pygame
-import random
-import configparser
+from sprites.miscelaneous.ui import UIGroup, BarraVida, Score
 
 #==============================================================================
 
@@ -63,7 +64,7 @@ class Level(Scene, Observer):
 
         self.player = None
         self.alive_enemies = 0
-        self.goal = False ### TODO: En un futuro se puede quitar
+        self.goal = False 
         self.lose = False
         
         self.tile_size = int(self.parser.get("level", "TILE_SIZE"))
@@ -76,7 +77,7 @@ class Level(Scene, Observer):
 
         # Elementos UI
         barra_vida = BarraVida([self.ui_sprites], "UI/health-bars.png", "UI/health-bars.txt", self.player.vida)
-        puntuacion = Puntuacion([self.ui_sprites], self.player.puntos)
+        puntuacion = Score([self.ui_sprites], self.player.puntos)
 
         self.player.add_observer(barra_vida)
         self.player.add_observer(puntuacion)
@@ -257,9 +258,6 @@ class CameraGroup(pygame.sprite.Group):
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
     
     def custom_draw(self,player):
-
-        # Un poco de geometria y se entiende, jurado, el tema de movimiento de la camara.
-        
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
@@ -311,7 +309,11 @@ class Final(Scene):
         self.text2 = text_font.render('Pulse Q para salir del juego', True, (255, 255, 255))
         self.text2_rect = self.text2.get_rect()
 
-        self.score_text = score_font.render('Puntuación: ' + str(score), True, (230, 245, 66))
+        score_text = 'Puntuación: ' + str(score) 
+        if not win and score > 0: 
+            score_text += ' - ' + str(score // 2) 
+
+        self.score_text = score_font.render(score_text, True, (230, 245, 66))
         self.score_text_rect = self.score_text.get_rect()
 
     def update(self, *args):
@@ -333,15 +335,10 @@ class Final(Scene):
 
     def draw(self, screen):
         screen.blit(self.image, self.image.get_rect())
+
         self.title_rect.center = (self.width // 2, self.height // 2 - 100)
         screen.blit(self.title, self.title_rect)
-        #screen.blit(self.title, (300, 210))
-        # blit text1 centered using self.width and self.height 
-        self.title_rect.center = (self.width // 2, self.height // 2)
+ 
         screen.blit(self.text1, (self.width // 2 - self.text1_rect.width // 2, self.height // 2))
-        # blit text1 below text2
-        self.text1_rect.center = (self.width // 2, self.height // 2 + self.text1_rect.height)
         screen.blit(self.text2, (self.width // 2 - self.text2_rect.width // 2, self.height // 2 + self.text1_rect.height + self.text2_rect.height))
-        # blit score below text 2
-        self.score_text_rect.center = (self.width // 2, self.height // 2 + self.text1_rect.height + self.text2_rect.height + self.score_text_rect.height)
         screen.blit(self.score_text, (self.width // 2 - self.score_text_rect.width // 2, self.height // 2 + self.text1_rect.height + self.text2_rect.height + self.score_text_rect.height * 2))

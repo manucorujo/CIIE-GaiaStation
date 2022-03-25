@@ -1,7 +1,8 @@
 import sys
 import pygame
-from director.scene import Scene
+
 from utils.resources_manager import ResourcesManager
+from director.scene import Scene
 from pygame.locals import *
 
 class Pause(Scene):
@@ -9,10 +10,10 @@ class Pause(Scene):
     def __init__(self, director):
         Scene.__init__(self, director)
 
-        self.image = ResourcesManager.LoadImage('end.jpg')
+        self.image = ResourcesManager.LoadImage('pause.jpg')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        font = ResourcesManager.loadFont("upheavtt.ttf", 26)
-        self.title = font.render('PAUSA', True, (255, 255, 255))
+        font = ResourcesManager.loadFont("upheavtt.ttf", 52)
+        self.title = font.render('PAUSA', True, (237, 82, 47))
         self.title_rect = self.title.get_rect()
 
     def update(self, *args):

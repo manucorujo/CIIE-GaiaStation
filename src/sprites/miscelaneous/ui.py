@@ -1,7 +1,9 @@
+import configparser
+import pygame
+
 from utils.resources_manager import *
 from sprites.mi_sprite import MiSprite
 from sprites.observer import Observer
-import pygame
 
 class UIGroup(pygame.sprite.Group):
     def __init__(self):
@@ -48,18 +50,21 @@ class BarraVida(MiSprite, Observer):
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10 + self.separacion_barras, 10))
             self.display_surface.blit(self.image.subsurface(self.coordenadasHoja[0][0]), (10 + self.separacion_barras * 2, 10))  
 
-# TODO: cambiar nombre por Score
-class Puntuacion(pygame.sprite.Sprite, Observer):
+class Score(pygame.sprite.Sprite, Observer):
     def __init__(self, groups, puntos):
         super().__init__(groups)
         self.display_surface = pygame.display.get_surface()
         self.font = ResourcesManager.loadFont("upheavtt.ttf", 24)
         self.puntos = puntos
 
+        # Lectura do ficheiro de configuracion
+        parser = configparser.ConfigParser()
+        parser.read("GaiaStation.config")
+        self.width = int(parser.get("director", "SCREEN_WIDTH"))
+        
+
     def notify(self,player):
         self.puntos = player.puntos
 
     def dibujar_ui(self):
-        # TODO: Añadir el tamaño de la pantalla real
-        tam_x = 800
-        self.display_surface.blit(self.font.render(str(self.puntos), True, (160, 160, 160)), (tam_x-60, 10))
+        self.display_surface.blit(self.font.render(str(self.puntos), True, (160, 160, 160)), (self.width-60, 10))

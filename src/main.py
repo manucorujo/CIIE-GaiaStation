@@ -4,11 +4,11 @@
 #
 #==============================================================================
 
-import pygame
 import director.director as director
 from director.director import *
 from director.menu import Menu
 from pygame.locals import *
+import pygame
 
 #==============================================================================
 # loop principal

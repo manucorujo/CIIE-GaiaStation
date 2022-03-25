@@ -1,19 +1,17 @@
-import configparser
-from utils.resources_manager import *
 import sprites.mi_sprite as mi_sprite
+from utils.resources_manager import *
+import configparser
 import pygame
-
-# -------------------------------------------------
-
-#TODO: Hay que sacar esto y hacer el config singleton
-HEART_HEAL_VALUE = 1
 
 class HeartObject(mi_sprite.MiSprite):
     def __init__(self, pos, groups, image_file, colorkey=-1):
         super().__init__(groups, image_file, colorkey)
 
+        self.parser = configparser.ConfigParser()
+        self.parser.read("GaiaStation.config")
+
         self.rect = self.image.get_rect(topleft = pos)
-        self.heal_value = HEART_HEAL_VALUE
+        self.heal_value = int(self.parser.get("object", "HEART_HEAL_VALUE"))
 
     
     def get_heal_value(self):

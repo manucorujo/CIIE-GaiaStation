@@ -1,28 +1,24 @@
 import configparser
-from utils.resources_manager import *
-import sprites.dynamic_sprites as dynamic_sprites
 import pygame
 
-# -------------------------------------------------
-# Lectura do ficheiro de configuración
-
-ANIMATION_TRANSITION_TIME = 7
-NUM_FRAMES_PER_POSE = [3]
-
-'''parser = configparser.ConfigParser()
-parser.read("GaiaStation.config")
-ANIMATION_TRANSITION_TIME = int(parser.get("bullets", "RETARDO_ANIMACION_BALA"))'''
+from utils.resources_manager import *
+import sprites.dynamic_sprites as dynamic_sprites
 
 # -------------------------------------------------
 
 class Projectile(dynamic_sprites.DynamicSprites):
     def __init__(self, player, groups, collision_groups, image_file, coordeanada_file, borrar_ataque):
-        super().__init__(groups, collision_groups, image_file, coordeanada_file, NUM_FRAMES_PER_POSE, ANIMATION_TRANSITION_TIME)
+
+        parser = configparser.ConfigParser()
+        parser.read("GaiaStation.config")
+        animation_transition_time = int(parser.get("bullets", "ANIMATION_TRANSITION_TIME"))
+        num_frames_per_pose = [int(parser.get("bullets", "NUM_FRAMES_PER_POSE"))]
+
+        super().__init__(groups, collision_groups, image_file, coordeanada_file, num_frames_per_pose, animation_transition_time)
 
         self.orientation = player.get_attackOrientation()
         self.current_pose_frame = 0
 
-        self.animation_delay = ANIMATION_TRANSITION_TIME
         self.speed = 3
 
         self.borrar_ataque = borrar_ataque
@@ -77,7 +73,7 @@ class Projectile(dynamic_sprites.DynamicSprites):
         self.animation_delay -= 1
         # Miramos si ha pasado el retardo
         if (self.animation_delay < 0):
-            self.animation_delay = ANIMATION_TRANSITION_TIME
+            self.animation_delay = self.animation_transition_time
             # Si ha pasado, actualizamos la postura
             self.current_pose_frame += 1
         

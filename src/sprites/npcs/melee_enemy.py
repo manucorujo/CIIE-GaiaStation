@@ -2,7 +2,6 @@ import configparser
 import random
 
 import sprites.npcs.enemies as enemies
-from sprites.miscelaneous.objects import HeartObject
 from utils.resources_manager import *
 import sprites.dynamic_sprites as dynamic_sprites
 import pygame
@@ -71,7 +70,6 @@ class MeleeEnemy(enemies.Enemy):
         self.hitbox = self.rect.inflate(0, -12)
 
         # Un cooldown do movemento para que non cambie de sprite moi rapido
-        self.animation_delay = 0
         self.attack_count = 12
 
         # Movemento
