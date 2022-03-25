@@ -1,5 +1,4 @@
 import pygame
-import math
 
 import sprites.mi_sprite as mi_sprite
 from utils.resources_manager import *
@@ -105,8 +104,3 @@ class DynamicSprites(mi_sprite.MiSprite):
 
             elif self.current_pose_frame < 0:
                 self.current_pose_frame = len(self.coordinates_sheet[self.current_pose])-1
-
-
-    def wave_value(self):
-        value = math.sin(pygame.time.get_ticks())
-        return 255 if value >= 0 else 0

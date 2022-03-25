@@ -1,3 +1,4 @@
+import math
 import pygame
 
 # Utils
@@ -242,3 +243,7 @@ class Player(DynamicSprites, Subject):
             else: # En caso de haber muerto
                 self.vida = self.max_vida
                 self.puntos = dto.get_puntos() // 2 # penalizacion 
+
+    def wave_value(self):
+        value = math.sin(pygame.time.get_ticks())
+        return 255 if value >= 0 else 0

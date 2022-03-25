@@ -1,9 +1,3 @@
-#==============================================================================
-#
-# # TODO: Engadir sinatura en todos os ficheiros
-#
-#==============================================================================
-
 import director.director as director
 from director.director import *
 from director.menu import Menu
