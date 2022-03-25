@@ -323,7 +323,7 @@ class Final(Scene):
         for event in events_list:
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE or event.key == K_q:
-                    self.director_quit_program()
+                    self.director.quit_program()
                 elif event.key == K_r:
                     if (not self.win):
                         self.director.exit_scene()
