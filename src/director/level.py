@@ -305,7 +305,7 @@ class Final(Scene):
         self.text1 = text_font.render('Pulse R para reiniciar', True, (255, 255, 255))
         self.text1_rect = self.text1.get_rect()
 
-        self.text2 = text_font.render('Pulse Q para salir del juego', True, (255, 255, 255))
+        self.text2 = text_font.render('Pulse Q para saír do xogo', True, (255, 255, 255))
         self.text2_rect = self.text2.get_rect()
 
         score_text = 'Puntuación: ' + str(score) 

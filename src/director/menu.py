@@ -132,15 +132,15 @@ class SetVolumeText(GUIText):
 class ToggleFullScreem(GUIText):
     def __init__(self, screen):
         font = ResourcesManager.load_font("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa o ventana', (50, 300))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa ou ventá', (50, 300))
 
     def select(self, screen):
         font = ResourcesManager.load_font("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (138, 41, 10), 'Cambiar entre pantalla completa o ventana', (50, 300))
+        GUIText.__init__(self, screen, font, (138, 41, 10), 'Cambiar entre pantalla completa ou ventá', (50, 300))
 
     def unselect(self, screen):
         font = ResourcesManager.load_font("upheavtt.ttf", 26)
-        GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa o ventana', (50, 300))
+        GUIText.__init__(self, screen, font, (237, 82, 47), 'Cambiar entre pantalla completa ou ventá', (50, 300))
 
     def action(self):
         pygame.display.toggle_fullscreen()

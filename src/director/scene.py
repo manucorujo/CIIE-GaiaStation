@@ -13,10 +13,10 @@ class Scene:
         self.height = int(self.parser.get("director", "SCREEN_HEIGHT"))
 
     def update(self, *args):
-        raise NotImplemented("Tiene que implementar el metodo update.")
+        raise NotImplemented("Ten que implementar o método update.")
 
     def events(self, *args):
-        raise NotImplemented("Tiene que implementar el metodo eventos.")
+        raise NotImplemented("Ten que implementar o método eventos.")
 
     def draw(self, screen):
-        raise NotImplemented("Tiene que implementar el metodo dibujar.")
+        raise NotImplemented("Ten que implementar o método debuxar.")
