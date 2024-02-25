@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Manu Corujo <manucorujo@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 import director.director as director
 from director.director import *
 from director.menu import Menu

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Manu Corujo <manucorujo@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 import pygame
 from utils.resources_manager import *
 

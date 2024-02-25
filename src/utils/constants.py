@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Manu Corujo <manucorujo@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 '''
 Estas constantes no se colocan en el fichero de configuración ya que no se van a cambiar. 
 Es más, donde se usan podriamos usar un string con el nombre de lo que se quiere hacer, 

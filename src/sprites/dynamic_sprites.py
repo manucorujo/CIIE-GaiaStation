@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Manu Corujo <manucorujo@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 import pygame
 
 import sprites.mi_sprite as mi_sprite

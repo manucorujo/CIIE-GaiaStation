@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Manu Corujo <manucorujo@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 import os, pygame
 from csv import reader
 from pygame.locals import *
