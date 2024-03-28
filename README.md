@@ -27,13 +27,12 @@
 
 
 <!-- PROJECT LOGO -->
-<!-->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/manucorujo/CIIE-GaiaStation">
+    <img src="res/images/logo/logo-color.svg" alt="Logo" width="80" height="80">
   </a>
--->
+
 
 <h3 align="center">Gaia Station</h3>
 
@@ -83,18 +82,19 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+<div align=center>
+  <a href="https://github.com/manucorujo/CIIE-GaiaStation">
+    <img src="res/images/init_screen.png" alt="Logo" height="90">
+  </a>
+</div>
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Built With
 
-* [![Python][Python.org]][Python-url]
-* [![Pygame][Pygame.org]][Pygame-url]
+* [![Python][Python]][Python-url]
+* [![Pygame][Pygame]][Pygame-url]
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -108,6 +108,7 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
+
 * Python
   ```sh
   apt install python
@@ -116,7 +117,7 @@ This is an example of how to list things you need to use the software and how to
 * Pip
   ```sh
   apt install python-pip
-```
+  ```
 
 ### Installation
 
@@ -126,7 +127,7 @@ This is an example of how to list things you need to use the software and how to
    ```
 2. Install dependencies
    ```sh
-   pip install pygame
+   pip install -r requirements.txt
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -179,7 +180,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 
 <!-- CONTACT -->
-<!-->
+<!--
 ## Contact
 
 Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
@@ -191,7 +192,7 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 
 
 <!-- ACKNOWLEDGMENTS -->
-<!-->
+<!--
 ## Acknowledgments
 
 * []()
@@ -217,7 +218,9 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 
 
-[Python-url]: https://www.python.org/
 [Python]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python-url]: https://www.python.org/
+
+
 [Pygame-url]: https://www.pygame.org/
-[Pygame]: https://img.shields.io/badge/Pygame-3776AB?style=for-the-badge&logo=pygame&logoColor=white
+[Pygame]: https://www.pygame.org/docs/_static/pygame_tiny.png
