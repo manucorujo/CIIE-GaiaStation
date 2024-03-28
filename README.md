@@ -30,7 +30,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/manucorujo/CIIE-GaiaStation">
-    <img src="res/images/logo/logo-color.svg" alt="Logo">
+    <img src="res/images/logo/logo-crop.png" alt="Logo">
   </a>
 
 
