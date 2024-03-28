@@ -69,8 +69,6 @@ This README is based on the Best-README-Template by othneildrew. (https://github
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -159,7 +157,7 @@ See the [open issues](https://github.com/manucorujo/CIIE-GaiaStation/issues) for
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Would you like to contribute? Great! Then, please refer to the [CONTRIBUTING.md](https://github.com/manucorujo/CIIE-GaiaStation/blob/main/CONTRIBUTING.md) file for instructions.
+Would you like to contribute? Great! Then, please refer to the [CONTRIBUTING.md](https://github.com/manucorujo/CIIE-GaiaStation/blob/main/.github/CONTRIBUTING.md) file for instructions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -168,7 +166,7 @@ Would you like to contribute? Great! Then, please refer to the [CONTRIBUTING.md]
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/manucorujo/CIIE-GaiaStation/blob/main/LICENSE) file for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
