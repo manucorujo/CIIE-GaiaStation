@@ -92,8 +92,7 @@
 
 ### Built With
 
-* [![Python][Python]][Python-url]
-* [![Pygame][Pygame]][Pygame-url]
+[![Pygame][Pygame]][Pygame-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
