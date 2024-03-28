@@ -1,64 +1,223 @@
-# CIIE-GaiaStation
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Don't forget to give the project a star!
+*** Thanks again! Now go create something AMAZING! :D
+-->
 
 
-## Resource Manager
 
-Tenemos tres funciones para cargar datos:
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
- * load_image: cargamos una imagen tal cual, por ejemplo la de fondo (carpeta Image)
- * load_sprite: es como la anterior pero con la utilidad de colorKey para borrar el fondo (carpeta Sprite)
- * LoadLevelDefinitionFile: carga el archivo de definición de un nivel (carpeta levels)
- * load_coordinates_file: carga un archivo de coordenadas de un sprite sheet determinado (carpeta Sprites)
 
-## Sprites
 
-En la carpeta uml se incluye el UML actual con todas las clases correspondientes a los Sprites, 
-además del dichero .drawio para poder editarlo en la correspondiente plataforma.
+<!-- PROJECT LOGO -->
+<!-->
+<br />
+<div align="center">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+-->
 
-Sprites originales: https://mattwalkden.itch.io/free-robot-warfare-pack
+<h3 align="center">Gaia Station</h3>
 
-¿Por qué tienen una función get_image?
+  <p align="center">
+    2D game project developed for the subject "Contornos Inmersivos, Interactivos y de Entretenimiento (CIIE)"  of the Computer Science degree of the Universidade Da Coruña (UDC).
+    <br />
+    <a href="https://github.com/manucorujo/CIIE-GaiaStation"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/manucorujo/CIIE-GaiaStation">View Demo</a>
+    ·
+    <a href="https://github.com/manucorujo/CIIE-GaiaStation/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/manucorujo/CIIE-GaiaStation/issues">Request Feature</a>
+  </p>
+</div>
 
-Para así en la función custom_draw de level.py, cuando se vaya a dibujar cada elemento se use, en vez de llamar al atributo 
-image de cada objeto. Pero además de esta regla del software, conseguimos que para cada postura de un personaje se puede mostrar
-una imagen distinta, por tanto el get_image de cada personaje es más complejo que el de un obstaculo, que solo devolverá el atributo imagen
 
-## Patrones de diseño
 
-En esta sección se apuntarán los patrones de diseño recomendados por el profesor y alguno adicional que utilicemos.
-Además se debería incluir en que sección lo utilizamos, para la realización de la memoria o comentarios en el código.
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-### Observer
 
-Define una dependencia del tipo uno a muchos entre objetos, de manera que cuando uno de los objetos cambia su estado, notifica este cambio a todos los dependientes.
 
-Clases observer.py, subject.py, de las cuales heredan el jugador y los elementos de la
-HUD, que observan a este
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-### Singletone
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Se asegura de que solo exista una única instancia del objeto y proporciona un acceso global a esta. Ejemplos: Gestor de recursos.
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
-GESTOR DE RECURSOS
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Decorator
 
-Este patrón de diseño de software nos proporciona una forma fácil de añadir responsabilidades adicionales a un objeto de forma dinámica y sin tener que modificar este objeto. Además proporciona una alternativa a la herencia para extender su funcionalidad.
+### Built With
 
-### Inyección de dependencias
+* [![Python][Python.org]][Python-url]
+* [![Pygame][Pygame.org]][Pygame-url]
 
-De esta no estoy tan seguro. Se suministran objetos a una clase en lugar de ser la propia clase la que cree dichos objetos. Esos objetos cumplen contratos que necesitan nuestras clases para poder funcionar (de ahí el concepto de dependencia). Nuestras clases no crean los objetos que necesitan, sino que se los suministra otra clase 'contenedora' que inyectará la implementación deseada a nuestro contrato.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Flyweight
 
-ESTE CREO QUE TENÍA OTRO NOMBRE, ES QUE NO LOS TENGO APUNTADOS. El patrón Flyweight (u objeto ligero) sirve para eliminar o reducir la redundancia cuando tenemos gran cantidad de objetos que contienen información idéntica, además de lograr un equilibrio entre flexibilidad y rendimiento (uso de recursos)
 
-GESTOR DE RECURSOS
+<!-- GETTING STARTED -->
+## Getting Started
 
-### Patron estrategia
+To get a local copy up and running follow these simple example steps.
 
-Controles: clases control.py y keyboardControl.py
+### Prerequisites
 
-- - - -
+This is an example of how to list things you need to use the software and how to install them.
+* Python
+  ```sh
+  apt install python
+  ```
 
-Estas definiciones las ha sacado de una busqueda rápida en google, es más por tener los patrones recomendados aquí a mano para todos y saber que debemos usarlos. Eran unos 6, no me sale ahora el nombre de los otros.
+* Pip
+  ```sh
+  apt install python-pip
+```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/manucorujo/CIIE-GaiaStation.git
+   ```
+2. Install dependencies
+   ```sh
+   pip install pygame
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+To run the game, navigate to the `src/` directory:
+```sh
+cd src/
+```
+
+ and execute the Python file `main.py`:
+```sh
+python main.py
+```
+
+It is worth noting that to facilitate testing of different levels, developers can advance to the next level by pressing the letter E. As explained in the corresponding issue, this functionality should only be included in debug mode and removed from normal gameplay.
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+See the [open issues](https://github.com/manucorujo/CIIE-GaiaStation/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Would you like to contribute? Great! Then, please refer to the [CONTRIBUTING.md](https://github.com/manucorujo/CIIE-GaiaStation/blob/main/CONTRIBUTING.md) file for instructions.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+<!-->
+## Contact
+
+Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+
+Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+-->
+
+
+<!-- ACKNOWLEDGMENTS -->
+<!-->
+## Acknowledgments
+
+* []()
+* []()
+* []()
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+-->
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-url]: https://github.com/github_username/repo_name/network/members
+[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-url]: https://github.com/github_username/repo_name/stargazers
+[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-url]: https://github.com/github_username/repo_name/issues
+[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
+[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+
+
+[Python-url]: https://www.python.org/
+[Python]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Pygame-url]: https://www.pygame.org/
+[Pygame]: https://img.shields.io/badge/Pygame-3776AB?style=for-the-badge&logo=pygame&logoColor=white
