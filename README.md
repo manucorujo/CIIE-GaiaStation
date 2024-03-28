@@ -30,7 +30,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/manucorujo/CIIE-GaiaStation">
-    <img src="res/images/logo/logo-color.svg" alt="Logo" width="80" height="80">
+    <img src="res/images/logo/logo-color.svg" alt="Logo">
   </a>
 
 
@@ -84,7 +84,7 @@
 ## About The Project
 <div align=center>
   <a href="https://github.com/manucorujo/CIIE-GaiaStation">
-    <img src="res/images/init_screen.png" alt="Logo" height="90">
+    <img src="res/images/playing.png" alt="Logo">
   </a>
 </div>
 
